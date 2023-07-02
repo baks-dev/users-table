@@ -1,17 +1,17 @@
 <?php
 /*
  *  Copyright 2023.  Baks.dev <admin@baks.dev>
- *  
+ *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
  *  in the Software without restriction, including without limitation the rights
  *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  *  copies of the Software, and to permit persons to whom the Software is furnished
  *  to do so, subject to the following conditions:
- *  
+ *
  *  The above copyright notice and this permission notice shall be included in all
  *  copies or substantial portions of the Software.
- *  
+ *
  *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  *  FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL THE
@@ -21,31 +21,22 @@
  *  THE SOFTWARE.
  */
 
-namespace Symfony\Component\DependencyInjection\Loader\Configurator;
+declare(strict_types=1);
 
-use BaksDev\Users\UsersTable\Type\Table\Event\UsersTableEventType;
-use BaksDev\Users\UsersTable\Type\Table\Event\UsersTableEventUid;
-use BaksDev\Users\UsersTable\Type\Table\Id\UsersTableType;
-use BaksDev\Users\UsersTable\Type\Table\Id\UsersTableUid;
-use Symfony\Config\DoctrineConfig;
+namespace BaksDev\Users\UsersTable\Type\Actions\Event;
 
-return static function(ContainerConfigurator $container, DoctrineConfig $doctrine)
+
+use BaksDev\Core\Type\UidType\UidType;
+
+final class UsersTableActionsEventType extends UidType
 {
-    $doctrine->dbal()->type(UsersTableUid::TYPE)->class(UsersTableType::class);
-    $doctrine->dbal()->type(UsersTableEventUid::TYPE)->class(UsersTableEventType::class);
+    public function getClassType(): string
+    {
+        return UsersTableActionsEventUid::class;
+    }
 
-
-    $doctrine->dbal()->type(UsersTableEventUid::TYPE)->class(UsersTableType::class);
-
-	$emDefault = $doctrine->orm()->entityManager('default');
-	
-	$emDefault->autoMapping(true);
-    
-	$emDefault->mapping('UsersTable')
-		->type('attribute')
-		->dir(__DIR__.'/../../Entity')
-		->isBundle(false)
-		->prefix('BaksDev\Users\UsersTable')
-		->alias('UsersTable')
-	;
-};
+    public function getName(): string
+    {
+        return UsersTableActionsEventUid::TYPE;
+    }
+}
