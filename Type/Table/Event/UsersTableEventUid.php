@@ -30,5 +30,5 @@ use BaksDev\Core\Type\UidType\Uid;
 
 final class UsersTableEventUid extends Uid
 {
-    public const TYPE = 'users_table_event_uid';
+    public const TYPE = 'users_table_event';
 }

@@ -33,7 +33,7 @@ final class UsersTableActionsWorkingUid extends Uid
 {
     public const TEST = '01895aa7-8acc-776f-b8b6-d726d029042c';
     
-    public const TYPE = 'users_table_actions_working_uid';
+    public const TYPE = 'users_table_actions_working';
 
     private mixed $attr;
 

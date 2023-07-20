@@ -30,5 +30,5 @@ use BaksDev\Core\Type\UidType\Uid;
 
 final class UsersTableUid extends Uid
 {
-    public const TYPE = 'users_table_uid';
+    public const TYPE = 'users_table';
 }

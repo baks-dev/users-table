@@ -31,7 +31,7 @@ use Symfony\Component\Uid\AbstractUid;
 
 final class UsersTableActionsEventUid extends Uid
 {
-    public const TYPE = 'users_table_actions_event_uid';
+    public const TYPE = 'users_table_actions_event';
     /**
      * @var mixed|null
      */
