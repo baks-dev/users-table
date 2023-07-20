@@ -28,6 +28,12 @@ namespace BaksDev\Users\UsersTable\Repository\Actions\AllUsersTableActions;
 use BaksDev\Core\Form\Search\SearchDTO;
 use BaksDev\Core\Services\Paginator\PaginatorInterface;
 use BaksDev\Core\Services\Switcher\SwitcherInterface;
+use BaksDev\Core\Type\Locale\Locale;
+use BaksDev\Products\Category\Entity\Cover\ProductCategoryCover;
+use BaksDev\Products\Category\Entity\ProductCategory;
+use BaksDev\Products\Category\Entity\Trans\ProductCategoryTrans;
+use BaksDev\Users\UsersTable\Entity\Actions\Event\UsersTableActionsEvent;
+use BaksDev\Users\UsersTable\Entity\Actions\Trans\UsersTableActionsTrans;
 use BaksDev\Users\UsersTable\Entity\Actions\UsersTableActions;
 use Doctrine\DBAL\Connection;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -43,9 +49,9 @@ final class AllUsersTableActions implements AllUsersTableActionsInterface
     private TranslatorInterface $translator;
 
     public function __construct(
-        Connection          $connection,
-        PaginatorInterface  $paginator,
-        SwitcherInterface   $switcher,
+        Connection $connection,
+        PaginatorInterface $paginator,
+        SwitcherInterface $switcher,
         TranslatorInterface $translator,
     )
     {
@@ -59,22 +65,90 @@ final class AllUsersTableActions implements AllUsersTableActionsInterface
     public function fetchAllUsersTableActionsAssociative(SearchDTO $search): PaginatorInterface
     {
         $qb = $this->connection->createQueryBuilder();
+        $locale = new Locale($this->translator->getLocale());
 
-        $qb->select('*');
+        $qb->select('actions.id');
+        $qb->addSelect('actions.event');
+
         $qb->from(UsersTableActions::TABLE, 'actions');
 
+
+        $qb->leftJoin(
+            'actions',
+            UsersTableActionsEvent::TABLE,
+            'event',
+            'event.id = actions.event'
+        );
+
+
+        $qb->leftJoin(
+            'event',
+            ProductCategory::TABLE,
+            'category',
+            'category.id = event.category'
+        );
+
+        $qb->addSelect('trans.name AS category_name');
+
+        $qb->leftJoin(
+            'category',
+            ProductCategoryTrans::TABLE,
+            'trans',
+            'trans.event = category.event AND trans.local = :local'
+        );
+
+        $qb->setParameter('local', $locale, Locale::TYPE);
+
+
+        // Обложка
+
+        $qb->addSelect("
+			CASE
+			   WHEN category_cover.name IS NOT NULL THEN
+					CONCAT ( '/upload/".ProductCategoryCover::TABLE."' , '/', category_cover.dir, '/', category_cover.name, '.')
+			   ELSE NULL
+			END AS category_cover_name
+		"
+        );
+
+        $qb->addSelect('category_cover.ext AS category_cover_ext');
+        $qb->addSelect('category_cover.cdn AS category_cover_cdn');
+
+
+        $qb->leftJoin(
+            'category',
+            ProductCategoryCover::TABLE,
+            'category_cover',
+            'category_cover.event = category.event'
+        );
+
+
+
+
         /* Поиск */
-        if ($search->query) {
-//            $search->query = mb_strtolower($search->query);
+        if($search->query)
+        {
 
-//            $searcher = $this->connection->createQueryBuilder();
+            $search->query = mb_strtolower($search->query);
+            $searcher = $this->connection->createQueryBuilder();
 
-//            $searcher->orWhere('LOWER(trans.name) LIKE :query');
-//            $searcher->orWhere('LOWER(trans.name) LIKE :switcher');
+            if($search->isUid())
+            {
+                $searcher->orWhere('actions.id = :query');
+                $searcher->orWhere('actions.event = :query');
 
-//            $qb->andWhere('('.$searcher->getQueryPart('where').')');
-//            $qb->setParameter('query', '%'.$this->switcher->toRus($search->query).'%');
-//            $qb->setParameter('switcher', '%'.$this->switcher->toEng($search->query).'%');
+                $qb->setParameter('query', $search->query);
+            }
+            else
+            {
+                $searcher->orWhere('LOWER(trans.name) LIKE :query');
+                $searcher->orWhere('LOWER(trans.name) LIKE :switcher');
+
+                $qb->setParameter('query', '%'.$this->switcher->toRus($search->query).'%');
+                $qb->setParameter('switcher', '%'.$this->switcher->toEng($search->query).'%');
+            }
+
+            $qb->andWhere('('.$searcher->getQueryPart('where').')');
         }
 
         return $this->paginator->fetchAllAssociative($qb);

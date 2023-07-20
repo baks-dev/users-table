@@ -54,7 +54,7 @@ class UsersTableDay extends EntityState
     #[Assert\Uuid]
     #[ORM\Id]
     #[ORM\Column(type: UsersTableActionsWorkingUid::TYPE)]
-    private UsersTableActionsWorkingUid $working;
+    private readonly UsersTableActionsWorkingUid $working;
 
     /**
      * Дата дневного табеля (timestamp).
@@ -86,76 +86,18 @@ class UsersTableDay extends EntityState
     #[ORM\Column(type: Money::TYPE)]
     private Money $premium;
 
-//    public function __construct(UserProfileUid $profile)
-//    {
-//        $this->profile = $profile;
-//    }
-
     /**
-     * Количество выполненной работы.
+     * Total
      */
-
-    // Увеличиваем количество
-    public function addTotal(int $total): void
-    {
-        $this->total += $total;
-    }
-
-    // Уменьшаем количество
-    public function subTotal(int $total): void
-    {
-        $this->total -= $total;
-    }
-
     public function getTotal(): int
     {
         return $this->total;
     }
 
-    /**
-     * Стоимость с учетом коэффициента.
-     */
-
-    // Увеличиваем количество
-    public function addMoney(int $money): void
-    {
-        //$this->money += $money;
-    }
-
-    // Уменьшаем количество
-    public function subMoney(int $money): void
-    {
-        //$this->money -= $money;
-    }
-
-    public function getMoney(): Money
-    {
-        return $this->money;
-    }
-
-    /**
-     * Премия за переработку с учетом дневной нормы.
-     */
-    public function getPremium(): Money
-    {
-        return $this->premium;
-    }
-
-    // Увеличиваем количество
-    public function addPremium(int $premium): void
-    {
-        //$this->premium += $money;
-    }
-
-    // Уменьшаем количество
-    public function subPremium(int $premium): void
-    {
-        //$this->premium -= premium;
-    }
 
     public function getDto($dto): mixed
     {
-        if ($dto instanceof UsersTableDayInterface)
+        if($dto instanceof UsersTableDayInterface)
         {
             return parent::getDto($dto);
         }
@@ -165,7 +107,7 @@ class UsersTableDay extends EntityState
 
     public function setEntity($dto): mixed
     {
-        if ($dto instanceof UsersTableDayInterface)
+        if($dto instanceof UsersTableDayInterface)
         {
             return parent::setEntity($dto);
         }

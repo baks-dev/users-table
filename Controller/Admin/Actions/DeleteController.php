@@ -49,7 +49,14 @@ final class DeleteController extends AbstractController
     {
         $UsersTableActionsDeleteDTO = new UsersTableActionsDeleteDTO();
         $UsersTableActionsEvent->getDto($UsersTableActionsDeleteDTO);
-        $form = $this->createForm(UsersTableActionsDeleteForm::class, $UsersTableActionsDeleteDTO, ['action' => $this->generateUrl('UsersTableActions:admin.delete', ['id' => $UsersTableActionsDeleteDTO->getEvent()]),]);
+
+        $form = $this->createForm(
+            UsersTableActionsDeleteForm::class, $UsersTableActionsDeleteDTO, [
+                'action' => $this->generateUrl(
+                    'UsersTable:admin.action.delete', ['id' => $UsersTableActionsDeleteDTO->getEvent()]
+                ),
+            ]
+        );
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid() && $form->has('users_table_actions_delete'))
@@ -60,15 +67,22 @@ final class DeleteController extends AbstractController
             {
                 $this->addFlash('admin.form.header.delete', 'admin.success.delete', 'admin.table.actions');
 
-                return $this->redirectToRoute('UsersTableActions:admin.index');
+                return $this->redirectToRoute('UsersTable:admin.action.index');
             }
 
-            $this->addFlash('admin.form.header.delete', 'admin.danger.delete', 'admin.contacts.region', $UsersTableActions);
+            $this->addFlash(
+                'admin.form.header.delete',
+                'admin.danger.delete',
+                'admin.contacts.region',
+                $UsersTableActions
+            );
 
-            return $this->redirectToRoute('UsersTableActions:admin.index', status: 400);
+            return $this->redirectToRoute('UsersTable:admin.action.index', status: 400);
         }
 
-        return $this->render(['form' => $form->createView(), 'name' => $UsersTableActionsEvent->getNameByLocale($this->getLocale()), // название согласно локали
+        return $this->render([
+            'form' => $form->createView(),
+            'name' => $UsersTableActionsEvent->getNameByLocale($this->getLocale()), // название согласно локали
         ]);
     }
 }

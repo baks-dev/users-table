@@ -69,25 +69,24 @@ final class UserTableMonthHandler
             return $uniqid;
         }
 
-        $UserTableDay = $this->entityManager->getRepository(UsersTableMonth::class)->findOneBy(
+        $UsersTableMonth = $this->entityManager->getRepository(UsersTableMonth::class)->findOneBy(
             [
                 'profile' => $command->getProfile(),
                 'date' => $command->getDate()
             ]
         );
 
-        if ($UserTableDay === null)
+        if ($UsersTableMonth === null)
         {
-            $UserTableDay = new UsersTableMonth();
+            $UsersTableMonth = new UsersTableMonth();
         }
-
-        $command->addTotal($UserTableDay->getTotal());
-        $UserTableDay->setEntity($command);
+        
+        $UsersTableMonth->setEntity($command);
 
         /**
-         * Валидация UserTableDay.
+         * Валидация UsersTableMonth.
          */
-        $errors = $this->validator->validate($UserTableDay);
+        $errors = $this->validator->validate($UsersTableMonth);
 
         if (count($errors) > 0)
         {
@@ -97,9 +96,9 @@ final class UserTableMonthHandler
             return $uniqid;
         }
 
-        $this->entityManager->persist($UserTableDay);
+        $this->entityManager->persist($UsersTableMonth);
         $this->entityManager->flush();
 
-        return $UserTableDay;
+        return $UsersTableMonth;
     }
 }

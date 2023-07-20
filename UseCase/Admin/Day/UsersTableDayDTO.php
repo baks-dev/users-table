@@ -25,8 +25,10 @@ declare(strict_types=1);
 
 namespace BaksDev\Users\UsersTable\UseCase\Admin\Day;
 
+use BaksDev\Reference\Money\Type\Money;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use BaksDev\Users\UsersTable\Entity\UsersTableDayInterface;
+use BaksDev\Users\UsersTable\Type\Actions\Working\UsersTableActionsWorkingUid;
 use DateTimeImmutable;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -36,19 +38,43 @@ final class UsersTableDayDTO implements UsersTableDayInterface
     /** ID профиля пользователя */
     #[Assert\NotBlank]
     #[Assert\Uuid]
-    private UserProfileUid $profile;
+    private readonly UserProfileUid $profile;
+
+
+    /** Действие */
+    #[Assert\NotBlank]
+    #[Assert\Uuid]
+    private readonly  UsersTableActionsWorkingUid $working;
 
     /**
      * Дата табеля (timestamp).
      */
     #[Assert\NotBlank]
-    private int $date;
+    private readonly  int $date;
 
     /**
      * Количество.
      */
     #[Assert\NotBlank]
-    private int $total;
+    private int $total = 0;
+
+    /**
+     * Стоимость с учетом коэффициента.
+     */
+    #[Assert\NotBlank]
+    private Money $money;
+
+    /**
+     * Премия за переработку с учетом дневной нормы.
+     */
+    #[Assert\NotBlank]
+    private Money $premium;
+
+
+    public function __construct() {
+        $this->money = new Money(0);
+        $this->premium = new Money(0);
+    }
 
     /**
      * Profile.
@@ -98,6 +124,45 @@ final class UsersTableDayDTO implements UsersTableDayInterface
     public function addTotal(int $total): void
     {
         $this->total += $total;
+    }
+
+    /**
+     * Стоимость с учетом коэффициента.
+     */
+    public function getMoney(): Money
+    {
+        return $this->money;
+    }
+
+    public function setMoney(Money $money): void
+    {
+        $this->money = $money;
+    }
+
+    /**
+     * Премия за переработку с учетом дневной нормы.
+     */
+    public function getPremium(): Money
+    {
+        return $this->premium;
+    }
+
+    public function setPremium(Money $premium): void
+    {
+        $this->premium = $premium;
+    }
+
+    /**
+     * Working
+     */
+    public function getWorking(): UsersTableActionsWorkingUid
+    {
+        return $this->working;
+    }
+
+    public function setWorking(UsersTableActionsWorkingUid $working): void
+    {
+        $this->working = $working;
     }
 
 }

@@ -26,7 +26,11 @@ declare(strict_types=1);
 namespace BaksDev\Users\UsersTable\UseCase\Admin\Actions\NewEdit;
 
 
+use BaksDev\Products\Category\Repository\CategoryChoice\CategoryChoiceInterface;
+use BaksDev\Products\Category\Type\Id\ProductCategoryUid;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -34,9 +38,63 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 final class UsersTableActionsForm extends AbstractType
 {
 
+    private CategoryChoiceInterface $category;
+
+
+    public function __construct(CategoryChoiceInterface $category)
+    {
+        $this->category = $category;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        //$builder->add('image', TextType::class, ['required' => false]);
+        /** Настройки локали службы доставки */
+
+        /*        $builder->add('translate', CollectionType::class, [
+                    'entry_type' => Trans\UsersTableActionsTransForm::class,
+                    'entry_options' => ['label' => false],
+                    'label' => false,
+                    'by_reference' => false,
+                    'allow_delete' => true,
+                    'allow_add' => true,
+                    'prototype_name' => '__actions_translate__',
+                ]);*/
+
+
+        /**
+         * Категория производства
+         */
+
+        $builder
+            ->add('category', ChoiceType::class, [
+                'choices' => $this->category->getCategoryCollection(),
+                'choice_value' => function(?ProductCategoryUid $category) {
+                    return $category?->getValue();
+                },
+                'choice_label' => function(ProductCategoryUid $category) {
+                    return $category->getOptions();
+                },
+
+                'label' => false,
+                'expanded' => false,
+                'multiple' => false,
+                'required' => true,
+            ]);
+
+        /**
+         * Действия
+         */
+        
+        $builder->add('working', CollectionType::class, [
+            'entry_type' => Working\UsersTableActionsWorkingForm::class,
+            'entry_options' => ['label' => false],
+            'label' => false,
+            'by_reference' => false,
+            'allow_delete' => true,
+            'allow_add' => true,
+            'prototype_name' => '__actions_working__',
+        ]);
+
 
         /* Сохранить ******************************************************/
         $builder->add(

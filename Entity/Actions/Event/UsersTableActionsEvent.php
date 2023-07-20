@@ -27,9 +27,11 @@ namespace BaksDev\Users\UsersTable\Entity\Actions\Event;
 
 use BaksDev\Core\Entity\EntityEvent;
 use BaksDev\Core\Type\Locale\Locale;
+use BaksDev\Products\Category\Type\Id\ProductCategoryUid;
 use BaksDev\Users\UsersTable\Entity\Actions\Modify\UsersTableActionsModify;
 use BaksDev\Users\UsersTable\Entity\Actions\Trans\UsersTableActionsTrans;
 use BaksDev\Users\UsersTable\Entity\Actions\UsersTableActions;
+use BaksDev\Users\UsersTable\Entity\Actions\Working\UsersTableActionsWorking;
 use BaksDev\Users\UsersTable\Type\Actions\Event\UsersTableActionsEventUid;
 use BaksDev\Users\UsersTable\Type\Actions\Id\UsersTableActionsUid;
 use Doctrine\Common\Collections\Collection;
@@ -59,18 +61,25 @@ class UsersTableActionsEvent extends EntityEvent
     #[ORM\Column(type: UsersTableActionsUid::TYPE, nullable: false)]
     private ?UsersTableActionsUid $main = null;
 
-    /** One To One */
-    //#[ORM\OneToOne(mappedBy: 'event', targetEntity: UsersTableActionsLogo::class, cascade: ['all'])]
-    //private ?UsersTableActionsOne $one = null;
+    /**
+     * Категория производства
+     */
+    #[Assert\NotBlank]
+    #[Assert\Uuid]
+    #[ORM\Column(type: ProductCategoryUid::TYPE)]
+    private ProductCategoryUid $category;
 
-    /** Модификатор */
+    /**
+     * Модификатор
+     */
     #[ORM\OneToOne(mappedBy: 'event', targetEntity: UsersTableActionsModify::class, cascade: ['all'])]
     private UsersTableActionsModify $modify;
 
-    /** Перевод */
-    #[ORM\OneToMany(mappedBy: 'event', targetEntity: UsersTableActionsTrans::class, cascade: ['all'])]
-    private Collection $translate;
 
+    /** Действия */
+    #[ORM\OneToMany(mappedBy: 'event', targetEntity: UsersTableActionsWorking::class, cascade: ['all'])]
+    #[ORM\OrderBy(['sort' => 'ASC'])]
+    private Collection $working;
 
     public function __construct()
     {
@@ -107,7 +116,8 @@ class UsersTableActionsEvent extends EntityEvent
 
     public function getDto($dto): mixed
     {
-        if ($dto instanceof UsersTableActionsEventInterface) {
+        if($dto instanceof UsersTableActionsEventInterface)
+        {
             return parent::getDto($dto);
         }
 
@@ -116,7 +126,8 @@ class UsersTableActionsEvent extends EntityEvent
 
     public function setEntity($dto): mixed
     {
-        if ($dto instanceof UsersTableActionsEventInterface) {
+        if($dto instanceof UsersTableActionsEventInterface)
+        {
             return parent::setEntity($dto);
         }
 
@@ -124,29 +135,29 @@ class UsersTableActionsEvent extends EntityEvent
     }
 
 
-//	public function isModifyActionEquals(ModifyActionEnum $action) : bool
-//	{
-//		return $this->modify->equals($action);
-//	}
+    //	public function isModifyActionEquals(ModifyActionEnum $action) : bool
+    //	{
+    //		return $this->modify->equals($action);
+    //	}
 
-//	public function getUploadClass() : UsersTableActionsImage
-//	{
-//		return $this->image ?: $this->image = new UsersTableActionsImage($this);
-//	}
+    //	public function getUploadClass() : UsersTableActionsImage
+    //	{
+    //		return $this->image ?: $this->image = new UsersTableActionsImage($this);
+    //	}
 
-	public function getNameByLocale(Locale $locale) : ?string
-	{
-		$name = null;
+    public function getNameByLocale(Locale $locale): ?string
+    {
+        $name = null;
 
-		/** @var UsersTableActionsTrans $trans */
-		foreach($this->translate as $trans)
-		{
-			if($name = $trans->name($locale))
-			{
-				break;
-			}
-		}
+        /** @var UsersTableActionsTrans $trans */
+        foreach($this->translate as $trans)
+        {
+            if($name = $trans->name($locale))
+            {
+                break;
+            }
+        }
 
-		return $name;
-	}
+        return $name;
+    }
 }

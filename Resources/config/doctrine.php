@@ -23,6 +23,14 @@
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
+use BaksDev\Users\UsersTable\Type\Actions\Const\UsersTableActionsWorkingConst;
+use BaksDev\Users\UsersTable\Type\Actions\Const\UsersTableActionsWorkingConstType;
+use BaksDev\Users\UsersTable\Type\Actions\Event\UsersTableActionsEventType;
+use BaksDev\Users\UsersTable\Type\Actions\Event\UsersTableActionsEventUid;
+use BaksDev\Users\UsersTable\Type\Actions\Id\UsersTableActionsType;
+use BaksDev\Users\UsersTable\Type\Actions\Id\UsersTableActionsUid;
+use BaksDev\Users\UsersTable\Type\Actions\Working\UsersTableActionsWorkingType;
+use BaksDev\Users\UsersTable\Type\Actions\Working\UsersTableActionsWorkingUid;
 use BaksDev\Users\UsersTable\Type\Table\Event\UsersTableEventType;
 use BaksDev\Users\UsersTable\Type\Table\Event\UsersTableEventUid;
 use BaksDev\Users\UsersTable\Type\Table\Id\UsersTableType;
@@ -35,7 +43,11 @@ return static function(ContainerConfigurator $container, DoctrineConfig $doctrin
     $doctrine->dbal()->type(UsersTableEventUid::TYPE)->class(UsersTableEventType::class);
 
 
-    $doctrine->dbal()->type(UsersTableEventUid::TYPE)->class(UsersTableType::class);
+    $doctrine->dbal()->type(UsersTableActionsUid::TYPE)->class(UsersTableActionsType::class);
+    $doctrine->dbal()->type(UsersTableActionsEventUid::TYPE)->class(UsersTableActionsEventType::class);
+    $doctrine->dbal()->type(UsersTableActionsWorkingUid::TYPE)->class(UsersTableActionsWorkingType::class);
+    $doctrine->dbal()->type(UsersTableActionsWorkingConst::TYPE)->class(UsersTableActionsWorkingConstType::class);
+
 
 	$emDefault = $doctrine->orm()->entityManager('default');
 	

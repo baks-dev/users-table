@@ -31,6 +31,7 @@ use BaksDev\Users\UsersTable\Entity\Actions\UsersTableActions;
 use BaksDev\Users\UsersTable\UseCase\Admin\Actions\NewEdit\UsersTableActionsDTO;
 use BaksDev\Users\UsersTable\UseCase\Admin\Actions\NewEdit\UsersTableActionsForm;
 use BaksDev\Users\UsersTable\UseCase\Admin\Actions\NewEdit\UsersTableActionsHandler;
+use BaksDev\Users\UsersTable\UseCase\Admin\Actions\NewEdit\Working\UsersTableActionsWorkingDTO;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -45,24 +46,27 @@ final class NewController extends AbstractController
     ): Response
     {
         $UsersTableActionsDTO = new UsersTableActionsDTO();
+        $UsersTableActionsWorkingDTO = new UsersTableActionsWorkingDTO();
+        $UsersTableActionsDTO->addWorking($UsersTableActionsWorkingDTO);
 
         // Форма
         $form = $this->createForm(
             UsersTableActionsForm::class, $UsersTableActionsDTO,
-            ['action' => $this->generateUrl('UsersTableActions:admin.newedit.new'),]
+            ['action' => $this->generateUrl('UsersTable:admin.action.newedit.new'),]
         );
 
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid() && $form->has('users_table_actions'))
         {
+
             $UsersTableActions = $UsersTableActionsHandler->handle($UsersTableActionsDTO);
 
             if($UsersTableActions instanceof UsersTableActions)
             {
                 $this->addFlash('success', 'admin.success.new', 'admin.table.actions');
 
-                return $this->redirectToRoute('UsersTableActions:admin.index');
+                return $this->redirectToRoute('UsersTable:admin.action.index');
             }
 
             $this->addFlash('danger', 'admin.danger.new', 'admin.table.actions', $UsersTableActions);

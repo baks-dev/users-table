@@ -25,8 +25,10 @@ declare(strict_types=1);
 
 namespace BaksDev\Users\UsersTable\UseCase\Admin\Actions\NewEdit;
 
+use BaksDev\Products\Category\Type\Id\ProductCategoryUid;
 use BaksDev\Users\UsersTable\Entity\Actions\Event\UsersTableActionsEventInterface;
 use BaksDev\Users\UsersTable\Type\Actions\Event\UsersTableActionsEventUid;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /** @see UsersTableActionsEvent */
@@ -39,8 +41,29 @@ final class UsersTableActionsDTO implements UsersTableActionsEventInterface
     private ?UsersTableActionsEventUid $id = null;
 
     /**
+     * Категория производства
+     */
+    #[Assert\NotBlank]
+    #[Assert\Uuid]
+    private ProductCategoryUid $category;
+
+    /**
+     * Действия
+     */
+    #[Assert\Valid]
+    private ArrayCollection $working;
+
+
+    public function __construct()
+    {
+        $this->working = new ArrayCollection();
+    }
+
+
+    /**
      * Идентификатор события.
      */
+    
     public function setId(?UsersTableActionsEventUid $id): void
     {
         $this->id = $id;
@@ -50,4 +73,48 @@ final class UsersTableActionsDTO implements UsersTableActionsEventInterface
     {
         return $this->id;
     }
+
+    /**
+     * Категория производства
+     */
+
+    public function getCategory(): ProductCategoryUid
+    {
+        return $this->category;
+    }
+
+    public function setCategory(ProductCategoryUid $category): void
+    {
+        $this->category = $category;
+    }
+
+
+    /**
+     * Действия
+     */
+
+    public function getWorking(): ArrayCollection
+    {
+        return $this->working;
+    }
+
+    public function addWorking(Working\UsersTableActionsWorkingDTO $working): void
+    {
+        if(!$this->working->contains($working))
+        {
+            $this->working->add($working);
+        }
+    }
+
+
+    public function removeWorking(Working\UsersTableActionsWorkingDTO $working): void
+    {
+        $this->working->removeElement($working);
+    }
+
+    public function setWorking(ArrayCollection $working): void
+    {
+        $this->working = $working;
+    }
+
 }

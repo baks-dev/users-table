@@ -77,90 +77,66 @@ final class UsersTableActionsDeleteHandler
         }
 
 
-        if ($command->getEvent()) {
-            $EventRepo = $this->entityManager->getRepository(UsersTableActionsEvent::class)->find(
+
+        /* Обязательно передается идентификатор события */
+        if($command->getEvent() === null)
+        {
+            $uniqid = uniqid('', false);
+            $errorsString = sprintf(
+                'Not found event id in class: %s',
+                $command::class
+            );
+            $this->logger->error($uniqid.': '.$errorsString);
+
+            return $uniqid;
+        }
+
+
+        /** Получаем событие */
+        $Event = $this->entityManager->getRepository(UsersTableActionsEvent::class)->find(
+            $command->getEvent()
+        );
+
+        if($Event === null)
+        {
+            $uniqid = uniqid('', false);
+            $errorsString = sprintf(
+                'Not found %s by id: %s',
+                UsersTableActionsEvent::class,
                 $command->getEvent()
             );
+            $this->logger->error($uniqid.': '.$errorsString);
 
-            if ($EventRepo === null) {
-                $uniqid = uniqid('', false);
-                $errorsString = sprintf(
-                    'Not found %s by id: %s',
-                    UsersTableActionsEvent::class,
-                    $command->getEvent()
-                );
-                $this->logger->error($uniqid . ': ' . $errorsString);
-
-                return $uniqid;
-            }
-
-            $Event = $EventRepo->cloneEntity();
-
-        } else {
-            $Event = new UsersTableActionsEvent();
-            $this->entityManager->persist($Event);
+            return $uniqid;
         }
+        
 
-        $this->entityManager->clear();
+        /** Получаем корень агрегата */
+        $Main = $this->entityManager->getRepository(UsersTableActions::class)->findOneBy(
+            ['event' => $command->getEvent()]
+        );
 
-        /** @var UsersTableActions $Main */
-        if ($Event->getMain()) {
-            $Main = $this->entityManager->getRepository(UsersTableActions::class)->findOneBy(
-                ['event' => $command->getEvent()]
+        if(empty($Main))
+        {
+            $uniqid = uniqid('', false);
+            $errorsString = sprintf(
+                'Not found %s by event: %s',
+                UsersTableActions::class,
+                $command->getEvent()
             );
+            $this->logger->error($uniqid.': '.$errorsString);
 
-            if (empty($Main)) {
-                $uniqid = uniqid('', false);
-                $errorsString = sprintf(
-                    'Not found %s by event: %s',
-                    UsersTableActions::class,
-                    $command->getEvent()
-                );
-                $this->logger->error($uniqid . ': ' . $errorsString);
-
-                return $uniqid;
-            }
-
-        } else {
-
-            $Main = new UsersTableActions();
-            $this->entityManager->persist($Main);
-            $Event->setMain($Main);
+            return $uniqid;
         }
 
 
+
+        /** Применяем изменения к событию */
         $Event->setEntity($command);
         $this->entityManager->persist($Event);
 
-
-        /**
-         * Валидация Event
-         */
-        $errors = $this->validator->validate($Event);
-
-        if (count($errors) > 0) {
-            $uniqid = uniqid('', false);
-            $errorsString = (string)$errors;
-            $this->logger->error($uniqid . ': ' . $errorsString);
-            return $uniqid;
-        }
-
-
-        /* присваиваем событие корню */
-        $Main->setEvent($Event);
-
-        /**
-         * Валидация Main
-         */
-        $errors = $this->validator->validate($Main);
-
-        if (count($errors) > 0) {
-            $uniqid = uniqid('', false);
-            $errorsString = (string)$errors;
-            $this->logger->error($uniqid . ': ' . $errorsString);
-            return $uniqid;
-        }
-
+        /* Удаляем корень агрегата */
+        $this->entityManager->remove($Main);
 
         $this->entityManager->flush();
 
@@ -170,7 +146,7 @@ final class UsersTableActionsDeleteHandler
             transport: 'users_table'
         );
 
-        // 'users_table_actions_high'
         return $Main;
+
     }
 }

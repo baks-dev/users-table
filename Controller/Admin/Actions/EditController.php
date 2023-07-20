@@ -43,9 +43,9 @@ final class EditController extends AbstractController
 {
     #[Route('/admin/users/table/action/edit/{id}', name: 'admin.action.newedit.edit', methods: ['GET', 'POST'])]
     public function edit(
-        Request                             $request,
+        Request $request,
         #[MapEntity] UsersTableActionsEvent $UsersTableActionsEvent,
-        UsersTableActionsHandler            $UsersTableActionsHandler,
+        UsersTableActionsHandler $UsersTableActionsHandler,
     ): Response
     {
         $UsersTableActionsDTO = new UsersTableActionsDTO();
@@ -53,17 +53,20 @@ final class EditController extends AbstractController
 
         // Форма
         $form = $this->createForm(UsersTableActionsForm::class, $UsersTableActionsDTO, [
-            'action' => $this->generateUrl('UsersTableActions:admin.edit', ['id' => $UsersTableActionsDTO->getEvent()]),
+            'action' => $this->generateUrl('UsersTable:admin.action.newedit.edit', ['id' => $UsersTableActionsDTO->getEvent()]),
         ]);
+
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid() && $form->has('users_table_actions')) {
+        if($form->isSubmitted() && $form->isValid() && $form->has('users_table_actions'))
+        {
             $UsersTableActions = $UsersTableActionsHandler->handle($UsersTableActionsDTO);
 
-            if ($UsersTableActions instanceof UsersTableActions) {
+            if($UsersTableActions instanceof UsersTableActions)
+            {
                 $this->addFlash('success', 'admin.success.new', 'admin.table.actions');
 
-                return $this->redirectToRoute('UsersTableActions:admin.index');
+                return $this->redirectToRoute('UsersTable:admin.action.index');
             }
 
             $this->addFlash('danger', 'admin.danger.new', 'admin.table.actions', $UsersTableActions);

@@ -14,7 +14,7 @@
 
 		<div class="d-flex w-50 gap-3">
 
-			{% set img_path = item.users_profile_avatar_cdn == true ? cdn_host : '' %}
+			{% set img_path = item.users_profile_avatar_cdn == true ? CDN_HOST : '' %}
 
 			<div>
 				<a href="{# {{ is_granted('ROLE_ADMIN') ? path('UserProfile:admin.newedit.edit', { id: item.users_profile_event }) : '#' }} #}"
@@ -50,9 +50,25 @@
 
 	</td>
 
+	<td class="text-center">
+		{{ item.table_action }}
+	</td>
+	<td class="text-center">
+		{{ item.table_working }}
+	</td>
 
 	<td class="text-center">
 		{{ item.table_total }}
 	</td>
 
+	<td class="text-center">
+		{{ money(item.table_money) }}
+	</td>
+	<td class="text-center">
+		{{ money(item.table_premium) }}
+	</td>
+
+	<td class="text-center fw-bolder">
+		{{ money(item.table_money + item.table_premium) }}
+	</td>
 </tr>

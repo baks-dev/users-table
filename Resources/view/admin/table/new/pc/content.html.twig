@@ -18,19 +18,35 @@
 
         <div class="modal-body">
 
-            <div class="w-100" style="clear: both;">
+            <div class="w-100">
                 {{ form_row(form.profile, {
                     label : 'Сотрудник',
-                    placeholder: 'Выберите сотрудника',  attr: { 'data-select' : 'select2' } })  }}
+                    placeholder: 'Выберите сотрудника',  attr: { 'data-select' : 'select2' } }) }}
             </div>
 
             <div class="d-flex justify-content-between gap-3" style="clear: both;">
+                <div class="w-50">
+                    {{ form_row(form.action, {
+                        label : 'Категория производства',
+                        placeholder: 'Выберите категорию из списка ...',  attr: { 'data-select' : 'select2' } }) }}
+                </div>
+
+                <div class="w-50">
+
+                    {{ form_row(form.working, {
+                        label : 'Действие сотрудника',
+                        placeholder:   form.action.vars.data ? 'Выберите действие сотрудника ...' : 'Выберите отдел ...',  attr: { 'data-select' : 'select2' } }) }}
+                </div>
+
+            </div>
+
+            <div class="d-flex justify-content-between gap-3">
                 <div class="w-100">
                     {{ form_row(form.date, { label: 'Дата', attr: { class: 'js-datepicker'} }) }}
                 </div>
 
                 <div class="w-100">
-                    {{ form_row(form.total, { label: 'Количество' }) }}
+                    {{ form_row(form.quantity, { label: 'Количество' }) }}
                 </div>
             </div>
 
@@ -53,5 +69,11 @@
     {{ form_end(form) }}
 </div>
 
-<script nonce="{{ csp_nonce() }}" data-src="/assets/plugins/datepicker/datepicker.min.js?v={{ version }}" defer class="lazy"></script>
+<script async nonce="{{ csp_nonce() }}" data-src="/assets/users_table/tables.js?v={{ version }}"
+        class="lazy"
+></script>
+
+<script async nonce="{{ csp_nonce() }}" data-src="/assets/plugins/datepicker/datepicker.min.js?v={{ version }}"
+        class="lazy"
+></script>
 

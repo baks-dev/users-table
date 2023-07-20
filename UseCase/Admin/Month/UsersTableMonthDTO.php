@@ -25,30 +25,58 @@ declare(strict_types=1);
 
 namespace BaksDev\Users\UsersTable\UseCase\Admin\Month;
 
+use BaksDev\Reference\Money\Type\Money;
+use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
+use BaksDev\Users\UsersTable\Entity\UsersTableDayInterface;
+use BaksDev\Users\UsersTable\Entity\UsersTableMonth;
+use BaksDev\Users\UsersTable\Type\Actions\Working\UsersTableActionsWorkingUid;
 use DateTimeImmutable;
 use Symfony\Component\Validator\Constraints as Assert;
-use BaksDev\Users\UsersTable\Entity\UsersTableDayInterface;
-use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 
-/** @see UsersTableDay */
+/** @see UsersTableMonth */
 final class UsersTableMonthDTO implements UsersTableDayInterface
 {
     /** ID профиля пользователя */
     #[Assert\NotBlank]
     #[Assert\Uuid]
-    private UserProfileUid $profile;
+    private readonly UserProfileUid $profile;
+
+    /** Действие */
+    #[Assert\NotBlank]
+    #[Assert\Uuid]
+    private readonly UsersTableActionsWorkingUid $working;
 
     /**
      * Дата табеля (timestamp).
      */
     #[Assert\NotBlank]
-    private int $date;
+    private readonly int $date;
 
     /**
      * Количество.
      */
     #[Assert\NotBlank]
-    private int $total;
+    private int $total = 0;
+
+
+    /**
+     * Стоимость работы
+     */
+    #[Assert\NotBlank]
+    private Money $money;
+
+
+    /**
+     * Премия за переработку
+     */
+    #[Assert\NotBlank]
+    private Money $premium;
+
+
+    public function __construct() {
+        $this->money = new Money(0);
+        $this->premium = new Money(0);
+    }
 
     /**
      * Profile.
@@ -73,12 +101,10 @@ final class UsersTableMonthDTO implements UsersTableDayInterface
 
     public function setDate(int|DateTimeImmutable $date): void
     {
-        if ($date instanceof DateTimeImmutable)
+        if($date instanceof DateTimeImmutable)
         {
-            $date = $date
-                ->modify('first day of') // Устанавливает первый день текущего месяца
-                ->setTime(0, 0)
-                ->getTimestamp();
+            $date = $date->modify('first day of') // Устанавливает первый день текущего месяца
+                ->setTime(0, 0)->getTimestamp();
         }
 
         $this->date = $date;
@@ -102,4 +128,46 @@ final class UsersTableMonthDTO implements UsersTableDayInterface
     {
         $this->total += $total;
     }
+
+    /**
+     * Действие
+     */
+    public function getWorking(): UsersTableActionsWorkingUid
+    {
+        return $this->working;
+    }
+
+    public function setWorking(UsersTableActionsWorkingUid $working): void
+    {
+        $this->working = $working;
+    }
+
+    /**
+     * Стоимость работы
+     */
+    public function getMoney(): Money
+    {
+        return $this->money;
+    }
+
+    public function setMoney(Money $money): void
+    {
+        $this->money = $money;
+    }
+
+
+    /**
+     * Премия за переработку
+     */
+    public function getPremium(): Money
+    {
+        return $this->premium;
+    }
+
+    public function setPremium(Money $premium): void
+    {
+        $this->premium = $premium;
+    }
+
+
 }

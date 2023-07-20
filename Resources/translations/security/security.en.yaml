@@ -1,13 +1,16 @@
-ROLE_USERPROFILE:
-  name: 'User profiles'
-  desc: 'User profiles'
+# Role
 
+ROLE_USERS_TABLE:
+  name: 'Timesheets'
+  desc: 'Employee Timesheets'
 
-ROLE_USERPROFILE_NEW:
+# Rules
+
+ROLE_USERS_TABLE_NEW:
   name: 'Add'
 
-ROLE_USERPROFILE_EDIT:
+ROLE_USERS_TABLE_EDIT:
   name: 'Edit'
 
-ROLE_USERPROFILE_DELETE:
+ROLE_USERS_TABLE_DELETE:
   name: 'Delete'

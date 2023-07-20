@@ -159,7 +159,6 @@ final class UsersTableActionsHandler
             return $uniqid;
         }
 
-
         $this->entityManager->flush();
 
         /* Отправляем сообщение в шину */

@@ -26,21 +26,11 @@ $ php bin/console doctrine:migrations:migrate
 $ php bin/console baks:assets:install
 ```
 
-Роли администратора с помощью Fixtures
-
-``` bash
-$ php bin/console doctrine:fixtures:load --append
-```
-
 Тесты
 
 ``` bash
 $ php bin/phpunit --group=users-table
 ```
-
-## Журнал изменений ![Changelog](https://img.shields.io/badge/changelog-yellow)
-
-О том, что изменилось за последнее время, обратитесь к [CHANGELOG](CHANGELOG.md) за дополнительной информацией.
 
 ## Лицензия ![License](https://img.shields.io/badge/MIT-green)
 

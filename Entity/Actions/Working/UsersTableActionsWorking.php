@@ -28,6 +28,7 @@ namespace BaksDev\Users\UsersTable\Entity\Actions\Working;
 use BaksDev\Core\Entity\EntityEvent;
 use BaksDev\Users\UsersTable\Entity\Actions\Event\UsersTableActionsEvent;
 use BaksDev\Users\UsersTable\Entity\Actions\Working\Trans\UsersTableActionsWorkingTrans;
+use BaksDev\Users\UsersTable\Type\Actions\Const\UsersTableActionsWorkingConst;
 use BaksDev\Users\UsersTable\Type\Actions\Working\UsersTableActionsWorkingUid;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -53,22 +54,32 @@ class UsersTableActionsWorking extends EntityEvent
 
     /** Связь на событие */
     #[Assert\NotBlank]
-    #[ORM\Id]
     #[ORM\ManyToOne(targetEntity: UsersTableActionsEvent::class, inversedBy: "working")]
     #[ORM\JoinColumn(name: 'event', referencedColumnName: "id")]
     private UsersTableActionsEvent $event;
+
+    /** Const */
+    #[Assert\NotBlank]
+    #[Assert\Uuid]
+    #[ORM\Column(type: UsersTableActionsWorkingConst::TYPE)]
+    private UsersTableActionsWorkingConst $const;
 
 
     /** Перевод */
     #[ORM\OneToMany(mappedBy: 'working', targetEntity: UsersTableActionsWorkingTrans::class, cascade: ['all'])]
     private Collection $translate;
 
+    /** Сортировка */
+    #[Assert\NotBlank]
+    #[ORM\Column(type: Types::SMALLINT, options: ['default' => 500])]
+    private int $sort = 500;
+
     /**
      * Коэффициент
      */
     #[Assert\NotBlank]
-    #[ORM\Column(type: Types::INTEGER)]
-    private int $coefficient;
+    #[ORM\Column(type: Types::FLOAT)]
+    private float $coefficient;
 
     /**
      * Дневная норма
@@ -91,6 +102,7 @@ class UsersTableActionsWorking extends EntityEvent
     {
         $this->event = $event;
         $this->id = new UsersTableActionsWorkingUid();
+        $this->const = new UsersTableActionsWorkingConst();
     }
 
     public function __clone()
@@ -128,6 +140,33 @@ class UsersTableActionsWorking extends EntityEvent
         throw new InvalidArgumentException(sprintf('Class %s interface error', $dto::class));
     }
 
+    /**
+     * Coefficient
+     */
+    public function getCoefficient(): float
+    {
+        return $this->coefficient;
+    }
+
+    /**
+     * Norm
+     */
+    public function getNorm(): int
+    {
+        return $this->norm;
+    }
+
+    /**
+     * Premium
+     */
+    public function getPremium(): int
+    {
+        return $this->premium;
+    }
+
+
+
+
 
 //	public function isModifyActionEquals(ModifyActionEnum $action) : bool
 //	{
@@ -142,7 +181,7 @@ class UsersTableActionsWorking extends EntityEvent
 //	public function getNameByLocale(Locale $locale) : ?string
 //	{
 //		$name = null;
-//		
+//
 //		/** @var UsersTableActionsWorkingTrans $trans */
 //		foreach($this->translate as $trans)
 //		{
@@ -151,7 +190,7 @@ class UsersTableActionsWorking extends EntityEvent
 //				break;
 //			}
 //		}
-//		
+//
 //		return $name;
 //	}
 }

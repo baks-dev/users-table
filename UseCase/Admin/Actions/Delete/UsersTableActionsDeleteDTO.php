@@ -38,9 +38,21 @@ final class UsersTableActionsDeleteDTO implements UsersTableActionsEventInterfac
     #[Assert\Uuid]
     private ?UsersTableActionsEventUid $id = null;
 
+    #[Assert\Valid]
+    private Modify\ModifyDTO $modify;
+
+    public function __construct() {
+        $this->modify = new Modify\ModifyDTO();
+    }
+
     public function getEvent(): ?UsersTableActionsEventUid
     {
         return $this->id;
     }
 
+
+    public function getModify() : Modify\ModifyDTO
+    {
+        return $this->modify;
+    }
 }

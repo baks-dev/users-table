@@ -29,6 +29,8 @@ use BaksDev\Core\Form\Search\SearchDTO;
 use BaksDev\Core\Services\Paginator\PaginatorInterface;
 use BaksDev\Core\Services\Switcher\SwitcherInterface;
 use BaksDev\Core\Type\Locale\Locale;
+use BaksDev\Products\Category\Entity\ProductCategory;
+use BaksDev\Products\Category\Entity\Trans\ProductCategoryTrans;
 use BaksDev\Users\Groups\Group\Entity\Group;
 use BaksDev\Users\Groups\Group\Entity\Trans\GroupTrans;
 use BaksDev\Users\Groups\Users\Entity\CheckUsers;
@@ -38,6 +40,10 @@ use BaksDev\Users\Profile\UserProfile\Entity\Event\UserProfileEvent;
 use BaksDev\Users\Profile\UserProfile\Entity\Info\UserProfileInfo;
 use BaksDev\Users\Profile\UserProfile\Entity\Personal\UserProfilePersonal;
 use BaksDev\Users\Profile\UserProfile\Entity\UserProfile;
+use BaksDev\Users\UsersTable\Entity\Actions\Event\UsersTableActionsEvent;
+use BaksDev\Users\UsersTable\Entity\Actions\Trans\UsersTableActionsTrans;
+use BaksDev\Users\UsersTable\Entity\Actions\Working\Trans\UsersTableActionsWorkingTrans;
+use BaksDev\Users\UsersTable\Entity\Actions\Working\UsersTableActionsWorking;
 use BaksDev\Users\UsersTable\Entity\UsersTableDay;
 use BaksDev\Users\UsersTable\Forms\DayUsersTableFilter\DayUsersTableFilterInterface;
 use DateTimeImmutable;
@@ -75,8 +81,68 @@ final class DayUsersTable implements DayUsersTableInterface
         $local = new Locale($this->translator->getLocale());
 
         $qb->addSelect('users_table_day.total AS table_total');
+        $qb->addSelect('users_table_day.money AS table_money');
+        $qb->addSelect('users_table_day.premium AS table_premium');
         $qb->addSelect('users_table_day.date_table AS table_date');
         $qb->from(UsersTableDay::TABLE, 'users_table_day');
+
+
+        /**
+         * Действие
+         */
+        $qb->leftJoin(
+            'users_table_day',
+            UsersTableActionsWorking::TABLE,
+            'working',
+            'working.id = users_table_day.working'
+        );
+
+        $qb->addSelect('working_trans.name AS table_working');
+        $qb->leftJoin(
+            'working',
+            UsersTableActionsWorkingTrans::TABLE,
+            'working_trans',
+            'working_trans.working = working.id AND working_trans.local = :local'
+        );
+
+        $qb->leftJoin(
+            'working',
+            UsersTableActionsEvent::TABLE,
+            'action_event',
+            'action_event.id = working.event'
+        );
+
+/*        $qb->addSelect('action_trans.name AS table_action');
+        $qb->leftJoin(
+            'action_event',
+            UsersTableActionsTrans::TABLE,
+            'action_trans',
+            'action_trans.event = action_event.id AND action_trans.local = :local'
+        );*/
+
+        $qb->leftJoin(
+            'action_event',
+            ProductCategory::TABLE,
+            'category',
+            'category.id = action_event.category'
+        );
+
+        $qb->addSelect('trans.name AS table_action');
+
+        $qb->leftJoin(
+            'category',
+            ProductCategoryTrans::TABLE,
+            'trans',
+            'trans.event = category.event AND trans.local = :local'
+        );
+
+
+
+
+        $qb->setParameter('local', $local, Locale::TYPE);
+
+
+
 
         // ОТВЕТСТВЕННЫЙ
 

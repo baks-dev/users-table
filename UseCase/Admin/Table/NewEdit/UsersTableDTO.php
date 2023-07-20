@@ -27,6 +27,8 @@ namespace BaksDev\Users\UsersTable\UseCase\Admin\Table\NewEdit;
 
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use BaksDev\Users\UsersTable\Entity\Table\Event\UsersTableEventInterface;
+use BaksDev\Users\UsersTable\Type\Actions\Event\UsersTableActionsEventUid;
+use BaksDev\Users\UsersTable\Type\Actions\Working\UsersTableActionsWorkingUid;
 use BaksDev\Users\UsersTable\Type\Table\Event\UsersTableEventUid;
 use DateTimeImmutable;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -47,6 +49,14 @@ final class UsersTableDTO implements UsersTableEventInterface
     #[Assert\Uuid]
     private UserProfileUid $profile;
 
+
+    /**
+     * Действие сотрудника
+     */
+    //#[Assert\NotBlank]
+    #[Assert\Uuid]
+    private UsersTableActionsWorkingUid $working;
+
     /**
      * Дата.
      */
@@ -58,7 +68,20 @@ final class UsersTableDTO implements UsersTableEventInterface
      */
     #[Assert\NotBlank]
     #[Assert\Range(min: 1)]
-    private int $total;
+    private int $quantity;
+
+    /*
+     *
+     * Вспомогательное свойство
+     *
+     */
+
+    /**
+     * Категория производства
+     */
+    #[Assert\Uuid]
+    private ?UsersTableActionsEventUid $action = null;
+
 
     public function __construct()
     {
@@ -94,15 +117,16 @@ final class UsersTableDTO implements UsersTableEventInterface
     /**
      * Количество.
      */
-    public function getTotal(): int
+    public function getQuantity(): int
     {
-        return $this->total;
+        return $this->quantity;
     }
 
-    public function setTotal(int $total): void
+    public function setQuantity(int $quantity): void
     {
-        $this->total = $total;
+        $this->quantity = $quantity;
     }
+
 
     /**
      * Дата.
@@ -112,8 +136,37 @@ final class UsersTableDTO implements UsersTableEventInterface
         return $this->date;
     }
 
-    public function setDate(DateTimeImmutable $date): void
+    public function setDate(?DateTimeImmutable $date): void
     {
-        $this->date = $date;
+        $this->date = $date ?: new DateTimeImmutable();
     }
+
+
+    /**
+     * Категория производства
+     */
+    public function getAction(): ?UsersTableActionsEventUid
+    {
+        return $this->action;
+    }
+
+    public function setAction(UsersTableActionsEventUid $action): void
+    {
+        $this->action = $action;
+    }
+
+
+    /**
+     * Действие
+     */
+    public function getWorking(): UsersTableActionsWorkingUid
+    {
+        return $this->working;
+    }
+
+    public function setWorking(UsersTableActionsWorkingUid $working): void
+    {
+        $this->working = $working;
+    }
+    
 }

@@ -40,16 +40,15 @@ final class IndexController extends AbstractController
 {
     #[Route('/admin/users/table/actions/{page<\d+>}', name: 'admin.action.index', methods: ['GET', 'POST'])]
     public function index(
-        Request                       $request,
+        Request $request,
         AllUsersTableActionsInterface $allUsersTableActions,
-        int                           $page = 0,
+        int $page = 0,
     ): Response
     {
         // Поиск
         $search = new SearchDTO();
         $searchForm = $this->createForm(SearchForm::class, $search);
         $searchForm->handleRequest($request);
-
 
         // Фильтр
         // $filter = new ProductsStocksFilterDTO($request, $ROLE_ADMIN ? null : $this->getProfileUid());

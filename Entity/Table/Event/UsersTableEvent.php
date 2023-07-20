@@ -26,7 +26,6 @@ declare(strict_types=1);
 namespace BaksDev\Users\UsersTable\Entity\Table\Event;
 
 use BaksDev\Core\Entity\EntityEvent;
-use BaksDev\Reference\Money\Type\Money;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use BaksDev\Users\UsersTable\Entity\Table\Modify\UsersTableModify;
 use BaksDev\Users\UsersTable\Entity\Table\UsersTable;
@@ -153,7 +152,7 @@ class UsersTableEvent extends EntityEvent
     }
 
     /**
-     * Profile.
+     * Профиль пользователя.
      */
     public function getProfile(): UserProfileUid
     {
@@ -161,7 +160,7 @@ class UsersTableEvent extends EntityEvent
     }
 
     /**
-     * Date.
+     * Дата табеля.
      */
     public function getDate(): DateTimeImmutable
     {
@@ -169,7 +168,7 @@ class UsersTableEvent extends EntityEvent
     }
 
     /**
-     * Quantity.
+     * Количество.
      */
     public function getQuantity(): int
     {
@@ -177,12 +176,15 @@ class UsersTableEvent extends EntityEvent
     }
 
     /**
-     * Money.
+     * Действие.
      */
-    public function getMoney(): Money
+    public function getWorking(): UsersTableActionsWorkingUid
     {
-        return $this->money;
+        return $this->working;
     }
+
+
+
 
 //	public function isModifyActionEquals(ModifyActionEnum $action) : bool
 //	{

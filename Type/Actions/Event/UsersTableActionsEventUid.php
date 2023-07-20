@@ -26,9 +26,33 @@ declare(strict_types=1);
 namespace BaksDev\Users\UsersTable\Type\Actions\Event;
 
 use BaksDev\Core\Type\UidType\Uid;
+use Symfony\Component\Uid\AbstractUid;
 
 
 final class UsersTableActionsEventUid extends Uid
 {
     public const TYPE = 'users_table_actions_event_uid';
+    /**
+     * @var mixed|null
+     */
+    private mixed $attr;
+
+    public function __construct(
+        AbstractUid|string|null $value = null,
+        mixed $attr = null
+    )
+    {
+        parent::__construct($value);
+        $this->attr = $attr;
+    }
+
+    /**
+     * Attr
+     */
+    public function getAttr(): mixed
+    {
+        return $this->attr;
+    }
+
+
 }

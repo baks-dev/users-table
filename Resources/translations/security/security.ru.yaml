@@ -1,18 +1,18 @@
 # Роль
 
-ROLE_USERPROFILE:
-  name: 'Профили пользователей'
-  desc: 'Профили пользователей'
+ROLE_USERS_TABLE:
+  name: 'Табели сотрудников'
+  desc: 'Табели учета рабочего времени сотрудников'
 
 # Правила
 
-ROLE_USERPROFILE_NEW:
+ROLE_USERS_TABLE_NEW:
   name: 'Добавить'
 
-ROLE_USERPROFILE_EDIT:
+ROLE_USERS_TABLE_EDIT:
   name: 'Редактировать'
 
-ROLE_USERPROFILE_DELETE:
+ROLE_USERS_TABLE_DELETE:
   name: 'Удалить'
 
 

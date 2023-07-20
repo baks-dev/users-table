@@ -9,12 +9,18 @@
 	</td>
 	
 	
+	<td class="text-nowrap">
+		{# Пользовательское меню #}
+		{{ item.table_date|date('d.m.Y H:s') }}
+	</td>
+
+
 
 	<td class="text-center w-100">
 
 		<div class="d-flex w-50 gap-3">
 
-			{% set img_path = item.users_profile_avatar_cdn == true ? cdn_host : '' %}
+			{% set img_path = item.users_profile_avatar_cdn == true ? CDN_HOST : '' %}
 
 			<div>
 				<a href="{# {{ is_granted('ROLE_ADMIN') ? path('UserProfile:admin.newedit.edit', { id: item.users_profile_event }) : '#' }} #}"
@@ -50,9 +56,17 @@
 
 	</td>
 
+	<td class="text-center">
+		{{ item.table_action }}
+	</td>
 
 	<td class="text-center">
-		{{ item.table_total }}
+		{{ item.table_working }}
 	</td>
+
+	<td class="text-center">
+		{{ item.table_quantity }}
+	</td>
+
 
 </tr>

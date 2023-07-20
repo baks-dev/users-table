@@ -73,6 +73,7 @@ final class UserTableDayHandler
         $UserTableDay = $this->entityManager->getRepository(UsersTableDay::class)->findOneBy(
             [
                 'profile' => $command->getProfile(),
+                'working' => $command->getWorking(),
                 'date' => $command->getDate()
             ]
         );
@@ -82,7 +83,6 @@ final class UserTableDayHandler
             $UserTableDay = new UsersTableDay();
         }
 
-        $command->addTotal($UserTableDay->getTotal());
         $UserTableDay->setEntity($command);
 
         /**
@@ -97,6 +97,7 @@ final class UserTableDayHandler
             $this->logger->error($uniqid.': '.$errorsString);
             return $uniqid;
         }
+
 
         $this->entityManager->persist($UserTableDay);
         $this->entityManager->flush();

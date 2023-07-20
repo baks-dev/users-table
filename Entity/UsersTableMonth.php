@@ -56,7 +56,7 @@ class UsersTableMonth  extends EntityState
     #[Assert\Uuid]
     #[ORM\Id]
     #[ORM\Column(type: UsersTableActionsWorkingUid::TYPE)]
-    private UsersTableActionsWorkingUid $working;
+    private readonly UsersTableActionsWorkingUid $working;
 
     /**
      * Дата ежемесячного табеля (timestamp).
@@ -100,83 +100,6 @@ class UsersTableMonth  extends EntityState
     #[Assert\NotBlank]
     #[ORM\Column(type: Money::TYPE)]
     private Money $premium;
-
-
-
-    /**
-     * Стоимость с учетом коэффициента.
-     */
-
-    // Увеличиваем количество
-    public function addMoney(int $money): void
-    {
-        //$this->money += $money;
-    }
-
-    // Уменьшаем количество
-    public function subMoney(int $money): void
-    {
-        //$this->money -= $money;
-    }
-
-    public function getMoney(): Money
-    {
-        return $this->money;
-    }
-
-    
-
-    /**
-     * Премия за переработку с учетом дневной нормы.
-     */
-    public function getPremium(): Money
-    {
-        return $this->premium;
-    }
-
-    // Увеличиваем количество
-    public function addPremium(int $premium): void
-    {
-        //$this->premium += $money;
-    }
-
-    // Уменьшаем количество
-    public function subPremium(int $premium): void
-    {
-        //$this->premium -= premium;
-    }
-
-
-//    public function __construct(UserProfileUid $profile)
-//    {
-//        $this->profile = $profile;
-//    }
-
-    /**
-     * Количество выполненной работы
-     */
-
-    // Увеличиваем количество
-    public function addTotal(int $total): void
-    {
-        $this->total += $total;
-    }
-
-    // Уменьшаем количество
-    public function subTotal(int $total): void
-    {
-        $this->total -= $total;
-    }
-
-    public function getTotal(): int
-    {
-        return $this->total;
-    }
-
-
-
-
-
 
 
     public function getDto($dto): mixed
