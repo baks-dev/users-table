@@ -33,7 +33,7 @@ $ php bin/phpunit --group=users-table
 ```
 
 ## Лицензия ![License](https://img.shields.io/badge/MIT-green)
-
+[README.md](README.md)
 The MIT License (MIT). Обратитесь к [Файлу лицензии](LICENSE.md) за дополнительной информацией.
 
 
