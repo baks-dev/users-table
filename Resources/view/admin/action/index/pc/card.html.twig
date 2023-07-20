@@ -1,0 +1,35 @@
+{% trans_default_domain("admin.table.actions") %}
+
+<tr class="vertical-middle">
+
+    <td class="text-nowrap">
+        {# Пользовательское меню #}
+        {{ include(_self|replace({ "card.html.twig": "_usecase.html.twig" })) }}
+    </td>
+
+    <td class="w-100">
+
+
+        <a href="{{ is_granted('ROLE_ADMIN') or is_granted('ROLE_USERS_TABLE_ACTIONS_EDIT') ? path('UsersTable:admin.action.newedit.edit', { id: item.event }) : '#' }}"
+
+           class="text-decoration-none text-dark fw-bolder w-100 modal-link w-100 d-flex align-items-center gap-3"
+           data-bs-toggle="modal"
+           data-bs-target="#modal"
+           title="{{ 'btn.delete'|trans({}, 'core.btn') }}"
+
+        >
+
+            {% set img_path = item.category_cover_cdn == true ? CDN_HOST : '' %}
+            {% set category_cover_ext = item.category_cover_cdn == true ? 'small.'~item.category_cover_ext : item.category_cover_ext %}
+
+            <div class="rounded-circle bg-contain lazy p-1" style="width: 50px; height: 50px;"
+                 data-bg="{{ item.category_cover_name ? img_path ~ item.category_cover_name ~ category_cover_ext : '/assets/img/blank.svg' }}">
+            </div>
+
+            {{ item.category_name }}
+        </a>
+
+
+    </td>
+
+</tr>

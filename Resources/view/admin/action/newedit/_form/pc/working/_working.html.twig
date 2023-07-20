@@ -1,0 +1,18 @@
+{% trans_default_domain 'admin.table.actions' %}
+
+<div class="card w-100 border-light">
+
+    <div class="card-body text-start pb-0">
+
+        {# Колелкция действий  #}
+
+        {{ include(_self|replace({ "_working.html.twig": "_trans.html.twig" })) }}
+
+        <div class="d-flex justify-content-between gap-3">
+            {{ form_row(form.coefficient, { label : 'Коэффициет' }) }}
+            {{ form_row(form.norm, { label : 'Дневная норма' }) }}
+            {{ form_row(form.premium, { label : 'Процент премии' }) }}
+        </div>
+
+    </div>
+</div>

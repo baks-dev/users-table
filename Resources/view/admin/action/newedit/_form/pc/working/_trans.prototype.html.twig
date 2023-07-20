@@ -1,0 +1,93 @@
+{% trans_default_domain 'admin.table.actions' %}
+
+
+
+{% set identifier = form.working.vars.prototype.translate.vars.id %}
+
+
+
+{% set local =  form_row(form.working.vars.prototype.translate.vars.prototype.local, { attr : { value : '__working_translate__' }  }) %}
+
+{% set name =  form_row(form.working.vars.prototype.translate.vars.prototype.name, {
+    label : 'admin.form.label.working.trans.name'|trans
+}) %}
+
+{# {% set description =  form_row(form.translate.vars.prototype.description, {
+	label : 'Кратское описание'|trans
+})  %} #}
+
+
+
+{% if baks_settings.locales|length > 1 %}
+
+    <ul class="nav nav-pills gap-3 mb-3" id="nav-{{ identifier }}" role="tablist">
+
+        {% for translate in baks_settings.locales %}
+
+            <li class="nav-item" role="presentation">
+                <button class="btn fw-bolder nav-link{{ app.request.locale == translate ? ' active' : '' }}"
+                        data-bs-toggle="tab"
+                        type="button"
+                        role="tab"
+                        aria-selected="true"
+
+                        id="nav-{{ identifier }}-{{ translate }}-tab"
+                        data-bs-target="#nav-{{ identifier }}-{{ translate }}"
+                        aria-controls="nav-{{ identifier }}-{{ translate }}"
+                >
+                    <small class="text-uppercase px-3">{{ translate|trans({}, 'core') }}</small>
+                </button>
+            </li>
+
+        {% endfor %}
+    </ul>
+
+{% endif %}
+
+<div class="d-flex justify-content-between gap-3 align-items-end">
+
+
+    <div class="mb-3">
+        <button type="button"
+                class="btn-outline-danger del-item-working border-0 btn"
+                data-delete="item_{{ form.working.vars.prototype.vars.id }}">
+            <span class="svg-icon svg-icon-2 text-nowrap">
+                <svg
+                        xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 25 25" fill="none">
+                    <rect
+                            opacity="0.5" x="7.05025" y="15.5356" width="12" height="2" rx="1"
+                            transform="rotate(-45 7.05025 15.5356)" fill="currentColor"></rect>
+                    <rect x="8.46447"
+                          y="7.05029"
+                          width="12"
+                          height="2" rx="1"
+                          transform="rotate(45 8.46447 7.05029)"
+                          fill="currentColor"></rect>
+                </svg></span>
+        </button>
+    </div>
+
+    {{ form_row(form.working.vars.prototype.sort, { label : 'Сортировка', attr: { value: 500 } }) }}
+
+    <div class="tab-content w-100" id="nav-{{ identifier }}-content">
+
+
+        {% for translate in baks_settings.locales %}
+
+            <div class="tab-pane fade{{ app.request.locale == translate ? ' show active' : '' }}"
+                 id="nav-{{ identifier }}-{{ translate }}" role="tabpanel"
+                 aria-labelledby="nav-{{ identifier }}-{{ translate }}-tab">
+
+                {# Локаль #}
+                {{ local|replace({ '__working_translate__' : translate })|raw }}
+
+                {#  Название товара  #}
+                {{ name|replace({ '__working_translate__' : translate })|raw }}
+
+
+            </div>
+        {% endfor %}
+
+    </div>
+
+</div>

@@ -1,0 +1,36 @@
+{% trans_default_domain 'admin.table.actions' %}
+
+
+<div class="card-body text-start pb-0">
+    {# Настройки локали  #}
+    {#{{ include(_self|replace({ "form.html.twig": "_trans.html.twig" })) }}#}
+
+    {{ form_row(form.category, {
+        label: 'admin.form.label.category.name'|trans,
+        placeholder: 'admin.form.label.category.placeholder'|trans,
+        attr: { 'data-select' : 'select2' }
+    }) }}
+
+</div>
+
+
+
+
+
+
+
+{# Колелкция действий  #}
+
+<h4>
+    {# Действия сотрудников #}
+    {{ 'admin.form.header.working'|trans }}
+</h4>
+
+<div id="collection-working">
+    {% for form in form.working %}
+        <div class='mb-3' id='item_{{ form.vars.id }}'>
+            {{ include(_self|replace({ "form.html.twig": "/working/_working.html.twig" })) }}
+        </div>
+    {% endfor %}
+</div>
+
