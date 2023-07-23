@@ -47,3 +47,4 @@ final class VoterDelete implements VoterFixturesInterface
         return $role->getRole() === Role::ROLE;
     }
 }
+

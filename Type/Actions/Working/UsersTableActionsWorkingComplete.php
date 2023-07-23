@@ -23,28 +23,22 @@
 
 declare(strict_types=1);
 
-namespace BaksDev\Users\UsersTable\Security\Actions;
+namespace BaksDev\Users\UsersTable\Type\Actions\Working;
 
-use BaksDev\Users\Groups\Group\DataFixtures\Security\RoleFixturesInterface;
-use BaksDev\Users\Groups\Group\DataFixtures\Security\VoterFixturesInterface;
-use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
+use BaksDev\Core\Type\UidType\Uid;
 
-#[AutoconfigureTag('baks.security.voter')]
-final class VoterEdit implements VoterFixturesInterface
+
+final class UsersTableActionsWorkingComplete extends Uid
 {
-    /**
-     * Редактировать
-     */
-    public const VOTER = 'EDIT';
+    public const TEST = '01895aa7-8acc-776f-b8b6-d726d029042c';
+    
+    public const TYPE = 'users_table_actions_working';
 
-    public static function getVoter(): string
-    {
-        return Role::ROLE.'_'.self::VOTER;
-    }
+    /** Идентификатор завершенного процесса */
+    public const COMPLETE = '01897e7c-3e0d-7350-90ba-bccaa2cf282a';
 
-    public function equals(RoleFixturesInterface $role): bool
+    public function __construct()
     {
-        return $role->getRole() === Role::ROLE;
+        parent::__construct(self::COMPLETE);
     }
 }
-

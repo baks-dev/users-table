@@ -39,9 +39,9 @@ use Symfony\Config\DoctrineConfig;
 
 return static function(ContainerConfigurator $container, DoctrineConfig $doctrine)
 {
+
     $doctrine->dbal()->type(UsersTableUid::TYPE)->class(UsersTableType::class);
     $doctrine->dbal()->type(UsersTableEventUid::TYPE)->class(UsersTableEventType::class);
-
 
     $doctrine->dbal()->type(UsersTableActionsUid::TYPE)->class(UsersTableActionsType::class);
     $doctrine->dbal()->type(UsersTableActionsEventUid::TYPE)->class(UsersTableActionsEventType::class);

@@ -27,7 +27,6 @@ namespace BaksDev\Users\UsersTable\Type\Table\Event;
 
 use BaksDev\Core\Type\UidType\Uid;
 
-
 final class UsersTableEventUid extends Uid
 {
     public const TYPE = 'users_table_event';

@@ -89,6 +89,11 @@ final class UpdateUsersTableDay
                 $UsersTableEvent->getWorking()
             );
 
+            if(!$UsersTableActionWorking)
+            {
+                return;
+            }
+
             /**
              * Количество выполненной работы.
              */

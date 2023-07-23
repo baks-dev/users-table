@@ -55,6 +55,7 @@ class UsersTableEvent extends EntityEvent
     #[ORM\Column(type: UsersTableEventUid::TYPE)]
     private UsersTableEventUid $id;
 
+
     /**
      * Идентификатор UsersTable.
      */

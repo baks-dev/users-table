@@ -25,8 +25,6 @@ declare(strict_types=1);
 
 namespace BaksDev\Users\UsersTable\Messenger\Table;
 
-
-
 use BaksDev\Users\UsersTable\Type\Table\Event\UsersTableEventUid;
 use BaksDev\Users\UsersTable\Type\Table\Id\UsersTableUid;
 
@@ -43,9 +41,9 @@ final class UsersTableMessage
 
     public function __construct(UsersTableUid $id, UsersTableEventUid $event, ?UsersTableEventUid $last = null)
     {
-        $this->last = $last;
         $this->id = $id;
         $this->event = $event;
+        $this->last = $last;
     }
 
     /** Идентификатор */

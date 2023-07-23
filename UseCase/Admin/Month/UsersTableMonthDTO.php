@@ -155,6 +155,10 @@ final class UsersTableMonthDTO implements UsersTableDayInterface
         $this->money = $money;
     }
 
+    public function addMoney(Money $money) : void
+    {
+        $this->money->add($money);
+    }
 
     /**
      * Премия за переработку
@@ -169,5 +173,9 @@ final class UsersTableMonthDTO implements UsersTableDayInterface
         $this->premium = $premium;
     }
 
+    public function addPremium(Money $money) : void
+    {
+        $this->premium->add($money);
+    }
 
 }

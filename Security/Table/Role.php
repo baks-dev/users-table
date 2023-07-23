@@ -35,7 +35,7 @@ use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 #[AutoconfigureTag('baks.menu.admin')]
 final class Role implements RoleFixturesInterface, MenuAdminInterface
 {
-    /** Транспорт доставки заказов */
+    /** Табели сотрудников */
     public const ROLE = 'ROLE_USERS_TABLE';
 
     public function getRole(): string
@@ -85,3 +85,4 @@ final class Role implements RoleFixturesInterface, MenuAdminInterface
         return false;
     }
 }
+

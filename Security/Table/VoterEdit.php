@@ -47,3 +47,4 @@ final class VoterEdit implements VoterFixturesInterface
         return $role->getRole() === Role::ROLE;
     }
 }
+

@@ -31,6 +31,7 @@ use BaksDev\Users\UsersTable\Entity\Actions\Working\UsersTableActionsWorking;
 use BaksDev\Users\UsersTable\Entity\Table\Event\UsersTableEvent;
 use BaksDev\Users\UsersTable\Entity\UsersTableDay;
 use BaksDev\Users\UsersTable\Entity\UsersTableMonth;
+use BaksDev\Users\UsersTable\Repository\DayUsersTable\PremiumCurrentMonth\PremiumCurrentMonthRepositoryInterface;
 use BaksDev\Users\UsersTable\UseCase\Admin\Month\UsersTableMonthDTO;
 use BaksDev\Users\UsersTable\UseCase\Admin\Month\UserTableMonthHandler;
 use Doctrine\ORM\EntityManagerInterface;
@@ -38,7 +39,7 @@ use DomainException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
-#[AsMessageHandler(priority: 99)]
+#[AsMessageHandler(priority: 0)] // В начале выполняется дневной табель
 final class UpdateUsersTableMonth
 {
     private EntityManagerInterface $entityManager;
@@ -46,15 +47,19 @@ final class UpdateUsersTableMonth
     private LoggerInterface $logger;
 
     private UserTableMonthHandler $tableMonthHandler;
+    private PremiumCurrentMonthRepositoryInterface $premiumCurrentMonthRepository;
 
     public function __construct(
         EntityManagerInterface $entityManager,
         LoggerInterface $messageDispatchLogger,
-        UserTableMonthHandler $tableMonthHandler
-    ) {
+        UserTableMonthHandler $tableMonthHandler,
+        PremiumCurrentMonthRepositoryInterface $premiumCurrentMonthRepository
+    )
+    {
         $this->entityManager = $entityManager;
         $this->logger = $messageDispatchLogger;
         $this->tableMonthHandler = $tableMonthHandler;
+        $this->premiumCurrentMonthRepository = $premiumCurrentMonthRepository;
     }
 
     /**
@@ -62,9 +67,10 @@ final class UpdateUsersTableMonth
      */
     public function __invoke(UsersTableMessage $message): void
     {
-
         $this->logger->info('MessageHandler', ['handler' => self::class]);
+        $this->logger->info('MessageData', [$message->getId(), $message->getEvent()]);
 
+        
         /** Получаем добавленный табель пользователя */
         $UsersTableEvent = $this->entityManager->getRepository(UsersTableEvent::class)->find($message->getEvent());
 
@@ -76,13 +82,12 @@ final class UpdateUsersTableMonth
             $UsersTableMonthDTO->setDate($UsersTableEvent->getDate());
 
 
-
             /** Получаем Ежемесячный табель сотрудника */
 
             $UsersTableMonth = $this->entityManager->getRepository(UsersTableMonth::class)->findOneBy([
                 'profile' => $UsersTableMonthDTO->getProfile(),
                 'working' => $UsersTableMonthDTO->getWorking(),
-                'date'    => $UsersTableMonthDTO->getDate()
+                'date' => $UsersTableMonthDTO->getDate()
             ]);
 
             $UsersTableMonth?->getDto($UsersTableMonthDTO);
@@ -94,45 +99,45 @@ final class UpdateUsersTableMonth
             );
 
 
-            /** Получаем дневной табель сотрудника для расчета премии */
+            if(!$UsersTableActionWorking)
+            {
+                return;
+            }
+
+
+            //$UsersTableDayDTO = new UsersTableDayDTO();
+
+            /** Получаем дневной табель сотрудника */
             $UsersTableDateDay = $UsersTableEvent->getDate()->setTime(0, 0)->getTimestamp();
             $UsersTableDay = $this->entityManager->getRepository(UsersTableDay::class)->findOneBy([
                 'profile' => $UsersTableMonthDTO->getProfile(),
                 'working' => $UsersTableMonthDTO->getWorking(),
-                'date'    => $UsersTableDateDay
+                'date' => $UsersTableDateDay
             ]);
 
-
-            /**
-             * Количество выполненной работы.
-             */
+            /* Добавляем количество выполненной работы */
             $UsersTableMonthDTO->addTotal($UsersTableEvent->getQuantity());
 
-            /**
-             * Стоимость работы с учетом коэффициента.
-             */
+            /* Добавляем стоимость */
             $moneyCoefficient = ($UsersTableMonthDTO->getTotal() * $UsersTableActionWorking->getCoefficient());
-            $UsersTableMonthDTO->setMoney(new Money($moneyCoefficient));
-
-
+            $UsersTableMonthDTO->addMoney(new Money($moneyCoefficient));
 
 
             /**
-             * Премия за переработку с учетом дневной нормы.
+             *
+             * Если была Выполнена дневная норма - делаем перерасчет премии
              */
-            if($UsersTableDay && $UsersTableDay->getTotal() > $UsersTableActionWorking->getNorm())
+           if($UsersTableDay && $UsersTableDay->getTotal() > $UsersTableActionWorking->getNorm())
             {
-                $premiumCoefficient = ($UsersTableActionWorking->getCoefficient() * $UsersTableActionWorking->getPremium()) / 100;
-                $premiumTotal = $UsersTableDay->getTotal() - $UsersTableActionWorking->getNorm();
-                $moneyPremium = $premiumTotal * $premiumCoefficient;
+                $moneyPremium = $this->premiumCurrentMonthRepository
+                    ->getSumPremium($UsersTableMonthDTO->getProfile(), $UsersTableMonthDTO->getWorking());
 
                 $UsersTableMonthDTO->setPremium(new Money($moneyPremium));
             }
 
-
             $UserTableDayHandler = $this->tableMonthHandler->handle($UsersTableMonthDTO);
-            
-            if (!$UserTableDayHandler instanceof UsersTableMonth)
+
+            if(!$UserTableDayHandler instanceof UsersTableMonth)
             {
                 throw new DomainException(sprintf('%s: Ошибка при обновлении дневного табеля', $UserTableDayHandler));
             }

@@ -47,3 +47,4 @@ final class VoterNew implements VoterFixturesInterface
         return $role->getRole() === Role::ROLE;
     }
 }
+

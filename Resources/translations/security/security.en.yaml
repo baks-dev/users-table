@@ -14,3 +14,16 @@ ROLE_USERS_TABLE_EDIT:
 
 ROLE_USERS_TABLE_DELETE:
   name: 'Delete'
+
+ROLE_USERS_TABLE_ACTIONS:
+  name: 'Production steps'
+  desc: 'Production steps'
+  
+ROLE_USERS_TABLE_ACTIONS_NEW:
+  name: 'Add'
+
+ROLE_USERS_TABLE_ACTIONS_EDIT:
+  name: 'Edit'
+
+ROLE_USERS_TABLE_ACTIONS_DELETE:
+  name: 'Delete'

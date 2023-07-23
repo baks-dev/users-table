@@ -16,3 +16,16 @@ ROLE_USERS_TABLE_DELETE:
   name: 'Удалить'
 
 
+ROLE_USERS_TABLE_ACTIONS:
+  name: 'Этапы производства продукции'
+  desc: 'Этапы производства продукции'
+
+
+ROLE_USERS_TABLE_ACTIONS_NEW:
+  name: 'Добавить'
+
+ROLE_USERS_TABLE_ACTIONS_EDIT:
+  name: 'Редактировать'
+
+ROLE_USERS_TABLE_ACTIONS_DELETE:
+  name: 'Удалить'

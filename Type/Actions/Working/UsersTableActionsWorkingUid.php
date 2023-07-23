@@ -35,6 +35,9 @@ final class UsersTableActionsWorkingUid extends Uid
     
     public const TYPE = 'users_table_actions_working';
 
+    /** Идентификатор завершенного процесса */
+    public const COMPLETE = '01897e7c-3e0d-7350-90ba-bccaa2cf282a';
+
     private mixed $attr;
 
     private mixed $option;

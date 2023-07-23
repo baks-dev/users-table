@@ -25,17 +25,63 @@ declare(strict_types=1);
 
 namespace BaksDev\Users\UsersTable\Security\Actions;
 
+use BaksDev\Menu\Admin\Command\Upgrade\MenuAdminInterface;
+use BaksDev\Menu\Admin\Type\SectionGroup\Group\Collection\MenuAdminSectionGroupCollectionInterface;
+use BaksDev\Menu\Admin\Type\SectionGroup\Group\MenuGroupSettings;
 use BaksDev\Users\Groups\Group\DataFixtures\Security\RoleFixturesInterface;
 use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 
 #[AutoconfigureTag('baks.security.role')]
-final class Role implements RoleFixturesInterface
+final class Role implements RoleFixturesInterface, MenuAdminInterface
 {
-    /** Транспорт доставки заказов */
+    /** Этапы производства продукции */
     public const ROLE = 'ROLE_USERS_TABLE_ACTIONS';
 
     public function getRole(): string
     {
         return self::ROLE;
     }
+    
+    /**
+     * Добавляем раздел в меню администрирования.
+     */
+
+    /** Метод возвращает PATH раздела */
+    public function getPath(): string
+    {
+        return 'UsersTable:admin.action.index';
+    }
+
+    /**
+     * Метод возвращает секцию, в которую помещается ссылка на раздел.
+     */
+    public function getGroupMenu(): MenuAdminSectionGroupCollectionInterface|bool
+    {
+        return new MenuGroupSettings();
+    }
+
+    /**
+     * Метод возвращает позицию, в которую располагается ссылка в секции меню.
+     */
+    public function getSortMenu(): int
+    {
+        return 300;
+    }
+
+    /**
+     * Метод возвращает флаг "Показать в выпадающем меню".
+     */
+    public function getDropdownMenu(): bool
+    {
+        return true;
+    }
+
+    /**
+     * Метод возвращает флаг "Модальное окно".
+     */
+    public function getModal(): bool
+    {
+        return false;
+    }
 }
+

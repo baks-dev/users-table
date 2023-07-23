@@ -72,6 +72,7 @@ final class UserTableMonthHandler
         $UsersTableMonth = $this->entityManager->getRepository(UsersTableMonth::class)->findOneBy(
             [
                 'profile' => $command->getProfile(),
+                'working' => $command->getWorking(),
                 'date' => $command->getDate()
             ]
         );

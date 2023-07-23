@@ -21,30 +21,15 @@
  *  THE SOFTWARE.
  */
 
-declare(strict_types=1);
+namespace BaksDev\Users\UsersTable\Repository\DayUsersTable\PremiumCurrentMonth;
 
-namespace BaksDev\Users\UsersTable\Security\Actions;
+use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
+use BaksDev\Users\UsersTable\Type\Actions\Working\UsersTableActionsWorkingUid;
 
-use BaksDev\Users\Groups\Group\DataFixtures\Security\RoleFixturesInterface;
-use BaksDev\Users\Groups\Group\DataFixtures\Security\VoterFixturesInterface;
-use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
-
-#[AutoconfigureTag('baks.security.voter')]
-final class VoterEdit implements VoterFixturesInterface
+interface PremiumCurrentMonthRepositoryInterface
 {
     /**
-     * Редактировать
+     * Метод возвращает сумму премии за текущий месяц за указанное действие
      */
-    public const VOTER = 'EDIT';
-
-    public static function getVoter(): string
-    {
-        return Role::ROLE.'_'.self::VOTER;
-    }
-
-    public function equals(RoleFixturesInterface $role): bool
-    {
-        return $role->getRole() === Role::ROLE;
-    }
+    public function getSumPremium(UserProfileUid $profile, UsersTableActionsWorkingUid $working): int|float;
 }
-
