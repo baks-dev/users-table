@@ -178,7 +178,7 @@ final class UsersTableDeleteHandler
         /* Отправляем сообщение в шину */
         $this->messageDispatch->dispatch(
             message: new UsersTableMessage($Main->getId(), $Main->getEvent(), $command->getEvent()),
-            transport: 'users_table'
+            transport: 'users-table'
         );
         
         return $Main;

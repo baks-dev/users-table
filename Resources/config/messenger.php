@@ -27,13 +27,12 @@ use Symfony\Config\FrameworkConfig;
 
 return static function (FrameworkConfig $framework) {
 
-    /** Транспорт отправки сообщений */
     $messenger = $framework->messenger();
 
     $messenger
-        ->transport('users_table')
+        ->transport('users-table')
         ->dsn('%env(MESSENGER_TRANSPORT_DSN)%')
-        ->options(['queue_name' => 'users_table'])
+        ->options(['queue_name' => 'users-table'])
         ->retryStrategy()
         ->maxRetries(5)
         ->delay(1000)

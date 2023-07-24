@@ -166,7 +166,7 @@ final class UsersTableHandler
         /* Отправляем сообщение в шину */
         $this->messageDispatch->dispatch(
             message: new UsersTableMessage($Main->getId(), $Main->getEvent(), $command->getEvent()),
-            transport: 'users_table'
+            transport: 'users-table'
         );
 
         // 'users_table_high'

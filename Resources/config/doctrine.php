@@ -49,13 +49,13 @@ return static function(ContainerConfigurator $container, DoctrineConfig $doctrin
     $doctrine->dbal()->type(UsersTableActionsWorkingConst::TYPE)->class(UsersTableActionsWorkingConstType::class);
 
 
-	$emDefault = $doctrine->orm()->entityManager('default');
-	
-	$emDefault->autoMapping(true);
-    
-	$emDefault->mapping('UsersTable')
+    $emDefault = $doctrine->orm()->entityManager('default')->autoMapping(true);
+
+    $MODULE = substr(__DIR__, 0, strpos(__DIR__, "Resources"));
+
+    $emDefault->mapping('UsersTable')
 		->type('attribute')
-		->dir(__DIR__.'/../../Entity')
+		->dir($MODULE.'Entity')
 		->isBundle(false)
 		->prefix('BaksDev\Users\UsersTable')
 		->alias('UsersTable')
