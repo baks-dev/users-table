@@ -160,6 +160,11 @@ final class UsersTableMonthDTO implements UsersTableDayInterface
         $this->money->add($money);
     }
 
+    public function subMoney(Money $money) : void
+    {
+        $this->money->sub($money);
+    }
+
     /**
      * Премия за переработку
      */

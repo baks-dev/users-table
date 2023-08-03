@@ -25,25 +25,25 @@ declare(strict_types=1);
 
 namespace BaksDev\Users\UsersTable\Repository\Actions\UsersTableActionsWorkingChoice;
 
+use BaksDev\Core\Doctrine\ORMQueryBuilder;
 use BaksDev\Core\Type\Locale\Locale;
 use BaksDev\Users\UsersTable\Entity\Actions\Working\Trans\UsersTableActionsWorkingTrans;
 use BaksDev\Users\UsersTable\Entity\Actions\Working\UsersTableActionsWorking;
 use BaksDev\Users\UsersTable\Type\Actions\Event\UsersTableActionsEventUid;
 use BaksDev\Users\UsersTable\Type\Actions\Working\UsersTableActionsWorkingUid;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class UsersTableActionsWorkingChoice implements UsersTableActionsWorkingChoiceInterface
 {
-    private EntityManagerInterface $entityManager;
 
     private TranslatorInterface $translator;
+    private ORMQueryBuilder $ORMQueryBuilder;
 
-    public function __construct(EntityManagerInterface $entityManager, TranslatorInterface $translator)
+    public function __construct(ORMQueryBuilder $ORMQueryBuilder, TranslatorInterface $translator)
     {
-        $this->entityManager = $entityManager;
+
         $this->translator = $translator;
+        $this->ORMQueryBuilder = $ORMQueryBuilder;
     }
 
     /**
@@ -51,7 +51,7 @@ final class UsersTableActionsWorkingChoice implements UsersTableActionsWorkingCh
      */
     public function getCollection(UsersTableActionsEventUid $event): ?array
     {
-        $qb = $this->entityManager->createQueryBuilder();
+        $qb = $this->ORMQueryBuilder->createQueryBuilder(self::class);
         $locale = new Locale($this->translator->getLocale());
 
         $select = sprintf('new %s(working.id, working.const, trans.name)', UsersTableActionsWorkingUid::class);
@@ -69,22 +69,11 @@ final class UsersTableActionsWorkingChoice implements UsersTableActionsWorkingCh
 
         $qb->setParameter('local', $locale, Locale::TYPE);
 
-        
         $qb->where('working.event = :event');
         $qb->setParameter('event', $event, UsersTableActionsEventUid::TYPE);
 
-        // Кешируем результат ORM
-        $cacheQueries = new FilesystemAdapter('UsersTable');
 
-        $query = $this->entityManager->createQuery($qb->getDQL());
-        $query->setQueryCache($cacheQueries);
-        $query->setResultCache($cacheQueries);
-        $query->enableResultCache();
-        $query->setLifetime(60 * 60 * 24);
-        $query->setParameters($qb->getParameters());
-
-        return $query->getResult();
-
-        return $qb->getQuery()->getResult();
+        /* Кешируем результат ORM */
+        return $qb->enableCache('UsersTable', 86400)->getResult();
     }
 }

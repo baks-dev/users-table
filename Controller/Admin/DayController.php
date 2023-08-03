@@ -34,8 +34,10 @@ use BaksDev\Users\UsersTable\Forms\DayUsersTableFilter\Admin\DayTableFilterFilte
 use BaksDev\Users\UsersTable\Repository\DayUsersTable\DayUsersTableInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Routing\Annotation\Route;
 
+#[AsController]
 #[RoleSecurity('ROLE_USERS_TABLE')]
 final class DayController extends AbstractController
 {

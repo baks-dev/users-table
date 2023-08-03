@@ -54,9 +54,16 @@ final class UsersTableActionsDTO implements UsersTableActionsEventInterface
     private ArrayCollection $working;
 
 
+    /**
+     * Продукция для привязки к процессу
+     */
+    #[Assert\Valid]
+    private ArrayCollection $product;
+
     public function __construct()
     {
         $this->working = new ArrayCollection();
+        $this->product = new ArrayCollection();
     }
 
 
@@ -98,9 +105,19 @@ final class UsersTableActionsDTO implements UsersTableActionsEventInterface
         return $this->working;
     }
 
+    public function setWorking(ArrayCollection $working): void
+    {
+        $this->working = $working;
+    }
+
     public function addWorking(Working\UsersTableActionsWorkingDTO $working): void
     {
-        if(!$this->working->contains($working))
+        $filter = $this->working->filter(function(Working\UsersTableActionsWorkingDTO $element) use ($working)
+        {
+            return $working->getConst()->equals($element->getConst());
+        });
+
+        if($filter->isEmpty())
         {
             $this->working->add($working);
         }
@@ -112,9 +129,38 @@ final class UsersTableActionsDTO implements UsersTableActionsEventInterface
         $this->working->removeElement($working);
     }
 
-    public function setWorking(ArrayCollection $working): void
+
+
+    /**
+     * Продукция для привязки к процессу
+     */
+    public function getProduct(): ArrayCollection
     {
-        $this->working = $working;
+        return $this->product;
     }
 
+    public function setProduct(ArrayCollection $product): self
+    {
+        $this->product = $product;
+        return $this;
+    }
+
+    public function addProduct(Products\UsersTableActionsProductDTO $product): void
+    {
+        $filter = $this->product->filter(function(Products\UsersTableActionsProductDTO $element) use ($product)
+        {
+            return $product->getProduct()->equals($element->getProduct());
+        });
+
+        if($filter->isEmpty())
+        {
+            $this->product->add($product);
+        }
+    }
+
+    public function removeProduct(Products\UsersTableActionsProductDTO $product): void
+    {
+        $this->product->removeElement($product);
+    }
+    
 }

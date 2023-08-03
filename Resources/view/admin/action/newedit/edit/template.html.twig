@@ -1,6 +1,11 @@
 {# ---- ШАБЛОН ------------------------------------------------------------ #}
 {% extends Template('/admin/base.html.twig') %}
 
+{% block stylesheets %}
+	<link href="/assets/plugins/nice-select2/nice-select2.min.css" rel="stylesheet">
+{% endblock %}
+
+
 {# ---- КОНТЕНТ-БЛОК ------------------------------------------------------------ #}
 {% block content %}
 	{{ include(_self|replace({ "template.html.twig": baks_settings.device~"/content.html.twig" })) }}
@@ -8,5 +13,6 @@
 
 
 {% block javascript %}
-{#<script defer src="{{ path(app.request.attributes.get('_route')~'.js') }}"></script>#}
+<script async data-src='/assets/plugins/nice-select2/nice-select2.min.js?v={{ version }}' class='lazy'></script>
+<script async nonce="{{ csp_nonce() }}" data-src="/assets/users_table/script.min.js?v={{ version }}"  class="lazy"></script>
 {% endblock %}

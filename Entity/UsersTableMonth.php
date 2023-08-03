@@ -82,6 +82,7 @@ class UsersTableMonth  extends EntityState
     /**
      * Количество выполненной работы
      */
+    #[Assert\NotBlank]
     #[ORM\Column(type: Types::INTEGER, options: ['default' => 0])]
     private int $total = 0;
 

@@ -35,8 +35,10 @@ use BaksDev\Users\UsersTable\UseCase\Admin\Actions\Delete\UsersTableActionsDelet
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Routing\Annotation\Route;
 
+#[AsController]
 #[RoleSecurity('ROLE_USERS_TABLE_ACTIONS_DELETE')]
 final class DeleteController extends AbstractController
 {
@@ -65,15 +67,15 @@ final class DeleteController extends AbstractController
 
             if($UsersTableActions instanceof UsersTableActions)
             {
-                $this->addFlash('admin.form.header.delete', 'admin.success.delete', 'admin.table.actions');
+                $this->addFlash('admin.page.delete', 'admin.success.delete', 'admin.table.actions');
 
                 return $this->redirectToRoute('UsersTable:admin.action.index');
             }
 
             $this->addFlash(
-                'admin.form.header.delete',
+                'admin.page.delete',
                 'admin.danger.delete',
-                'admin.contacts.region',
+                'admin.table.actions',
                 $UsersTableActions
             );
 
@@ -82,7 +84,6 @@ final class DeleteController extends AbstractController
 
         return $this->render([
             'form' => $form->createView(),
-            'name' => $UsersTableActionsEvent->getNameByLocale($this->getLocale()), // название согласно локали
         ]);
     }
 }

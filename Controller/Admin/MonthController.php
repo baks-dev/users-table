@@ -34,8 +34,10 @@ use BaksDev\Users\UsersTable\Forms\MonthUsersTableFilter\Admin\MonthTableFilterF
 use BaksDev\Users\UsersTable\Repository\MonthUsersTable\MonthUsersTableInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Routing\Annotation\Route;
 
+#[AsController]
 #[RoleSecurity('ROLE_USERS_TABLE')]
 final class MonthController extends AbstractController
 {

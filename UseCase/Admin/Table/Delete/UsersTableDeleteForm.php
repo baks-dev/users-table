@@ -36,14 +36,12 @@ final class UsersTableDeleteForm extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        //$builder->add('image', TextType::class, ['required' => false]);
-
         /* Сохранить ******************************************************/
         $builder->add(
             'users_table_delete', SubmitType::class, [
                 'label' => 'Save',
                 'label_html' => true,
-                'attr' => ['class' => 'btn-primary']
+                ['label' => 'Delete', 'label_html' => true, 'attr' => ['class' => 'btn-danger']]
             ]
         );
     }

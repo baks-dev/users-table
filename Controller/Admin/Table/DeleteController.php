@@ -29,11 +29,14 @@ namespace BaksDev\Users\UsersTable\Controller\Admin\Table;
 use BaksDev\Core\Controller\AbstractController;
 use BaksDev\Core\Listeners\Event\Security\RoleSecurity;
 use BaksDev\Users\UsersTable\Entity\Table\Event\UsersTableEvent;
+use BaksDev\Users\UsersTable\UseCase\Admin\Table\Delete\UsersTableDeleteHandler;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Routing\Annotation\Route;
 
+#[AsController]
 #[RoleSecurity('ROLE_USERS_TABLE_DELETE')]
 final class DeleteController extends AbstractController
 {
@@ -45,6 +48,7 @@ final class DeleteController extends AbstractController
     ): Response
     {
 
+        dd('/admin/users/table/delete');
 
         $UsersTableDeleteDTO = new UsersTableDeleteDTO();
         $UsersTableEvent->getDto($UsersTableDeleteDTO);
@@ -61,15 +65,15 @@ final class DeleteController extends AbstractController
 
             if($UsersTable instanceof UsersTable)
             {
-                $this->addFlash('admin.form.header.delete', 'admin.success.delete', 'admin.users.table');
+                $this->addFlash('admin.page.delete', 'admin.success.delete', 'admin.users.table');
 
                 return $this->redirectToRoute('UsersTable:admin.index');
             }
 
             $this->addFlash(
-                'admin.form.header.delete',
+                'admin.page.delete',
                 'admin.danger.delete',
-                'admin.contacts.region',
+                'admin.users.table',
                 $UsersTable
             );
 

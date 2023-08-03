@@ -25,10 +25,9 @@ declare(strict_types=1);
 
 namespace BaksDev\Users\UsersTable\Repository\MonthUsersTable;
 
+use BaksDev\Core\Doctrine\DBALQueryBuilder;
 use BaksDev\Core\Form\Search\SearchDTO;
 use BaksDev\Core\Services\Paginator\PaginatorInterface;
-use BaksDev\Core\Services\Switcher\SwitcherInterface;
-use BaksDev\Core\Type\Locale\Locale;
 use BaksDev\Products\Category\Entity\ProductCategory;
 use BaksDev\Products\Category\Entity\Trans\ProductCategoryTrans;
 use BaksDev\Users\Groups\Group\Entity\Group;
@@ -41,44 +40,39 @@ use BaksDev\Users\Profile\UserProfile\Entity\Info\UserProfileInfo;
 use BaksDev\Users\Profile\UserProfile\Entity\Personal\UserProfilePersonal;
 use BaksDev\Users\Profile\UserProfile\Entity\UserProfile;
 use BaksDev\Users\UsersTable\Entity\Actions\Event\UsersTableActionsEvent;
-use BaksDev\Users\UsersTable\Entity\Actions\Trans\UsersTableActionsTrans;
 use BaksDev\Users\UsersTable\Entity\Actions\Working\Trans\UsersTableActionsWorkingTrans;
 use BaksDev\Users\UsersTable\Entity\Actions\Working\UsersTableActionsWorking;
 use BaksDev\Users\UsersTable\Entity\UsersTableMonth;
 use BaksDev\Users\UsersTable\Forms\DayUsersTableFilter\DayUsersTableFilterInterface;
 use DateTimeImmutable;
-use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class MonthUsersTable implements MonthUsersTableInterface
 {
-    private Connection $connection;
-
     private PaginatorInterface $paginator;
-
-    private SwitcherInterface $switcher;
-
-    private TranslatorInterface $translator;
+    private DBALQueryBuilder $DBALQueryBuilder;
 
     public function __construct(
-        Connection $connection,
+        DBALQueryBuilder $DBALQueryBuilder,
         PaginatorInterface $paginator,
-        SwitcherInterface $switcher,
-        TranslatorInterface $translator,
-    ) {
-        $this->connection = $connection;
+    )
+    {
+
         $this->paginator = $paginator;
-        $this->switcher = $switcher;
-        $this->translator = $translator;
+        $this->DBALQueryBuilder = $DBALQueryBuilder;
     }
 
     /** Метод возвращает пагинатор UsersTableDay */
-    public function fetchMonthUsersTableAssociative(SearchDTO $search, DayUsersTableFilterInterface $filter = null): PaginatorInterface
+    public function fetchMonthUsersTableAssociative(
+        SearchDTO $search,
+        DayUsersTableFilterInterface $filter = null
+    ): PaginatorInterface
     {
-        $qb = $this->connection->createQueryBuilder();
+        $qb = $this->DBALQueryBuilder
+            ->createQueryBuilder(self::class)
+            ->bindLocal()
+        ;
 
-        $local = new Locale($this->translator->getLocale());
 
         $qb->addSelect('users_table_day.total AS table_total');
         $qb->addSelect('users_table_day.date_table AS table_date');
@@ -140,8 +134,6 @@ final class MonthUsersTable implements MonthUsersTableInterface
 
 
 
-        $qb->setParameter('local', $local, Locale::TYPE);
-
         // ОТВЕТСТВЕННЫЙ
 
         // UserProfile
@@ -194,14 +186,14 @@ final class MonthUsersTable implements MonthUsersTableInterface
 
         // Группа
 
-        $qb->join(
+        $qb->leftJoin(
             'users_profile_info',
             CheckUsers::TABLE,
             'check_user',
             'check_user.user_id = users_profile_info.user_id'
         );
 
-        $qb->join(
+        $qb->leftJoin(
             'check_user',
             CheckUsersEvent::TABLE,
             'check_user_event',
@@ -224,36 +216,21 @@ final class MonthUsersTable implements MonthUsersTableInterface
             'groups_trans.event = groups.event AND groups_trans.local = :local'
         );
 
-        $qb->setParameter('local', $local, Locale::TYPE);
-        
+
         $date = (new DateTimeImmutable())
             ->modify('first day of') // Устанавливает первый день текущего месяца
             ->setTime(0, 0)
             ->getTimestamp();
 
-        if ($filter && $filter->getDate())
+        if($filter && $filter->getDate())
         {
             $date = $filter->getDate()->getTimestamp();
         }
 
         $qb->where('users_table_day.date_table = :date');
         $qb->setParameter('date', $date, ParameterType::INTEGER);
-
-        /* Поиск */
-        if ($search->query)
-        {
-//            $search->query = mb_strtolower($search->query);
-
-//            $searcher = $this->connection->createQueryBuilder();
-
-//            $searcher->orWhere('LOWER(trans.name) LIKE :query');
-//            $searcher->orWhere('LOWER(trans.name) LIKE :switcher');
-
-//            $qb->andWhere('('.$searcher->getQueryPart('where').')');
-//            $qb->setParameter('query', '%'.$this->switcher->toRus($search->query).'%');
-//            $qb->setParameter('switcher', '%'.$this->switcher->toEng($search->query).'%');
-        }
-
+        
         return $this->paginator->fetchAllAssociative($qb);
+
     }
 }

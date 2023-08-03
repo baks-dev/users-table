@@ -26,9 +26,9 @@ declare(strict_types=1);
 namespace BaksDev\Users\UsersTable\Entity\Actions\Event;
 
 use BaksDev\Core\Entity\EntityEvent;
-use BaksDev\Core\Type\Locale\Locale;
 use BaksDev\Products\Category\Type\Id\ProductCategoryUid;
 use BaksDev\Users\UsersTable\Entity\Actions\Modify\UsersTableActionsModify;
+use BaksDev\Users\UsersTable\Entity\Actions\Products\UsersTableActionsProduct;
 use BaksDev\Users\UsersTable\Entity\Actions\Trans\UsersTableActionsTrans;
 use BaksDev\Users\UsersTable\Entity\Actions\UsersTableActions;
 use BaksDev\Users\UsersTable\Entity\Actions\Working\UsersTableActionsWorking;
@@ -75,11 +75,19 @@ class UsersTableActionsEvent extends EntityEvent
     #[ORM\OneToOne(mappedBy: 'event', targetEntity: UsersTableActionsModify::class, cascade: ['all'])]
     private UsersTableActionsModify $modify;
 
-
-    /** Действия */
+    /**
+     * Действия
+     */
     #[ORM\OneToMany(mappedBy: 'event', targetEntity: UsersTableActionsWorking::class, cascade: ['all'])]
     #[ORM\OrderBy(['sort' => 'ASC'])]
     private Collection $working;
+
+    /**
+     * Привязать продукцию к указанному процессу
+     */
+    #[ORM\OneToMany(mappedBy: 'event', targetEntity: UsersTableActionsProduct::class, cascade: ['all'])]
+    private Collection $product;
+
 
     public function __construct()
     {
@@ -134,30 +142,4 @@ class UsersTableActionsEvent extends EntityEvent
         throw new InvalidArgumentException(sprintf('Class %s interface error', $dto::class));
     }
 
-
-    //	public function isModifyActionEquals(ModifyActionEnum $action) : bool
-    //	{
-    //		return $this->modify->equals($action);
-    //	}
-
-    //	public function getUploadClass() : UsersTableActionsImage
-    //	{
-    //		return $this->image ?: $this->image = new UsersTableActionsImage($this);
-    //	}
-
-    public function getNameByLocale(Locale $locale): ?string
-    {
-        $name = null;
-
-        /** @var UsersTableActionsTrans $trans */
-        foreach($this->translate as $trans)
-        {
-            if($name = $trans->name($locale))
-            {
-                break;
-            }
-        }
-
-        return $name;
-    }
 }

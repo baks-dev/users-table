@@ -25,10 +25,9 @@ declare(strict_types=1);
 
 namespace BaksDev\Users\UsersTable\Repository\AllUsersTable;
 
+use BaksDev\Core\Doctrine\DBALQueryBuilder;
 use BaksDev\Core\Form\Search\SearchDTO;
 use BaksDev\Core\Services\Paginator\PaginatorInterface;
-use BaksDev\Core\Services\Switcher\SwitcherInterface;
-use BaksDev\Core\Type\Locale\Locale;
 use BaksDev\Products\Category\Entity\ProductCategory;
 use BaksDev\Products\Category\Entity\Trans\ProductCategoryTrans;
 use BaksDev\Users\Groups\Group\Entity\Group;
@@ -46,37 +45,28 @@ use BaksDev\Users\UsersTable\Entity\Actions\Working\Trans\UsersTableActionsWorki
 use BaksDev\Users\UsersTable\Entity\Actions\Working\UsersTableActionsWorking;
 use BaksDev\Users\UsersTable\Entity\Table\Event\UsersTableEvent;
 use BaksDev\Users\UsersTable\Entity\Table\UsersTable;
-use Doctrine\DBAL\Connection;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class AllUsersTable implements AllUsersTableInterface
 {
-    private Connection $connection;
-
     private PaginatorInterface $paginator;
 
-    private SwitcherInterface $switcher;
-
-    private TranslatorInterface $translator;
+    private DBALQueryBuilder $DBALQueryBuilder;
 
     public function __construct(
-        Connection $connection,
+        DBALQueryBuilder $DBALQueryBuilder,
         PaginatorInterface $paginator,
-        SwitcherInterface $switcher,
-        TranslatorInterface $translator,
     ) {
-        $this->connection = $connection;
         $this->paginator = $paginator;
-        $this->switcher = $switcher;
-        $this->translator = $translator;
+        $this->DBALQueryBuilder = $DBALQueryBuilder;
     }
 
     /** Метод возвращает пагинатор UsersTable */
     public function fetchAllUsersTableAssociative(SearchDTO $search): PaginatorInterface
     {
-        $qb = $this->connection->createQueryBuilder();
+        $qb = $this->DBALQueryBuilder
+            ->createQueryBuilder(self::class)
+        ->bindLocal();
 
-        $local = new Locale($this->translator->getLocale());
 
         $qb->addSelect('users_table.id');
         $qb->addSelect('users_table.event');
@@ -146,7 +136,6 @@ final class AllUsersTable implements AllUsersTableInterface
         );
 
 
-        $qb->setParameter('local', $local, Locale::TYPE);
 
         // ОТВЕТСТВЕННЫЙ
 
@@ -200,14 +189,14 @@ final class AllUsersTable implements AllUsersTableInterface
 
         // Группа
 
-        $qb->join(
+        $qb->leftJoin(
             'users_profile_info',
             CheckUsers::TABLE,
             'check_user',
             'check_user.user_id = users_profile_info.user_id'
         );
 
-        $qb->join(
+        $qb->leftJoin(
             'check_user',
             CheckUsersEvent::TABLE,
             'check_user_event',
@@ -232,25 +221,13 @@ final class AllUsersTable implements AllUsersTableInterface
 
 
 
-        $qb->setParameter('local', $local, Locale::TYPE);
         $qb->orderBy('event.date_table', 'DESC');
 
 
-        /* Поиск */
-        if ($search->query)
-        {
-//            $search->query = mb_strtolower($search->query);
 
-//            $searcher = $this->connection->createQueryBuilder();
 
-//            $searcher->orWhere('LOWER(trans.name) LIKE :query');
-//            $searcher->orWhere('LOWER(trans.name) LIKE :switcher');
-
-//            $qb->andWhere('('.$searcher->getQueryPart('where').')');
-//            $qb->setParameter('query', '%'.$this->switcher->toRus($search->query).'%');
-//            $qb->setParameter('switcher', '%'.$this->switcher->toEng($search->query).'%');
-        }
 
         return $this->paginator->fetchAllAssociative($qb);
+
     }
 }

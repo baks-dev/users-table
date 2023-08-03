@@ -32,14 +32,11 @@
         {% if is_granted(ROLE~'_EDIT') or is_granted('ROLE_ADMIN') %}
             <li class="list-group-item d-flex justify-content-between bg-transparent border-0 text-truncate rounded-5">
                 <a href="{{ path('UsersTable:admin.action.newedit.edit', {id: item.event }) }}"
-                   class="text-decoration-none text-dark w-100 modal-link"
-                   data-bs-toggle="modal"
-                   data-bs-target="#modal"
+                   class="text-decoration-none text-dark w-100"
                    title="{{ 'btn.edit'|trans({}, 'core.btn') }}">
                     {{ 'btn.edit'|trans({}, 'core.btn') }}
                 </a>
             </li>
-
         {% endif %}
 
         {# Удалить #}

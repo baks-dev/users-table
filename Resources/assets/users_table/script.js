@@ -42,8 +42,8 @@ if ($addButtonWorking) {
             /* Вставляем новую коллекцию */
             let div = document.createElement('div');
             div.id = 'item_users_table_actions_form_working_' + index;
+            div.classList.add('mb-3');
 
-            // div.classList.add('align-items-center');
             // div.classList.add('gap-3');
             // div.classList.add('item-collection-file');
 
@@ -56,7 +56,7 @@ if ($addButtonWorking) {
 
 
             /* Удаляем контактный номер телефона */
-            (div.querySelector('.del-item-working'))?.addEventListener('click', deletePhone);
+            (div.querySelector('.del-item-working'))?.addEventListener('click', deleteWorking);
 
 
             /* Увеличиваем data-index на 1 после вставки новой коллекции */
@@ -71,32 +71,62 @@ if ($addButtonWorking) {
     }
 }
 
-/*document.querySelectorAll('.del-item-call').forEach(function (item) {
-    item.addEventListener('click', deleteCall);
-});*/
-
-/*function deleteCall() {
-
-   if (document.getElementById('collection-call').childElementCount === 1)
-   {
-       return;
-   }
-
-   document.getElementById(this.dataset.delete).remove();
-}*/
-
-
 
 document.querySelectorAll('.del-item-working').forEach(function (item) {
-    item.addEventListener('click', deletePhone);
+    item.addEventListener('click', deleteWorking);
 });
 
-function deletePhone() {
-
-    console.log(this.dataset.delete);
-
+function deleteWorking() {
     document.getElementById(this.dataset.delete).remove();
 }
 
+
+
+$addButtonProduct = document.getElementById('productAddCollection');
+
+
+if ($addButtonProduct) {
+    /* Блок для новой коллекции */
+    let $blockCollectionCall = document.getElementById('collection-product');
+
+    if ($blockCollectionCall) {
+
+        $addButtonProduct.addEventListener('click', function () {
+
+            document.getElementById('products-alert')?.remove();
+
+
+            let $addButtonWorking = this;
+            /* получаем прототип коллекции  */
+            let newForm = $addButtonProduct.dataset.prototype;
+            let index = $addButtonProduct.dataset.index * 1;
+
+            /* Замена '__name__' в HTML-коде прототипа
+            вместо этого будет число, основанное на том, сколько коллекций */
+            newForm = newForm.replace(/__product__/g, index);
+
+            /* Вставляем новую коллекцию */
+            let div = document.createElement('div');
+            div.id = 'item_users_table_actions_form_product_' + index;
+            //div.classList.add('mb-3');
+
+            div.innerHTML = newForm;
+            $blockCollectionCall.append(div);
+
+            /* Удаляем контактный номер телефона */
+            (div.querySelector('.del-item-working'))?.addEventListener('click', deleteWorking);
+
+            /* Увеличиваем data-index на 1 после вставки новой коллекции */
+            $addButtonProduct.dataset.index = (index + 1).toString();
+
+            /* Плавная прокрутка к элементу */
+            div.scrollIntoView({block: "center", inline: "center", behavior: "smooth"});
+
+            new NiceSelect(div.querySelector('[data-select="select2"]'), {searchable: true});
+
+
+        });
+    }
+}
 
 

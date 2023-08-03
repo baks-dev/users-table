@@ -25,23 +25,22 @@ declare(strict_types=1);
 
 namespace BaksDev\Users\UsersTable\Repository\DayUsersTable\PremiumCurrentMonth;
 
+use BaksDev\Core\Doctrine\DBALQueryBuilder;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use BaksDev\Users\UsersTable\Entity\UsersTableDay;
 use BaksDev\Users\UsersTable\Type\Actions\Working\UsersTableActionsWorkingUid;
 use DateTimeImmutable;
-use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 
 final class PremiumCurrentMonthRepository implements PremiumCurrentMonthRepositoryInterface
 {
 
-    private Connection $connection;
+    private DBALQueryBuilder $DBALQueryBuilder;
 
-    public function __construct(
-        Connection $connection,
-    )
+    public function __construct(DBALQueryBuilder $DBALQueryBuilder)
     {
-        $this->connection = $connection;
+
+        $this->DBALQueryBuilder = $DBALQueryBuilder;
     }
 
     /**
@@ -49,7 +48,7 @@ final class PremiumCurrentMonthRepository implements PremiumCurrentMonthReposito
      */
     public function getSumPremium(UserProfileUid $profile, UsersTableActionsWorkingUid $working): int|float
     {
-        $qb = $this->connection->createQueryBuilder();
+        $qb = $this->DBALQueryBuilder->createQueryBuilder(self::class);
 
         $qb->select('SUM(table_day.premium)');
 

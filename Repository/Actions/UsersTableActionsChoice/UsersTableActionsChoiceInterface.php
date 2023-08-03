@@ -26,7 +26,7 @@ namespace BaksDev\Users\UsersTable\Repository\Actions\UsersTableActionsChoice;
 interface UsersTableActionsChoiceInterface
 {
     /**
-     * Метод возвращает коллекцию идентификаторов активных событий UsersTableActions
+     * Метод возвращает коллекцию идентификаторов активных процессов производства
      */
     public function getCollection(): ?array;
 

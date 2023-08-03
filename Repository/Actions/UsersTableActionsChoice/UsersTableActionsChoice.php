@@ -25,35 +25,30 @@ declare(strict_types=1);
 
 namespace BaksDev\Users\UsersTable\Repository\Actions\UsersTableActionsChoice;
 
-use BaksDev\Core\Type\Locale\Locale;
+use BaksDev\Core\Doctrine\ORMQueryBuilder;
 use BaksDev\Products\Category\Entity\ProductCategory;
 use BaksDev\Products\Category\Entity\Trans\ProductCategoryTrans;
 use BaksDev\Users\UsersTable\Entity\Actions\Event\UsersTableActionsEvent;
-use BaksDev\Users\UsersTable\Entity\Actions\Trans\UsersTableActionsTrans;
 use BaksDev\Users\UsersTable\Entity\Actions\UsersTableActions;
 use BaksDev\Users\UsersTable\Type\Actions\Event\UsersTableActionsEventUid;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class UsersTableActionsChoice implements UsersTableActionsChoiceInterface
 {
-    private EntityManagerInterface $entityManager;
-    private TranslatorInterface $translator;
+    private ORMQueryBuilder $ORMQueryBuilder;
 
-    public function __construct(EntityManagerInterface $entityManager, TranslatorInterface $translator)
+    public function __construct(
+        ORMQueryBuilder $ORMQueryBuilder,
+    )
     {
-        $this->entityManager = $entityManager;
-        $this->translator = $translator;
+        $this->ORMQueryBuilder = $ORMQueryBuilder;
     }
 
     /**
-     * Метод возвращает коллекцию идентификаторов активных событий UsersTableActions
+     * Метод возвращает коллекцию идентификаторов активных процессов производства
      */
     public function getCollection(): ?array
     {
-        $qb = $this->entityManager->createQueryBuilder();
-        $locale = new Locale($this->translator->getLocale());
+        $qb = $this->ORMQueryBuilder->createQueryBuilder(self::class);
 
         $select = sprintf('new %s(actions.event, trans.name)', UsersTableActionsEventUid::class);
 
@@ -75,7 +70,7 @@ final class UsersTableActionsChoice implements UsersTableActionsChoiceInterface
             'WITH',
             'category.id = event.category'
         );
-        
+
 
         $qb->leftJoin(
             ProductCategoryTrans::class,
@@ -84,27 +79,9 @@ final class UsersTableActionsChoice implements UsersTableActionsChoiceInterface
             'trans.event = category.event AND trans.local = :local'
         );
 
-        $qb->setParameter('local', $locale, Locale::TYPE);
-
-
-        /*$qb->leftJoin(
-            UsersTableActionsTrans::class,
-            'trans',
-            'WITH',
-            'trans.event = actions.event AND trans.local = :local'
-        );*/
-
-
-        // Кешируем результат ORM
-        $cacheQueries = new FilesystemAdapter('UsersTable');
-
-        $query = $this->entityManager->createQuery($qb->getDQL());
-        $query->setQueryCache($cacheQueries);
-        $query->setResultCache($cacheQueries);
-        $query->enableResultCache();
-        $query->setLifetime(60 * 60 * 24);
-        $query->setParameters($qb->getParameters());
-
-        return $query->getResult();
+        $qb->bindLocal();
+        
+        /* Кешируем результат ORM */
+        return $qb->enableCache('UsersTable', 86400)->getResult();
     }
 }

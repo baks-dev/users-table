@@ -65,9 +65,9 @@ final class UsersTableDTO implements UsersTableEventInterface
 
     /**
      * Количество.
+     * Может быть отрицательным - означает штраф!
      */
     #[Assert\NotBlank]
-    #[Assert\Range(min: 1)]
     private int $quantity;
 
     /*

@@ -11,11 +11,8 @@
 
 
         <a href="{{ is_granted('ROLE_ADMIN') or is_granted('ROLE_USERS_TABLE_ACTIONS_EDIT') ? path('UsersTable:admin.action.newedit.edit', { id: item.event }) : '#' }}"
-
-           class="text-decoration-none text-dark fw-bolder w-100 modal-link w-100 d-flex align-items-center gap-3"
-           data-bs-toggle="modal"
-           data-bs-target="#modal"
-           title="{{ 'btn.delete'|trans({}, 'core.btn') }}"
+           class="text-decoration-none fw-bolder w-100 d-flex align-items-center gap-3"
+           title="{{ 'btn.edit'|trans({}, 'core.btn') }}"
 
         >
 

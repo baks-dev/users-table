@@ -66,9 +66,9 @@ class UsersTableDay extends EntityState
 
     /**
      * Количество выполненной работы.
+     * (может быть отрицательным из-за штрафов)
      */
     #[Assert\NotBlank]
-    #[Assert\Range(min: 1)]
     #[ORM\Column(type: Types::INTEGER)]
     private int $total;
 

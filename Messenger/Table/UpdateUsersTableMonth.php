@@ -70,7 +70,7 @@ final class UpdateUsersTableMonth
         $this->logger->info('MessageHandler', ['handler' => self::class]);
         $this->logger->info('MessageData', [$message->getId(), $message->getEvent()]);
 
-        
+
         /** Получаем добавленный табель пользователя */
         $UsersTableEvent = $this->entityManager->getRepository(UsersTableEvent::class)->find($message->getEvent());
 
@@ -115,19 +115,38 @@ final class UpdateUsersTableMonth
                 'date' => $UsersTableDateDay
             ]);
 
+
+            if(empty($UsersTableEvent->getQuantity()))
+            {
+                return;
+            }
+
             /* Добавляем количество выполненной работы */
             $UsersTableMonthDTO->addTotal($UsersTableEvent->getQuantity());
 
-            /* Добавляем стоимость */
+            /* Делаем расчет стоимости действий пользователя */
             $moneyCoefficient = ($UsersTableMonthDTO->getTotal() * $UsersTableActionWorking->getCoefficient());
-            $UsersTableMonthDTO->addMoney(new Money($moneyCoefficient));
 
+            if($UsersTableEvent->getQuantity() > 0)
+            {
+                $UsersTableMonthDTO->addMoney(new Money($moneyCoefficient));
+            }
+
+            if($UsersTableEvent->getQuantity() < 0)
+            {
+                $UsersTableMonthDTO->subMoney(new Money(abs($moneyCoefficient)));
+            }
+
+            if($UsersTableEvent->getQuantity() === 0)
+            {
+                $UsersTableMonthDTO->setMoney(new Money(0));
+            }
 
             /**
              *
              * Если была Выполнена дневная норма - делаем перерасчет премии
              */
-           if($UsersTableDay && $UsersTableDay->getTotal() > $UsersTableActionWorking->getNorm())
+            if($UsersTableDay && $UsersTableDay->getTotal() > $UsersTableActionWorking->getNorm())
             {
                 $moneyPremium = $this->premiumCurrentMonthRepository
                     ->getSumPremium($UsersTableMonthDTO->getProfile(), $UsersTableMonthDTO->getWorking());

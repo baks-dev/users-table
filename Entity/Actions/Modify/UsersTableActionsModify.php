@@ -57,7 +57,7 @@ class UsersTableActionsModify extends EntityEvent
 
     /** Модификатор */
     #[Assert\NotBlank]
-    #[ORM\Column(type: ModifyAction::TYPE, nullable: false)]
+    #[ORM\Column(type: ModifyAction::TYPE)]
     private ModifyAction $action;
 
     /** Дата */

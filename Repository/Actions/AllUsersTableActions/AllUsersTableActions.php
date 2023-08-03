@@ -25,47 +25,36 @@ declare(strict_types=1);
 
 namespace BaksDev\Users\UsersTable\Repository\Actions\AllUsersTableActions;
 
+use BaksDev\Core\Doctrine\DBALQueryBuilder;
 use BaksDev\Core\Form\Search\SearchDTO;
 use BaksDev\Core\Services\Paginator\PaginatorInterface;
-use BaksDev\Core\Services\Switcher\SwitcherInterface;
-use BaksDev\Core\Type\Locale\Locale;
 use BaksDev\Products\Category\Entity\Cover\ProductCategoryCover;
 use BaksDev\Products\Category\Entity\ProductCategory;
 use BaksDev\Products\Category\Entity\Trans\ProductCategoryTrans;
 use BaksDev\Users\UsersTable\Entity\Actions\Event\UsersTableActionsEvent;
 use BaksDev\Users\UsersTable\Entity\Actions\Trans\UsersTableActionsTrans;
 use BaksDev\Users\UsersTable\Entity\Actions\UsersTableActions;
-use Doctrine\DBAL\Connection;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class AllUsersTableActions implements AllUsersTableActionsInterface
 {
-    private Connection $connection;
 
     private PaginatorInterface $paginator;
-
-    private SwitcherInterface $switcher;
-
-    private TranslatorInterface $translator;
+    private DBALQueryBuilder $DBALQueryBuilder;
 
     public function __construct(
-        Connection $connection,
+        DBALQueryBuilder $DBALQueryBuilder,
         PaginatorInterface $paginator,
-        SwitcherInterface $switcher,
-        TranslatorInterface $translator,
     )
     {
-        $this->connection = $connection;
+
         $this->paginator = $paginator;
-        $this->switcher = $switcher;
-        $this->translator = $translator;
+        $this->DBALQueryBuilder = $DBALQueryBuilder;
     }
 
     /** Метод возвращает пагинатор AllUsersTableActions */
     public function fetchAllUsersTableActionsAssociative(SearchDTO $search): PaginatorInterface
     {
-        $qb = $this->connection->createQueryBuilder();
-        $locale = new Locale($this->translator->getLocale());
+        $qb = $this->DBALQueryBuilder->createQueryBuilder(self::class);
 
         $qb->select('actions.id');
         $qb->addSelect('actions.event');
@@ -95,9 +84,8 @@ final class AllUsersTableActions implements AllUsersTableActionsInterface
             ProductCategoryTrans::TABLE,
             'trans',
             'trans.event = category.event AND trans.local = :local'
-        );
-
-        $qb->setParameter('local', $locale, Locale::TYPE);
+        )
+            ->bindLocal();
 
 
         // Обложка
@@ -123,32 +111,16 @@ final class AllUsersTableActions implements AllUsersTableActionsInterface
         );
 
 
-
-
         /* Поиск */
-        if($search->query)
+        if($search->getQuery())
         {
 
-            $search->query = mb_strtolower($search->query);
-            $searcher = $this->connection->createQueryBuilder();
+            $qb
+                ->createSearchQueryBuilder($search)
+                ->addSearchEqualUid('actions.id')
+                ->addSearchEqualUid('actions.event')
+                ->addSearchLike('trans.name');
 
-            if($search->isUid())
-            {
-                $searcher->orWhere('actions.id = :query');
-                $searcher->orWhere('actions.event = :query');
-
-                $qb->setParameter('query', $search->query);
-            }
-            else
-            {
-                $searcher->orWhere('LOWER(trans.name) LIKE :query');
-                $searcher->orWhere('LOWER(trans.name) LIKE :switcher');
-
-                $qb->setParameter('query', '%'.$this->switcher->toRus($search->query).'%');
-                $qb->setParameter('switcher', '%'.$this->switcher->toEng($search->query).'%');
-            }
-
-            $qb->andWhere('('.$searcher->getQueryPart('where').')');
         }
 
         return $this->paginator->fetchAllAssociative($qb);
