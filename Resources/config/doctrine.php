@@ -23,6 +23,7 @@
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
+
 use BaksDev\Users\UsersTable\Type\Actions\Const\UsersTableActionsWorkingConst;
 use BaksDev\Users\UsersTable\Type\Actions\Const\UsersTableActionsWorkingConstType;
 use BaksDev\Users\UsersTable\Type\Actions\Event\UsersTableActionsEventType;
@@ -47,7 +48,6 @@ return static function(ContainerConfigurator $container, DoctrineConfig $doctrin
     $doctrine->dbal()->type(UsersTableActionsEventUid::TYPE)->class(UsersTableActionsEventType::class);
     $doctrine->dbal()->type(UsersTableActionsWorkingUid::TYPE)->class(UsersTableActionsWorkingType::class);
     $doctrine->dbal()->type(UsersTableActionsWorkingConst::TYPE)->class(UsersTableActionsWorkingConstType::class);
-
 
     $emDefault = $doctrine->orm()->entityManager('default')->autoMapping(true);
 

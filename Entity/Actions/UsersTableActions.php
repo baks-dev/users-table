@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace BaksDev\Users\UsersTable\Entity\Actions;
 
+use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use BaksDev\Users\UsersTable\Entity\Actions\Event\UsersTableActionsEvent;
 use BaksDev\Users\UsersTable\Type\Actions\Event\UsersTableActionsEventUid;
 use BaksDev\Users\UsersTable\Type\Actions\Id\UsersTableActionsUid;
@@ -36,6 +37,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'users_table_actions')]
+#[ORM\Index(columns: ['profile'])]
 class UsersTableActions
 {
     public const TABLE = 'users_table_actions';
@@ -55,10 +57,17 @@ class UsersTableActions
     private UsersTableActionsEventUid $event;
 
 
+    /** ID профиля ответственного */
+    #[Assert\NotBlank]
+    #[Assert\Uuid]
+    #[ORM\Column(type: UserProfileUid::TYPE, nullable: false)]
+    private UserProfileUid $profile;
 
-    public function __construct()
+
+    public function __construct(UserProfileUid $profile)
     {
         $this->id = new UsersTableActionsUid();
+        $this->profile = $profile;
     }
 
     public function getId(): UsersTableActionsUid

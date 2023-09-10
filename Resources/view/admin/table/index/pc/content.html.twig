@@ -76,7 +76,7 @@
                     </a>
                 {% endif %}
 
-                {% if is_granted('ROLE_USERS_TABLE_ACTIONS') or is_granted('ROLE_ADMIN') %}
+                {#{% if is_granted('ROLE_USERS_TABLE_ACTIONS') or is_granted('ROLE_ADMIN') %}
 
                     <a href="{{ path('UsersTable:admin.action.index') }}"
                        class="btn btn-light"
@@ -91,7 +91,7 @@
                         </svg>
                     </a>
 
-                {% endif %}
+                {% endif %}#}
 
 
                 {% if constant('BaksDev\\Users\\UsersTable\\Telegram\\Entity\\UsersTableTelegramSettings::TABLE') is defined %}
@@ -133,12 +133,12 @@
                 <thead>
 
                 <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Дата</th>
-                    <th scope="col">Сотрудник</th>
-                    <th scope="col">Категория</th>
-                    <th scope="col">Действие</th>
-                    <th scope="col">Количество</th>
+                    <th>#</th>
+                    <th>Дата</th>
+                    <th>Сотрудник</th>
+                    <th>Категория</th>
+                    <th>Действие</th>
+                    <th>Количество</th>
                 </tr>
 
                 </thead>

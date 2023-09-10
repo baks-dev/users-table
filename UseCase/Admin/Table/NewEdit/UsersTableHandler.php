@@ -169,7 +169,6 @@ final class UsersTableHandler
             transport: 'users-table'
         );
 
-        // 'users_table_high'
         return $Main;
     }
 }

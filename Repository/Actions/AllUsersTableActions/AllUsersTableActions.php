@@ -31,6 +31,9 @@ use BaksDev\Core\Services\Paginator\PaginatorInterface;
 use BaksDev\Products\Category\Entity\Cover\ProductCategoryCover;
 use BaksDev\Products\Category\Entity\ProductCategory;
 use BaksDev\Products\Category\Entity\Trans\ProductCategoryTrans;
+use BaksDev\Users\Profile\UserProfile\Entity\Personal\UserProfilePersonal;
+use BaksDev\Users\Profile\UserProfile\Entity\UserProfile;
+use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use BaksDev\Users\UsersTable\Entity\Actions\Event\UsersTableActionsEvent;
 use BaksDev\Users\UsersTable\Entity\Actions\Trans\UsersTableActionsTrans;
 use BaksDev\Users\UsersTable\Entity\Actions\UsersTableActions;
@@ -52,14 +55,42 @@ final class AllUsersTableActions implements AllUsersTableActionsInterface
     }
 
     /** Метод возвращает пагинатор AllUsersTableActions */
-    public function fetchAllUsersTableActionsAssociative(SearchDTO $search): PaginatorInterface
+    public function fetchAllUsersTableActionsAssociative(SearchDTO $search, ?UserProfileUid $profile): PaginatorInterface
     {
-        $qb = $this->DBALQueryBuilder->createQueryBuilder(self::class);
+        $qb = $this->DBALQueryBuilder->createQueryBuilder(self::class)
+        ->bindLocal();
 
         $qb->select('actions.id');
         $qb->addSelect('actions.event');
 
         $qb->from(UsersTableActions::TABLE, 'actions');
+
+        if($profile)
+        {
+            $qb
+                ->where('actions.profile = :profile')
+                ->setParameter('profile', $profile, UserProfileUid::TYPE)
+            ;
+        }
+
+
+        /** Ответственное лицо (Профиль пользователя) */
+
+        $qb->leftJoin(
+            'actions',
+            UserProfile::TABLE,
+            'users_profile',
+            'users_profile.id = actions.profile'
+        );
+
+        $qb->addSelect('users_profile_personal.username AS users_profile_username');
+
+        $qb->leftJoin(
+            'users_profile',
+            UserProfilePersonal::TABLE,
+            'users_profile_personal',
+            'users_profile_personal.event = users_profile.event'
+        );
 
 
         $qb->leftJoin(
@@ -68,6 +99,16 @@ final class AllUsersTableActions implements AllUsersTableActionsInterface
             'event',
             'event.id = actions.event'
         );
+
+
+        $qb->addSelect('actions_trans.name AS action_name');
+        $qb->leftJoin(
+            'actions',
+            UsersTableActionsTrans::TABLE,
+            'actions_trans',
+            'actions_trans.event = actions.event AND actions_trans.local = :local'
+        );
+
 
 
         $qb->leftJoin(
@@ -84,8 +125,7 @@ final class AllUsersTableActions implements AllUsersTableActionsInterface
             ProductCategoryTrans::TABLE,
             'trans',
             'trans.event = category.event AND trans.local = :local'
-        )
-            ->bindLocal();
+        );
 
 
         // Обложка
@@ -119,7 +159,10 @@ final class AllUsersTableActions implements AllUsersTableActionsInterface
                 ->createSearchQueryBuilder($search)
                 ->addSearchEqualUid('actions.id')
                 ->addSearchEqualUid('actions.event')
-                ->addSearchLike('trans.name');
+                ->addSearchEqualUid('actions.profile')
+                ->addSearchLike('trans.name')
+                ->addSearchLike('users_profile_personal.username')
+            ;
 
         }
 

@@ -28,11 +28,11 @@ namespace BaksDev\Users\UsersTable\Security\Actions;
 use BaksDev\Menu\Admin\Command\Upgrade\MenuAdminInterface;
 use BaksDev\Menu\Admin\Type\SectionGroup\Group\Collection\MenuAdminSectionGroupCollectionInterface;
 use BaksDev\Menu\Admin\Type\SectionGroup\Group\MenuGroupSettings;
-use BaksDev\Users\Groups\Group\DataFixtures\Security\RoleFixturesInterface;
+use BaksDev\Users\Profile\Group\Security\RoleInterface;
 use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 
 #[AutoconfigureTag('baks.security.role')]
-final class Role implements RoleFixturesInterface, MenuAdminInterface
+final class Role implements RoleInterface, MenuAdminInterface
 {
     /** Этапы производства продукции */
     public const ROLE = 'ROLE_USERS_TABLE_ACTIONS';

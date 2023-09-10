@@ -60,8 +60,15 @@
                    style='--bs-table-striped-bg: rgba(249,249,249,0.7);'>
                 <thead>
                 <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Категория производства</th>
+                    <th>#</th>
+                    <th class="text-nowrap">Категория производства</th>
+                    <th class="w-100 text-nowrap">Производственный процесс</th>
+
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <th class="text-nowrap">
+                            Профиль пользователя
+                        </th>
+                    {% endif %}
                 </tr>
                 </thead>
 

@@ -23,11 +23,14 @@
 
 namespace BaksDev\Users\UsersTable\Repository\Actions\UsersTableActionsChoice;
 
+use BaksDev\Products\Category\Type\Id\ProductCategoryUid;
+use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
+
 interface UsersTableActionsChoiceInterface
 {
     /**
      * Метод возвращает коллекцию идентификаторов активных процессов производства
      */
-    public function getCollection(): ?array;
+    public function getCollection(ProductCategoryUid $category, UserProfileUid $profile): ?array;
 
 }

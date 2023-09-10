@@ -49,7 +49,6 @@ final class UsersTableActionsForm extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
 
-
         /**
          * Коллекция продукции для привязки к процессу
          */
@@ -95,6 +94,17 @@ final class UsersTableActionsForm extends AbstractType
             'allow_delete' => true,
             'allow_add' => true,
             'prototype_name' => '__actions_working__',
+        ]);
+
+
+        /* CollectionType */
+        $builder->add('translate', CollectionType::class, [
+            'entry_type' => Trans\UsersTableActionsTransForm::class,
+            'entry_options' => ['label' => false],
+            'label' => false,
+            'by_reference' => false,
+            'allow_delete' => true,
+            'allow_add' => true,
         ]);
 
 

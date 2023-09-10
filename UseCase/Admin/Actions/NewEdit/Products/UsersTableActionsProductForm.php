@@ -64,6 +64,53 @@ final class UsersTableActionsProductForm extends AbstractType
                 'required' => true,
             ]);
 
+        return;
+
+
+
+//        $builder->add('product', TextType::class, ['label' => false]);
+//
+//        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event): void {
+//
+//            $product = $event->getData();
+//            $form = $event->getForm();
+//
+//            if(!$product)
+//            {
+//                $form
+//                    ->add('product', ChoiceType::class, [
+//                        'choices' => $this->productChoice->fetchAllProduct(),
+//                        'choice_value' => function(?ProductUid $product) {
+//                            return $product?->getValue();
+//                        },
+//                        'choice_label' => function(ProductUid $product) {
+//                            return $product->getAttr();
+//                        },
+//
+//                        'choice_attr' => function (?ProductUid $product) {
+//                            return $product ? ['data-filter' => $product->getOption()] : [];
+//                        },
+//
+//                        'label' => false,
+//                        'expanded' => false,
+//                        'multiple' => false,
+//                        'required' => true,
+//                    ]);
+//            }
+//        });
+//
+//
+//        $builder->get('product')->addModelTransformer(
+//            new CallbackTransformer(
+//                function($price) {
+//                    return $price instanceof ProductUid ? $price : new ProductUid($price);
+//                },
+//                function($price) {
+//                    return new ProductUid($price);
+//                }
+//            )
+//        );
+
     }
 
     public function configureOptions(OptionsResolver $resolver): void

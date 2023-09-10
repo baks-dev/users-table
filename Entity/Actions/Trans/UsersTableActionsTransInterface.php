@@ -21,30 +21,13 @@
  *  THE SOFTWARE.
  */
 
-declare(strict_types=1);
+namespace BaksDev\Users\UsersTable\Entity\Actions\Trans;
 
-namespace BaksDev\Users\UsersTable\Security\Table;
+use BaksDev\Core\Type\Locale\Locale;
 
-use BaksDev\Users\Profile\Group\Security\RoleInterface;
-use BaksDev\Users\Profile\Group\Security\VoterInterface;
-use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
-
-#[AutoconfigureTag('baks.security.voter')]
-final class VoterNew implements VoterInterface
+interface UsersTableActionsTransInterface
 {
-    /**
-     * Добавить
-     */
-    public const VOTER = 'NEW';
+    public function getLocal(): Locale;
 
-    public static function getVoter(): string
-    {
-        return Role::ROLE.'_'.self::VOTER;
-    }
-
-    public function equals(RoleInterface $role): bool
-    {
-        return $role->getRole() === Role::ROLE;
-    }
+    public function getName(): string;
 }
-

@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace BaksDev\Users\UsersTable\UseCase\Admin\Actions\NewEdit;
 
+use BaksDev\Core\Type\Locale\Locale;
 use BaksDev\Products\Category\Type\Id\ProductCategoryUid;
 use BaksDev\Users\UsersTable\Entity\Actions\Event\UsersTableActionsEventInterface;
 use BaksDev\Users\UsersTable\Type\Actions\Event\UsersTableActionsEventUid;
@@ -60,10 +61,18 @@ final class UsersTableActionsDTO implements UsersTableActionsEventInterface
     #[Assert\Valid]
     private ArrayCollection $product;
 
+    /**
+     * Продукция для привязки к процессу
+     */
+    #[Assert\Valid]
+    private ArrayCollection $translate;
+
+
     public function __construct()
     {
         $this->working = new ArrayCollection();
         $this->product = new ArrayCollection();
+        $this->translate = new ArrayCollection();
     }
 
 
@@ -162,5 +171,41 @@ final class UsersTableActionsDTO implements UsersTableActionsEventInterface
     {
         $this->product->removeElement($product);
     }
-    
+
+
+
+    /** Перевод */
+
+    public function setTranslate(ArrayCollection $trans): void
+    {
+        $this->translate = $trans;
+    }
+
+
+    public function getTranslate(): ArrayCollection
+    {
+        /* Вычисляем расхождение и добавляем неопределенные локали */
+        foreach(Locale::diffLocale($this->translate) as $locale)
+        {
+            $UsersTableActionsTransDTO = new Trans\UsersTableActionsTransDTO;
+            $UsersTableActionsTransDTO->setLocal($locale);
+            $this->addTranslate($UsersTableActionsTransDTO);
+        }
+
+        return $this->translate;
+    }
+
+
+    public function addTranslate(Trans\UsersTableActionsTransDTO $trans): void
+    {
+        if(!$this->translate->contains($trans))
+        {
+            $this->translate->add($trans);
+        }
+    }
+
+    public function removeTranslate(Trans\UsersTableActionsTransDTO $trans): void
+    {
+        $this->translate->removeElement($trans);
+    }
 }

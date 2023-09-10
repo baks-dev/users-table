@@ -36,14 +36,20 @@ final class UsersTableActionsEventUid extends Uid
      * @var mixed|null
      */
     private mixed $attr;
+    /**
+     * @var mixed|null
+     */
+    private mixed $option;
 
     public function __construct(
         AbstractUid|string|null $value = null,
-        mixed $attr = null
+        mixed $attr = null,
+        mixed $option = null,
     )
     {
         parent::__construct($value);
         $this->attr = $attr;
+        $this->option = $option;
     }
 
     /**
@@ -54,5 +60,12 @@ final class UsersTableActionsEventUid extends Uid
         return $this->attr;
     }
 
+    /**
+     * Option
+     */
+    public function getOption(): mixed
+    {
+        return $this->option;
+    }
 
 }

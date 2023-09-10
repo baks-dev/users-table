@@ -17,7 +17,7 @@ ROLE_USERS_TABLE_DELETE:
 
 
 ROLE_USERS_TABLE_ACTIONS:
-  name: 'Этапы производства продукции'
+  name: 'Производственные процессы'
   desc: 'Этапы производства продукции'
 
 

@@ -62,7 +62,7 @@ final class NewController extends AbstractController
         if($form->isSubmitted() && $form->isValid() && $form->has('users_table_actions'))
         {
 
-            $UsersTableActions = $UsersTableActionsHandler->handle($UsersTableActionsDTO);
+            $UsersTableActions = $UsersTableActionsHandler->handle($UsersTableActionsDTO, $this->getProfileUid());
 
             if($UsersTableActions instanceof UsersTableActions)
             {

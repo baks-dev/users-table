@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace BaksDev\Users\UsersTable\UseCase\Admin\Actions\NewEdit;
 
 use BaksDev\Core\Services\Messenger\MessageDispatchInterface;
+use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use BaksDev\Users\UsersTable\Entity\Actions\Event\UsersTableActionsEvent;
 use BaksDev\Users\UsersTable\Entity\Actions\UsersTableActions;
 use BaksDev\Users\UsersTable\Messenger\Actions\UsersTableActionsMessage;
@@ -60,10 +61,9 @@ final class UsersTableActionsHandler
     /** @see UsersTableActions */
     public function handle(
         UsersTableActionsDTO $command,
+        UserProfileUid $profile,
     ): string|UsersTableActions
     {
-
-
 
         /**
          *  Валидация UsersTableActionsDTO
@@ -107,7 +107,7 @@ final class UsersTableActionsHandler
         /** @var UsersTableActions $Main */
         if ($Event->getMain()) {
             $Main = $this->entityManager->getRepository(UsersTableActions::class)->findOneBy(
-                ['event' => $command->getEvent()]
+                ['event' => $command->getEvent(), 'profile' => $profile]
             );
 
             if (empty($Main)) {
@@ -124,11 +124,10 @@ final class UsersTableActionsHandler
 
         } else {
 
-            $Main = new UsersTableActions();
+            $Main = new UsersTableActions($profile);
             $this->entityManager->persist($Main);
             $Event->setMain($Main);
         }
-
 
         $Event->setEntity($command);
         $this->entityManager->persist($Event);

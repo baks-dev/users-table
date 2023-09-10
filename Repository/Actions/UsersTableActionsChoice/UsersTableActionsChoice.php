@@ -26,9 +26,10 @@ declare(strict_types=1);
 namespace BaksDev\Users\UsersTable\Repository\Actions\UsersTableActionsChoice;
 
 use BaksDev\Core\Doctrine\ORMQueryBuilder;
-use BaksDev\Products\Category\Entity\ProductCategory;
-use BaksDev\Products\Category\Entity\Trans\ProductCategoryTrans;
+use BaksDev\Products\Category\Type\Id\ProductCategoryUid;
+use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use BaksDev\Users\UsersTable\Entity\Actions\Event\UsersTableActionsEvent;
+use BaksDev\Users\UsersTable\Entity\Actions\Trans\UsersTableActionsTrans;
 use BaksDev\Users\UsersTable\Entity\Actions\UsersTableActions;
 use BaksDev\Users\UsersTable\Type\Actions\Event\UsersTableActionsEventUid;
 
@@ -46,9 +47,9 @@ final class UsersTableActionsChoice implements UsersTableActionsChoiceInterface
     /**
      * Метод возвращает коллекцию идентификаторов активных процессов производства
      */
-    public function getCollection(): ?array
+    public function getCollection(ProductCategoryUid $category, UserProfileUid $profile): ?array
     {
-        $qb = $this->ORMQueryBuilder->createQueryBuilder(self::class);
+        $qb = $this->ORMQueryBuilder->createQueryBuilder(self::class)->bindLocal();
 
         $select = sprintf('new %s(actions.event, trans.name)', UsersTableActionsEventUid::class);
 
@@ -56,30 +57,27 @@ final class UsersTableActionsChoice implements UsersTableActionsChoiceInterface
 
         $qb->from(UsersTableActions::class, 'actions');
 
-        $qb->leftJoin(
+        $qb->where('actions.profile = :profile')
+            ->setParameter('profile', $profile, UserProfileUid::TYPE)
+        ;
+
+        $qb->join(
 
             UsersTableActionsEvent::class,
             'event',
             'WITH',
-            'event.id = actions.event'
+            'event.id = actions.event AND event.category = :category'
         );
 
-        $qb->leftJoin(
-            ProductCategory::class,
-            'category',
-            'WITH',
-            'category.id = event.category'
-        );
-
+        $qb->setParameter('category', $category, ProductCategoryUid::TYPE);
 
         $qb->leftJoin(
-            ProductCategoryTrans::class,
+            UsersTableActionsTrans::class,
             'trans',
             'WITH',
-            'trans.event = category.event AND trans.local = :local'
+            'trans.event = actions.event AND trans.local = :local'
         );
 
-        $qb->bindLocal();
         
         /* Кешируем результат ORM */
         return $qb->enableCache('UsersTable', 86400)->getResult();

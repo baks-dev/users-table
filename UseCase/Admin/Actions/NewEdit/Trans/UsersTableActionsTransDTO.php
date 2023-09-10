@@ -23,28 +23,55 @@
 
 declare(strict_types=1);
 
-namespace BaksDev\Users\UsersTable\Security\Table;
+namespace BaksDev\Users\UsersTable\UseCase\Admin\Actions\NewEdit\Trans;
 
-use BaksDev\Users\Profile\Group\Security\RoleInterface;
-use BaksDev\Users\Profile\Group\Security\VoterInterface;
-use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 
-#[AutoconfigureTag('baks.security.voter')]
-final class VoterNew implements VoterInterface
+use BaksDev\Core\Type\Locale\Locale;
+use BaksDev\Users\UsersTable\Entity\Actions\Trans\UsersTableActionsTransInterface;
+use ReflectionProperty;
+use Symfony\Component\Validator\Constraints as Assert;
+
+/** @see UsersTableActionsTrans */
+final class UsersTableActionsTransDTO implements UsersTableActionsTransInterface
 {
-    /**
-     * Добавить
-     */
-    public const VOTER = 'NEW';
 
-    public static function getVoter(): string
+    /** Локаль */
+    #[Assert\NotBlank]
+    private readonly Locale $local;
+
+    /** Название  */
+    #[Assert\NotBlank]
+    private ?string $name;
+
+
+    /** Локаль */
+
+    public function getLocal(): Locale
     {
-        return Role::ROLE.'_'.self::VOTER;
+        return $this->local;
     }
 
-    public function equals(RoleInterface $role): bool
+
+    public function setLocal(Locale $local): void
     {
-        return $role->getRole() === Role::ROLE;
+        if(!(new ReflectionProperty($this::class, 'local'))->isInitialized($this))
+        {
+            $this->local = $local;
+        }
     }
+
+
+    /** Название продукта  */
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+
+    public function setName(?string $name): void
+    {
+        $this->name = $name;
+    }
+
 }
-

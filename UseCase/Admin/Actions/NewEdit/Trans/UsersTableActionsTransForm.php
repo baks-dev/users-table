@@ -23,28 +23,26 @@
 
 declare(strict_types=1);
 
-namespace BaksDev\Users\UsersTable\Security\Table;
+namespace BaksDev\Users\UsersTable\UseCase\Admin\Actions\NewEdit\Trans;
 
-use BaksDev\Users\Profile\Group\Security\RoleInterface;
-use BaksDev\Users\Profile\Group\Security\VoterInterface;
-use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 
-#[AutoconfigureTag('baks.security.voter')]
-final class VoterNew implements VoterInterface
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+
+final class UsersTableActionsTransForm extends AbstractType
 {
-    /**
-     * Добавить
-     */
-    public const VOTER = 'NEW';
 
-    public static function getVoter(): string
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        return Role::ROLE.'_'.self::VOTER;
+        $builder->add('name', TextType::class);
     }
 
-    public function equals(RoleInterface $role): bool
+    public function configureOptions(OptionsResolver $resolver): void
     {
-        return $role->getRole() === Role::ROLE;
+        $resolver->setDefaults([
+            'data_class' => UsersTableActionsTransDTO::class,
+        ]);
     }
 }
-

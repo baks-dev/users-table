@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace BaksDev\Users\UsersTable\Entity\Actions\Event;
 
 use BaksDev\Core\Entity\EntityEvent;
+use BaksDev\Core\Type\Locale\Locale;
 use BaksDev\Products\Category\Type\Id\ProductCategoryUid;
 use BaksDev\Users\UsersTable\Entity\Actions\Modify\UsersTableActionsModify;
 use BaksDev\Users\UsersTable\Entity\Actions\Products\UsersTableActionsProduct;
@@ -89,11 +90,17 @@ class UsersTableActionsEvent extends EntityEvent
     private Collection $product;
 
 
+    /**
+     * Переводы
+     */
+    #[ORM\OneToMany(mappedBy: 'event', targetEntity: UsersTableActionsTrans::class, cascade: ['all'], indexBy: 'local')]
+    private Collection $translate;
+
+    
     public function __construct()
     {
         $this->id = new UsersTableActionsEventUid();
         $this->modify = new UsersTableActionsModify($this);
-
     }
 
     public function __clone()
@@ -103,7 +110,7 @@ class UsersTableActionsEvent extends EntityEvent
 
     public function __toString(): string
     {
-        return (string)$this->id;
+        return (string) $this->id;
     }
 
     public function getId(): UsersTableActionsEventUid
@@ -140,6 +147,22 @@ class UsersTableActionsEvent extends EntityEvent
         }
 
         throw new InvalidArgumentException(sprintf('Class %s interface error', $dto::class));
+    }
+
+    public function getNameByLocale(Locale $locale): ?string
+    {
+        $lng = (string) $locale;
+
+
+//        if (!isset($this->translate[$locale])) {
+//            throw new \InvalidArgumentException("Symbol is not traded on this market.");
+//        }
+
+//        return $this->stocks[$symbol];
+
+
+
+        return 'temp';
     }
 
 }

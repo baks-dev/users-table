@@ -6,16 +6,9 @@
         {# Пользовательское меню #}
         {{ include(_self|replace({ "card.html.twig": "_usecase.html.twig" })) }}
     </td>
+    <td>
 
-    <td class="w-100">
-
-
-        <a href="{{ is_granted('ROLE_ADMIN') or is_granted('ROLE_USERS_TABLE_ACTIONS_EDIT') ? path('UsersTable:admin.action.newedit.edit', { id: item.event }) : '#' }}"
-           class="text-decoration-none fw-bolder w-100 d-flex align-items-center gap-3"
-           title="{{ 'btn.edit'|trans({}, 'core.btn') }}"
-
-        >
-
+        <div class="w-100 d-flex align-items-center gap-3">
             {% set img_path = item.category_cover_cdn == true ? CDN_HOST : '' %}
             {% set category_cover_ext = item.category_cover_cdn == true ? 'small.'~item.category_cover_ext : item.category_cover_ext %}
 
@@ -24,9 +17,28 @@
             </div>
 
             {{ item.category_name }}
-        </a>
+        </div>
 
 
     </td>
+
+    <td>
+        <a href="{{ is_granted('ROLE_ADMIN') or is_granted('ROLE_USERS_TABLE_ACTIONS_EDIT') ? path('UsersTable:admin.action.newedit.edit', { id: item.event }) : '#' }}"
+           class="text-decoration-none fw-bolder"
+           title="{{ 'btn.edit'|trans({}, 'core.btn') }}"
+        >
+            {% set img_path = item.category_cover_cdn == true ? CDN_HOST : '' %}
+            {% set category_cover_ext = item.category_cover_cdn == true ? 'small.'~item.category_cover_ext : item.category_cover_ext %}
+
+            {{ item.action_name }}
+        </a>
+    </td>
+
+
+    {% if is_granted('ROLE_ADMIN') %}
+        <td>
+            {{ item.users_profile_username }}
+        </td>
+    {% endif %}
 
 </tr>

@@ -57,7 +57,7 @@ final class IndexController extends AbstractController
         // $filterForm->handleRequest($request);
 
         // Получаем список
-        $UsersTableActions = $allUsersTableActions->fetchAllUsersTableActionsAssociative($search);
+        $UsersTableActions = $allUsersTableActions->fetchAllUsersTableActionsAssociative($search, $this->getFilterProfile());
 
         return $this->render(
             [

@@ -25,9 +25,10 @@ namespace BaksDev\Users\UsersTable\Repository\Actions\AllUsersTableActions;
 
 use BaksDev\Core\Form\Search\SearchDTO;
 use BaksDev\Core\Services\Paginator\PaginatorInterface;
+use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 
 interface AllUsersTableActionsInterface
 {
     /** Метод возвращает пагинатор AllUsersTableActions */
-    public function fetchAllUsersTableActionsAssociative(SearchDTO $search): PaginatorInterface;
+    public function fetchAllUsersTableActionsAssociative(SearchDTO $search, ?UserProfileUid $profile): PaginatorInterface;
 }
