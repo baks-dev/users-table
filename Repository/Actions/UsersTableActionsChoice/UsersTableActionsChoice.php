@@ -47,7 +47,7 @@ final class UsersTableActionsChoice implements UsersTableActionsChoiceInterface
     /**
      * Метод возвращает коллекцию идентификаторов активных процессов производства
      */
-    public function getCollection(ProductCategoryUid $category, UserProfileUid $profile): ?array
+    public function getCollection(UserProfileUid $profile, ?ProductCategoryUid $category = null): ?array
     {
         $qb = $this->ORMQueryBuilder->createQueryBuilder(self::class)->bindLocal();
 
@@ -58,18 +58,26 @@ final class UsersTableActionsChoice implements UsersTableActionsChoiceInterface
         $qb->from(UsersTableActions::class, 'actions');
 
         $qb->where('actions.profile = :profile')
-            ->setParameter('profile', $profile, UserProfileUid::TYPE)
-        ;
+            ->setParameter('profile', $profile, UserProfileUid::TYPE);
 
         $qb->join(
 
             UsersTableActionsEvent::class,
             'event',
             'WITH',
-            'event.id = actions.event AND event.category = :category'
+            'event.id = actions.event'
         );
 
-        $qb->setParameter('category', $category, ProductCategoryUid::TYPE);
+
+        if($category)
+        {
+
+            $qb
+                ->andWhere('event.category = :category')
+                ->setParameter('category', $category, ProductCategoryUid::TYPE);
+
+        }
+
 
         $qb->leftJoin(
             UsersTableActionsTrans::class,
@@ -78,7 +86,7 @@ final class UsersTableActionsChoice implements UsersTableActionsChoiceInterface
             'trans.event = actions.event AND trans.local = :local'
         );
 
-        
+
         /* Кешируем результат ORM */
         return $qb->enableCache('UsersTable', 86400)->getResult();
     }

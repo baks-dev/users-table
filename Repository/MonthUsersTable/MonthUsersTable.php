@@ -39,7 +39,10 @@ use BaksDev\Users\Profile\UserProfile\Entity\Event\UserProfileEvent;
 use BaksDev\Users\Profile\UserProfile\Entity\Info\UserProfileInfo;
 use BaksDev\Users\Profile\UserProfile\Entity\Personal\UserProfilePersonal;
 use BaksDev\Users\Profile\UserProfile\Entity\UserProfile;
+use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use BaksDev\Users\UsersTable\Entity\Actions\Event\UsersTableActionsEvent;
+use BaksDev\Users\UsersTable\Entity\Actions\Trans\UsersTableActionsTrans;
+use BaksDev\Users\UsersTable\Entity\Actions\UsersTableActions;
 use BaksDev\Users\UsersTable\Entity\Actions\Working\Trans\UsersTableActionsWorkingTrans;
 use BaksDev\Users\UsersTable\Entity\Actions\Working\UsersTableActionsWorking;
 use BaksDev\Users\UsersTable\Entity\UsersTableMonth;
@@ -65,7 +68,9 @@ final class MonthUsersTable implements MonthUsersTableInterface
     /** Метод возвращает пагинатор UsersTableDay */
     public function fetchMonthUsersTableAssociative(
         SearchDTO $search,
-        DayUsersTableFilterInterface $filter = null
+        UserProfileUid $profile,
+        DayUsersTableFilterInterface $filter = null,
+        ?UserProfileUid $authority = null,
     ): PaginatorInterface
     {
         $qb = $this->DBALQueryBuilder
@@ -73,23 +78,31 @@ final class MonthUsersTable implements MonthUsersTableInterface
             ->bindLocal()
         ;
 
+        $qb->addSelect('users_table_month.total AS table_total');
+        $qb->addSelect('users_table_month.date_table AS table_date');
+        $qb->addSelect('users_table_month.money AS table_money');
+        $qb->addSelect('users_table_month.premium AS table_premium');
+        $qb->addSelect('users_table_month.date_table AS table_date');
+        $qb->from(UsersTableMonth::TABLE, 'users_table_month');
 
-        $qb->addSelect('users_table_day.total AS table_total');
-        $qb->addSelect('users_table_day.date_table AS table_date');
-        $qb->addSelect('users_table_day.money AS table_money');
-        $qb->addSelect('users_table_day.premium AS table_premium');
-        $qb->addSelect('users_table_day.date_table AS table_date');
-        $qb->from(UsersTableMonth::TABLE, 'users_table_day');
 
-
+        if($authority && $filter?->getProfile())
+        {
+            $qb
+                ->andWhere('users_table_month.profile = :profile')
+                ->setParameter('profile', $filter?->getProfile(), UserProfileUid::TYPE);
+        }
+        
+        
         /**
          * Действие
          */
+        $qb->addSelect('working.id AS table_working_id');
         $qb->leftJoin(
-            'users_table_day',
+            'users_table_month',
             UsersTableActionsWorking::TABLE,
             'working',
-            'working.id = users_table_day.working'
+            'working.id = users_table_month.working'
         );
 
         $qb->addSelect('working_trans.name AS table_working');
@@ -100,11 +113,45 @@ final class MonthUsersTable implements MonthUsersTableInterface
             'working_trans.working = working.id AND working_trans.local = :local'
         );
 
+        $qb->addSelect('action_event.id AS table_action_id');
         $qb->leftJoin(
             'working',
             UsersTableActionsEvent::TABLE,
             'action_event',
             'action_event.id = working.event'
+        );
+
+
+
+
+
+        if($authority)
+        {
+            $qb->join(
+                'action_event',
+                UsersTableActions::TABLE,
+                'actions',
+                'actions.id = action_event.main AND actions.profile = :authority'
+            );
+
+            $qb->setParameter('authority', $authority, UserProfileUid::TYPE);
+        }
+        else
+        {
+            $qb->andWhere('users_table_month.profile = :profile')
+                ->setParameter('profile', $profile, UserProfileUid::TYPE)
+            ;
+
+            // $qb->setParameter('authority', $profile, UserProfileUid::TYPE);
+        }
+
+        $qb->addSelect('action_trans.name AS table_action');
+
+        $qb->leftJoin(
+            'action_event',
+            UsersTableActionsTrans::TABLE,
+            'action_trans',
+            'action_trans.event = action_event.id AND action_trans.local = :local'
         );
 
         /*$qb->addSelect('action_trans.name AS table_action');
@@ -115,7 +162,7 @@ final class MonthUsersTable implements MonthUsersTableInterface
             'action_trans.event = action_event.id AND action_trans.local = :local'
         );*/
 
-
+        $qb->addSelect('category.id AS table_category_id');
         $qb->leftJoin(
             'action_event',
             ProductCategory::TABLE,
@@ -123,13 +170,13 @@ final class MonthUsersTable implements MonthUsersTableInterface
             'category.id = action_event.category'
         );
 
-        $qb->addSelect('trans.name AS table_action');
+        $qb->addSelect('category_trans.name AS table_category');
 
         $qb->leftJoin(
             'category',
             ProductCategoryTrans::TABLE,
-            'trans',
-            'trans.event = category.event AND trans.local = :local'
+            'category_trans',
+            'category_trans.event = category.event AND category_trans.local = :local'
         );
 
 
@@ -139,18 +186,18 @@ final class MonthUsersTable implements MonthUsersTableInterface
         // UserProfile
         $qb->addSelect('users_profile.event as users_profile_event');
         $qb->join(
-            'users_table_day',
+            'users_table_month',
             UserProfile::TABLE,
             'users_profile',
-            'users_profile.id = users_table_day.profile'
+            'users_profile.id = users_table_month.profile'
         );
 
         // Info
         $qb->join(
-            'users_table_day',
+            'users_table_month',
             UserProfileInfo::TABLE,
             'users_profile_info',
-            'users_profile_info.profile = users_table_day.profile'
+            'users_profile_info.profile = users_table_month.profile'
         );
 
         // Event
@@ -173,7 +220,7 @@ final class MonthUsersTable implements MonthUsersTableInterface
 
         // Avatar
 
-        $qb->addSelect("CONCAT ( '/upload/".UserProfileAvatar::TABLE."' , '/', users_profile_avatar.dir, '/', users_profile_avatar.name, '.') AS users_profile_avatar");
+        $qb->addSelect("CASE WHEN users_profile_avatar.name IS NULL THEN users_profile_avatar.name ELSE CONCAT ( '/upload/".UserProfileAvatar::TABLE."' , '/', users_profile_avatar.dir, '/', users_profile_avatar.name, '.') END AS users_profile_avatar");
         $qb->addSelect("CASE WHEN users_profile_avatar.cdn THEN  CONCAT ( 'small.', users_profile_avatar.ext) ELSE users_profile_avatar.ext END AS users_profile_avatar_ext");
         $qb->addSelect('users_profile_avatar.cdn AS users_profile_avatar_cdn');
 
@@ -184,50 +231,54 @@ final class MonthUsersTable implements MonthUsersTableInterface
             'users_profile_avatar.event = users_profile_event.id'
         );
 
-        // Группа
-
-        $qb->leftJoin(
-            'users_profile_info',
-            CheckUsers::TABLE,
-            'check_user',
-            'check_user.usr = users_profile_info.usr'
-        );
-
-        $qb->leftJoin(
-            'check_user',
-            CheckUsersEvent::TABLE,
-            'check_user_event',
-            'check_user_event.id = check_user.event'
-        );
-
-        $qb->leftJoin(
-            'check_user_event',
-            Group::TABLE,
-            'groups',
-            'groups.id = check_user_event.group_id'
-        );
-
-        $qb->addSelect('groups_trans.name AS group_name'); // Название группы
-
-        $qb->leftJoin(
-            'groups',
-            GroupTrans::TABLE,
-            'groups_trans',
-            'groups_trans.event = groups.event AND groups_trans.local = :local'
-        );
-
-
-        $date = (new DateTimeImmutable())
-            ->modify('first day of') // Устанавливает первый день текущего месяца
-            ->setTime(0, 0)
-            ->getTimestamp();
+//        // Группа
+//
+//        $qb->leftJoin(
+//            'users_profile_info',
+//            CheckUsers::TABLE,
+//            'check_user',
+//            'check_user.usr = users_profile_info.usr'
+//        );
+//
+//        $qb->leftJoin(
+//            'check_user',
+//            CheckUsersEvent::TABLE,
+//            'check_user_event',
+//            'check_user_event.id = check_user.event'
+//        );
+//
+//        $qb->leftJoin(
+//            'check_user_event',
+//            Group::TABLE,
+//            'groups',
+//            'groups.id = check_user_event.group_id'
+//        );
+//
+//        $qb->addSelect('groups_trans.name AS group_name'); // Название группы
+//
+//        $qb->leftJoin(
+//            'groups',
+//            GroupTrans::TABLE,
+//            'groups_trans',
+//            'groups_trans.event = groups.event AND groups_trans.local = :local'
+//        );
 
         if($filter && $filter->getDate())
         {
-            $date = $filter->getDate()->getTimestamp();
+            $date = $filter->getDate()
+                ->modify('first day of') // Устанавливает первый день текущего месяца
+                ->setTime(0, 0)
+                ->getTimestamp();
+        }
+        else
+        {
+            $date = (new DateTimeImmutable())
+                ->modify('first day of') // Устанавливает первый день текущего месяца
+                ->setTime(0, 0)
+                ->getTimestamp();
         }
 
-        $qb->where('users_table_day.date_table = :date');
+        $qb->andWhere('users_table_month.date_table = :date');
         $qb->setParameter('date', $date, ParameterType::INTEGER);
         
         return $this->paginator->fetchAllAssociative($qb);

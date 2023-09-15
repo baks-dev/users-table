@@ -32,6 +32,7 @@ use BaksDev\Core\Listeners\Event\Security\RoleSecurity;
 use BaksDev\Users\UsersTable\Forms\DayUsersTableFilter\Admin\DayTableFilterDTO;
 use BaksDev\Users\UsersTable\Forms\DayUsersTableFilter\Admin\DayTableFilterFilterForm;
 use BaksDev\Users\UsersTable\Repository\DayUsersTable\DayUsersTableInterface;
+use DateInterval;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
@@ -46,26 +47,50 @@ final class DayController extends AbstractController
         Request $request,
         DayUsersTableInterface $allUsersTable,
         int $page = 0,
-    ): Response {
+    ): Response
+    {
         // Поиск
         $search = new SearchDTO();
         $searchForm = $this->createForm(SearchForm::class, $search);
         $searchForm->handleRequest($request);
 
         // Фильтр
-        $ROLE_ADMIN = $this->isGranted('ROLE_ADMIN');
-        $filter = new DayTableFilterDTO($request, $ROLE_ADMIN ? null : $this->getProfileUid());
+        //$ROLE_ADMIN = $this->isGranted('ROLE_ADMIN');
+        $filter = new DayTableFilterDTO($request, $this->getProfileUid());
+
         $filterForm = $this->createForm(DayTableFilterFilterForm::class, $filter);
         $filterForm->handleRequest($request);
 
+        if($filterForm->isSubmitted())
+        {
+            if($filterForm->get('back')->isClicked())
+            {
+                $filter->setDate($filter->getDate()?->sub(new DateInterval('P1D')));
+                return $this->redirectToReferer();
+            }
+
+            if($filterForm->get('next')->isClicked())
+            {
+                $filter->setDate($filter->getDate()?->add(new DateInterval('P1D')));
+                return $this->redirectToReferer();
+            }
+        }
+
         // Получаем список
-        $UsersTable = $allUsersTable->fetchDayUsersTableAssociative($search, $filter);
+        $UsersTable = $allUsersTable->fetchDayUsersTableAssociative(
+            $search,
+            $this->getCurrentProfileUid(),
+            $filter,
+            $this->isGranted('ROLE_MANUFACTURE_PART_OTHER') ? $this->getProfileUid() : null
+        );
+
 
         return $this->render(
             [
                 'query' => $UsersTable,
                 'search' => $searchForm->createView(),
                 'filter' => $filterForm->createView(),
+
             ]
         );
     }

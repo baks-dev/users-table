@@ -21,13 +21,17 @@
  *  THE SOFTWARE.
  */
 
-namespace BaksDev\Users\UsersTable\Forms\MonthUsersTableFilter\Admin;
+declare(strict_types=1);
+
+namespace BaksDev\Users\UsersTable\Forms\UserTableFilter;
+
 
 use BaksDev\Users\Profile\Group\Repository\UserProfileChoice\UserProfileChoiceInterface;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use BaksDev\Users\UsersTable\Forms\DayUsersTableFilter\Admin\DayTableFilterDTO;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
@@ -35,7 +39,7 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-final class MonthTableFilterFilterForm extends AbstractType
+final class UserTableFilterForm extends AbstractType
 {
     private RequestStack $request;
     private UserProfileChoiceInterface $profileChoice;
@@ -43,8 +47,8 @@ final class MonthTableFilterFilterForm extends AbstractType
     public function __construct(
         UserProfileChoiceInterface $profileChoice,
         RequestStack $request,
-    ) {
-
+    )
+    {
         $this->request = $request;
         $this->profileChoice = $profileChoice;
     }
@@ -52,7 +56,7 @@ final class MonthTableFilterFilterForm extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
 
-        /** @var MonthTableFilterDTO $data */
+        /** @var DayTableFilterDTO $data */
         $data = $builder->getData();
 
         $builder->add(
@@ -61,15 +65,14 @@ final class MonthTableFilterFilterForm extends AbstractType
             ['label' => 'Back', 'label_html' => true, 'attr' => ['class' => 'btn-light']]
         );
 
-
-        /*$builder->add('date', DateType::class, [
+        $builder->add('date', DateType::class, [
             'widget' => 'single_text',
             'html5' => false,
             'attr' => ['class' => 'js-datepicker'],
             'required' => false,
             'format' => 'dd.MM.yyyy',
             'input' => 'datetime_immutable',
-        ]);*/
+        ]);
 
 
         $builder->add(
@@ -77,17 +80,6 @@ final class MonthTableFilterFilterForm extends AbstractType
             SubmitType::class,
             ['label' => 'next', 'label_html' => true, 'attr' => ['class' => 'btn-light']]
         );
-
-
-       /* $builder->add('date', DateType::class, [
-            'widget' => 'single_text',
-            'html5' => false,
-            'attr' => ['class' => 'js-datepicker'],
-            'required' => false,
-            'format' => 'dd.MM.yyyy',
-            'input' => 'datetime_immutable',
-        ]);*/
-
 
         $profiles = $this->profileChoice->getCollection($data->getAuthority());
 
@@ -107,13 +99,14 @@ final class MonthTableFilterFilterForm extends AbstractType
             'attr' => ['data-select' => 'select2',]
         ]);
 
+
         $builder->addEventListener(
             FormEvents::POST_SUBMIT,
-            function (FormEvent $event): void {
-                /** @var MonthTableFilterDTO $data */
+            function(FormEvent $event): void {
+                /** @var DayTableFilterDTO $data */
                 $data = $event->getData();
 
-                $this->request->getSession()->set(MonthTableFilterDTO::date, $data->getDate());
+                $this->request->getSession()->set(DayTableFilterDTO::date, $data->getDate());
                 $this->request->getSession()->set(DayTableFilterDTO::profile, $data->getProfile());
             }
         );
@@ -121,11 +114,10 @@ final class MonthTableFilterFilterForm extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults(
-            [
-                'data_class' => MonthTableFilterDTO::class,
-                'method' => 'POST',
-            ]
-        );
+        $resolver->setDefaults([
+            'data_class' => UserTableFilterDTO::class,
+            'method' => 'POST',
+            'attr' => ['class' => 'w-100'],
+        ]);
     }
 }

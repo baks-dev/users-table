@@ -25,10 +25,16 @@ namespace BaksDev\Users\UsersTable\Repository\MonthUsersTable;
 
 use BaksDev\Core\Form\Search\SearchDTO;
 use BaksDev\Core\Services\Paginator\PaginatorInterface;
+use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use BaksDev\Users\UsersTable\Forms\DayUsersTableFilter\DayUsersTableFilterInterface;
 
 interface MonthUsersTableInterface
 {
     /** Метод возвращает пагинатор UsersTableDay */
-    public function fetchMonthUsersTableAssociative(SearchDTO $search, DayUsersTableFilterInterface $filter = null): PaginatorInterface;
+    public function fetchMonthUsersTableAssociative(
+        SearchDTO $search,
+        UserProfileUid $profile,
+        DayUsersTableFilterInterface $filter = null,
+        ?UserProfileUid $authority = null,
+    ): PaginatorInterface;
 }

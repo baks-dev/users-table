@@ -31,6 +31,6 @@ interface UsersTableActionsChoiceInterface
     /**
      * Метод возвращает коллекцию идентификаторов активных процессов производства
      */
-    public function getCollection(ProductCategoryUid $category, UserProfileUid $profile): ?array;
+    public function getCollection(UserProfileUid $profile, ?ProductCategoryUid $category = null): ?array;
 
 }

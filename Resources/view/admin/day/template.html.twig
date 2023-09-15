@@ -7,18 +7,18 @@
 
 {# ---- CSS ------------------------------------------------------------ #}
 {% block title %}
-	{{ 'admin.page.day'|trans }}
+    {{ 'admin.page.day'|trans }}
 {% endblock %}
 
 {# ---- CSS ------------------------------------------------------------ #}
 {% block stylesheets %}
-	<link href="/assets/plugins/nice-select2/nice-select2.min.css" rel="stylesheet">
-	<link href="/assets/plugins/datepicker/datepicker.min.css" rel="stylesheet">
+    <link href="/assets/plugins/nice-select2/nice-select2.min.css" rel="stylesheet">
+    <link href="/assets/plugins/datepicker/datepicker.min.css" rel="stylesheet">
 {% endblock %}
 
 {# ---- КОНТЕНТ-БЛОК ------------------------------------------------------------ #}
 {% block content %}
-	{{ include(_self|replace({ "template.html.twig": baks_settings.device~"/content.html.twig" })) }}
+    {{ include(_self|replace({ "template.html.twig": baks_settings.device~"/content.html.twig" })) }}
 {% endblock %}
 
 
@@ -29,9 +29,21 @@
 
 <script nonce="{{ csp_nonce() }}">
 
-filterDate = document.getElementById('delivery_package_filter_form_date');
+
+document.addEventListener("DOMContentLoaded", (event) => {
+	const form = document.forms.day_table_filter_filter_form;
+	form.addEventListener('change', () => { form.submit(); });
+});
+
     function changeDatapicker(input) {
         let forms = input.closest('form');
+
+        /** Пропускаем отпарвку формы, если "Добавить в табель" */
+       if (forms.name === 'users_table_form')
+           {
+               return;
+           }
+
         forms.submit();
     }
 </script>

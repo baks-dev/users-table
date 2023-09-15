@@ -1,0 +1,156 @@
+{% trans_default_domain("admin.table") %}
+
+
+ {# ДЕЙСТВИЯ #}
+
+        {% set working_colums = {} %}
+
+        {% for item in query.data %}
+            {# добавляем информацию о проделанной работе профиля #}
+            {% if working_colums[item.table_working_id] is not defined %}
+                {% set working_colums = working_colums + {(item.table_working_id) : item.table_working} %}
+            {% endif %}
+        {% endfor %}
+
+
+        {# ПРОИЗВОДСТВЕННЫЙ ПРОЦЕСС #}
+
+        {% set action_colums = {} %}
+        {% set action_colspan = {} %}
+
+        {% for item in query.data %}
+
+            {% if action_colums[item.table_action_id] is not defined %}
+                {% set action_colums = action_colums + {(item.table_action_id) : item.table_action } %}
+            {% endif %}
+
+            {% if action_colspan[item.table_working_id][item.table_action_id] is not defined %}
+                {% set action_colspan = action_colspan|merge({(item.table_working_id) : {
+                    action : item.table_action_id,
+                    category : item.table_category_id
+                } }) %}
+            {% endif %}
+
+        {% endfor %}
+
+
+
+        {# КАТЕГОРИИ #}
+
+        {% set category_colums = {} %}
+
+        {% for item in query.data %}
+            {% if category_colums[item.table_category_id] is not defined %}
+                {% set category_colums = category_colums + {(item.table_category_id) : item.table_category } %}
+            {% endif %}
+        {% endfor %}
+
+
+<table class="table  table-bordered mt-3"
+       style='--bs-table-striped-bg: rgba(249,249,249,0.7);'>
+    <thead>
+
+    <tr>
+        <th rowspan="3" class="text-center vertical-middle">Сотрудник</th>
+        {% for key_category, category in category_colums %}
+            <th colspan="{{ action_colspan|filter(v => v.category == key_category)|length }}" class="text-center">
+                {{ category }}
+            </th>
+        {% endfor %}
+        <th rowspan="3" class="text-center vertical-middle ">Всего</th>
+    </tr>
+
+
+    <tr>
+        {% for key_action, action in action_colums %}
+            <th colspan="{{ action_colspan|filter(v => v.action == key_action)|length }}"
+                class="text-center">{{ action }}</th>
+        {% endfor %}
+    </tr>
+
+    <tr>
+        {% for table_working in working_colums %}
+            <th class="text-center">{{ table_working }}</th>
+        {% endfor %}
+    </tr>
+
+    </thead>
+
+    <tbody>
+
+
+    {% set profiles = {} %}
+    {% set profile_working = {} %}
+    {% set profile_username = null %}
+
+    {% for item in query.data %}
+        {% if profiles[item.users_profile_event] is not defined %}
+            {% set profiles = profiles + {(item.users_profile_event) : item.users_profile_username} %}
+        {% endif %}
+    {% endfor %}
+
+
+
+    {% set all_total = 0 %}
+
+    {% for profile_key, profile_username in profiles %}
+        <tr>
+            <td class="text-end">{{ profile_username }}</td>
+
+            {% set total = 0 %}
+
+            {# ПЕРЕБОР ВСЕХ ДЕЙСТВИЙ #}
+            {% for work_key, work in working_colums %}
+
+                {% set quantity = null %}
+
+
+                {% for item in query.data %}
+
+                    {% if item.table_working_id == work_key and item.users_profile_event == profile_key %}
+                        {% set quantity = item.table_total %}
+                        {% set total = total + item.table_total %}
+                    {% endif %}
+
+                {% endfor %}
+
+                <td class="text-end">{{ quantity }}</td>
+
+            {% endfor %}
+
+            {% set all_total = all_total + total %}
+
+            <td class="text-end text-primary fw-bold">{{ total }}</td>
+        </tr>
+        {# {{ dump(key) }}
+        {{ dump(profile) }} #}
+
+    {% endfor %}
+
+    </tbody>
+
+
+    <tfoot>
+        <tr>
+            <th class="text-end text-primary">Итого</th>
+
+            {% for work_key, work in working_colums %}
+
+                {% set total = 0 %}
+
+                {% for item in query.data %}
+
+                    {% if item.table_working_id == work_key %}
+                        {% set total = total + item.table_total %}
+                    {% endif %}
+
+                {% endfor %}
+
+                <th class="text-end text-primary">{{ total }}</th>
+
+            {% endfor %}
+            <th class="text-end text-danger">{{ all_total }}</th>
+        </tr>
+    </tfoot>
+
+</table>

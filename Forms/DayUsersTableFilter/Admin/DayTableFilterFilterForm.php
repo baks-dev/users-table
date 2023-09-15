@@ -23,8 +23,13 @@
 
 namespace BaksDev\Users\UsersTable\Forms\DayUsersTableFilter\Admin;
 
+
+use BaksDev\Users\Profile\Group\Repository\UserProfileChoice\UserProfileChoiceInterface;
+use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -34,17 +39,30 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 final class DayTableFilterFilterForm extends AbstractType
 {
     private RequestStack $request;
+    private UserProfileChoiceInterface $profileChoice;
 
     public function __construct(
-
+        UserProfileChoiceInterface $profileChoice,
         RequestStack $request,
-    ) {
+    )
+    {
 
         $this->request = $request;
+        $this->profileChoice = $profileChoice;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+
+        /** @var DayTableFilterDTO $data */
+        $data = $builder->getData();
+        
+        $builder->add(
+            'back',
+            SubmitType::class,
+            ['label' => 'Back', 'label_html' => true, 'attr' => ['class' => 'btn-light']]
+        );
+
 
         $builder->add('date', DateType::class, [
             'widget' => 'single_text',
@@ -55,13 +73,41 @@ final class DayTableFilterFilterForm extends AbstractType
             'input' => 'datetime_immutable',
         ]);
 
+
+        $builder->add(
+            'next',
+            SubmitType::class,
+            ['label' => 'next', 'label_html' => true, 'attr' => ['class' => 'btn-light']]
+        );
+
+
+        $profiles = $this->profileChoice->getCollection($data->getAuthority());
+
+        /* TextType */
+        $builder->add('profile', ChoiceType::class, [
+            'choices' => $profiles,
+            'choice_value' => function(?UserProfileUid $profile) {
+                return $profile?->getValue();
+            },
+            'choice_label' => function(UserProfileUid $profile) {
+                return $profile->getAttr();
+            },
+            'label' => false,
+            'expanded' => false,
+            'multiple' => false,
+            'required' => false,
+            'attr' => ['data-select' => 'select2',]
+        ]);
+
+
         $builder->addEventListener(
             FormEvents::POST_SUBMIT,
-            function (FormEvent $event): void {
+            function(FormEvent $event): void {
                 /** @var DayTableFilterDTO $data */
                 $data = $event->getData();
 
                 $this->request->getSession()->set(DayTableFilterDTO::date, $data->getDate());
+                $this->request->getSession()->set(DayTableFilterDTO::profile, $data->getProfile());
             }
         );
     }

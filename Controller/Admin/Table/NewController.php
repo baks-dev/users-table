@@ -43,29 +43,32 @@ final class NewController extends AbstractController
 {
     #[Route('/admin/users/table/new', name: 'admin.table.new', methods: ['GET', 'POST'])]
     public function news(
-        Request           $request,
+        Request $request,
         UsersTableHandler $UsersTableHandler,
     ): Response
     {
-        $UsersTableDTO = new UsersTableDTO();
+        
+        $UsersTableDTO = new UsersTableDTO($this->getProfileUid());
+
+        //dd($UsersTableDTO);
 
         // Форма
         $form = $this->createForm(UsersTableForm::class, $UsersTableDTO, [
             'action' => $this->generateUrl('UsersTable:admin.table.new'),
         ]);
+
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid() && $form->has('users_table')) {
-
+        if($form->isSubmitted() && $form->isValid() && $form->has('users_table'))
+        {
             $UsersTable = $UsersTableHandler->handle($UsersTableDTO);
 
-            if ($UsersTable instanceof UsersTable) {
-                $this->addFlash('success', 'admin.success.new', 'admin.table');
-
-                return $this->redirectToRoute('UsersTable:admin.table.index');
-            }
-
-            $this->addFlash('danger', 'admin.danger.new', 'admin.table', $UsersTable);
+            $this->addFlash(
+                'admin.page.index',
+                $UsersTable instanceof UsersTable ? 'admin.success.new' : 'admin.danger.new',
+                'admin.table',
+                $UsersTable
+            );
 
             return $this->redirectToReferer();
         }

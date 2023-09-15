@@ -49,7 +49,7 @@ final class UsersTableActionsWorkingChoice implements UsersTableActionsWorkingCh
     /**
      * Метод возвращает коллекцию идентификаторов действий активного события UsersTableActions
      */
-    public function getCollection(UsersTableActionsEventUid $event): ?array
+    public function getCollection(?UsersTableActionsEventUid $event = null): ?array
     {
         $qb = $this->ORMQueryBuilder->createQueryBuilder(self::class);
         $locale = new Locale($this->translator->getLocale());
@@ -69,8 +69,12 @@ final class UsersTableActionsWorkingChoice implements UsersTableActionsWorkingCh
 
         $qb->setParameter('local', $locale, Locale::TYPE);
 
-        $qb->where('working.event = :event');
-        $qb->setParameter('event', $event, UsersTableActionsEventUid::TYPE);
+        if($event)
+        {
+            $qb
+                ->where('working.event = :event')
+                ->setParameter('event', $event, UsersTableActionsEventUid::TYPE);
+        }
 
 
         /* Кешируем результат ORM */

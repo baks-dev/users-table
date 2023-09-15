@@ -29,7 +29,10 @@ use BaksDev\Core\Controller\AbstractController;
 use BaksDev\Core\Form\Search\SearchDTO;
 use BaksDev\Core\Form\Search\SearchForm;
 use BaksDev\Core\Listeners\Event\Security\RoleSecurity;
+use BaksDev\Users\UsersTable\Forms\UserTableFilter\UserTableFilterDTO;
+use BaksDev\Users\UsersTable\Forms\UserTableFilter\UserTableFilterForm;
 use BaksDev\Users\UsersTable\Repository\AllUsersTable\AllUsersTableInterface;
+use DateInterval;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
@@ -53,17 +56,38 @@ final class IndexController extends AbstractController
         $searchForm->handleRequest($request);
 
         // Фильтр
-        // $filter = new ProductsStocksFilterDTO($request, $ROLE_ADMIN ? null : $this->getProfileUid());
-        // $filterForm = $this->createForm(ProductsStocksFilterForm::class, $filter);
-        // $filterForm->handleRequest($request);
+         $filter = new UserTableFilterDTO($request, $this->getProfileUid());
+         $filterForm = $this->createForm(UserTableFilterForm::class, $filter);
+         $filterForm->handleRequest($request);
+
+        if($filterForm->isSubmitted())
+        {
+            if($filterForm->get('back')->isClicked())
+            {
+                $filter->setDate($filter->getDate()?->sub(new DateInterval('P1D')));
+                return $this->redirectToReferer();
+            }
+
+            if($filterForm->get('next')->isClicked())
+            {
+                $filter->setDate($filter->getDate()?->add(new DateInterval('P1D')));
+                return $this->redirectToReferer();
+            }
+        }
 
         // Получаем список
-        $UsersTable = $allUsersTable->fetchAllUsersTableAssociative($search);
+        $UsersTable = $allUsersTable->fetchAllUsersTableAssociative(
+            $search,
+            $filter,
+            $this->getCurrentProfileUid(),
+            $this->isGranted('ROLE_MANUFACTURE_PART_OTHER') ? $this->getProfileUid() : null
+        );
 
         return $this->render(
             [
                 'query' => $UsersTable,
                 'search' => $searchForm->createView(),
+                'filter' => $filterForm->createView(),
             ]
         );
     }

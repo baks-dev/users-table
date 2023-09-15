@@ -31,15 +31,18 @@ use Symfony\Component\HttpFoundation\Request;
 final class DayTableFilterDTO implements DayUsersTableFilterInterface
 {
     public const date = 'BdAbXWDVTK';
+    public const profile = 'biOxIaADBD';
 
     private Request $request;
 
-    private ?UserProfileUid $profile;
+    private ?UserProfileUid $profile = null;
 
-    public function __construct(Request $request, ?UserProfileUid $profile)
+    private readonly ?UserProfileUid $authority;
+
+    public function __construct(Request $request, ?UserProfileUid $authority)
     {
         $this->request = $request;
-        $this->profile = $profile;
+        $this->authority = $authority;
     }
 
     /** Дата */
@@ -50,9 +53,19 @@ final class DayTableFilterDTO implements DayUsersTableFilterInterface
      */
     public function getDate(): ?DateTimeImmutable
     {
-        $sessionDate = $this->request->getSession()->get(self::date) ?: null;
+        $session = $this->request->getSession();
 
-        return $this->date ?: $sessionDate;
+        $sessionDate = $session->get(self::date) ?: new DateTimeImmutable();
+
+        //dump(time() - $session->getMetadataBag()->getLastUsed());
+
+        if(time() - $session->getMetadataBag()->getLastUsed() > 300)
+        {
+            $session->remove(self::date);
+            $this->date = new DateTimeImmutable();
+        }
+
+        return $this->date ?: $sessionDate ;
     }
 
     public function setDate(?DateTimeImmutable $date): void
@@ -61,15 +74,42 @@ final class DayTableFilterDTO implements DayUsersTableFilterInterface
         {
             $this->request->getSession()->remove(self::date);
         }
+        else
+        {
+            $this->request->getSession()->set(self::date, $date);
+        }
 
         $this->date = $date;
     }
 
     /**
-     * Profile.
+     * Authority
+     */
+    public function getAuthority(): ?UserProfileUid
+    {
+        return $this->authority;
+    }
+
+    /**
+     * Profile
      */
     public function getProfile(): ?UserProfileUid
     {
-        return $this->profile;
+
+        $sessionProfile = $this->request->getSession()->get(self::profile) ?: null;
+
+        return $this->profile ?: $sessionProfile;
     }
+
+    public function setProfile(?UserProfileUid $profile): self
+    {
+        if ($profile === null)
+        {
+            $this->request->getSession()->remove(self::profile);
+        }
+
+        $this->profile = $profile;
+        return $this;
+    }
+
 }

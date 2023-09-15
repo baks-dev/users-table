@@ -25,7 +25,9 @@ declare(strict_types=1);
 
 namespace BaksDev\Users\UsersTable\UseCase\Admin\Table\NewEdit;
 
-use BaksDev\Users\Profile\UserProfile\Repository\UserProfileChoice\UserProfileChoiceInterface;
+use BaksDev\Products\Category\Repository\CategoryChoice\CategoryChoiceInterface;
+use BaksDev\Products\Category\Type\Id\ProductCategoryUid;
+use BaksDev\Users\Profile\Group\Repository\UserProfileChoice\UserProfileChoiceInterface;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use BaksDev\Users\UsersTable\Repository\Actions\UsersTableActionsChoice\UsersTableActionsChoiceInterface;
 use BaksDev\Users\UsersTable\Repository\Actions\UsersTableActionsWorkingChoice\UsersTableActionsWorkingChoiceInterface;
@@ -36,10 +38,10 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 final class UsersTableForm extends AbstractType
@@ -47,55 +49,74 @@ final class UsersTableForm extends AbstractType
     private UserProfileChoiceInterface $profileChoice;
     private UsersTableActionsChoiceInterface $actionsChoice;
     private UsersTableActionsWorkingChoiceInterface $workingChoice;
+    private CategoryChoiceInterface $category;
 
     public function __construct(
         UserProfileChoiceInterface $profileChoice,
         UsersTableActionsChoiceInterface $actionsChoice,
-        UsersTableActionsWorkingChoiceInterface $workingChoice
+        UsersTableActionsWorkingChoiceInterface $workingChoice,
+        CategoryChoiceInterface $category,
     )
     {
         $this->profileChoice = $profileChoice;
         $this->actionsChoice = $actionsChoice;
         $this->workingChoice = $workingChoice;
+        $this->category = $category;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        /**
-         * Профиль пользователя.
-         */
-        $builder
-            ->add('profile', ChoiceType::class, [
-                'choices' => $this->profileChoice->getActiveUserProfile(),
-                'choice_value' => function (?UserProfileUid $profile) {
-                    return $profile?->getValue();
-                },
-                'choice_label' => function (UserProfileUid $profile) {
-                    return $profile->getAttr();
-                },
-                'label' => false,
-                'expanded' => false,
-                'multiple' => false
-            ]);
+
+        /** @var UsersTableDTO $data */
+        $data = $builder->getData();
+
 
 
         /**
-         * Группа действий
+         * Производственный процесс
          */
 
-        $builder
-            ->add('action', ChoiceType::class, [
-                'choices' => $this->actionsChoice->getCollection(),
-                'choice_value' => function (?UsersTableActionsEventUid $action) {
-                    return $action?->getValue();
+
+        /*$builder->get('action')->addModelTransformer(
+            new CallbackTransformer(
+                function($action) {
+                    return $action instanceof UsersTableActionsEventUid ? $action->getValue() : $action;
                 },
-                'choice_label' => function (UsersTableActionsEventUid $action) {
-                    return $action->getAttr();
+                function($action) {
+                    return $action ? new UsersTableActionsEventUid($action) : null;
+                }
+            )
+        );*/
+
+
+
+
+
+        /*$builder->get('working')->addModelTransformer(
+            new CallbackTransformer(
+                function($working) {
+                    return $working instanceof UsersTableActionsWorkingUid ? $working->getValue() : $working;
                 },
-                'label' => false,
-                'expanded' => false,
-                'multiple' => false
-            ]);
+                function($working) {
+                    return $working ? new UsersTableActionsWorkingUid($working) : null;
+                }
+            )
+        );*/
+
+        $choice = $this->actionsChoice->getCollection($data->getAuthority()) ?: [];
+
+
+
+//        $builder
+//            ->add('action', ChoiceType::class, [
+//                'choices' => [],
+//                'label' => false,
+//                'expanded' => false,
+//                'multiple' => false
+//            ]);
+
+//        $builder
+//            ->add('action', TextType::class, ['disabled' => true]);
 
 
         /*$builder
@@ -108,56 +129,90 @@ final class UsersTableForm extends AbstractType
 
 
 
-        $formModifier = function (FormInterface $form, UsersTableActionsEventUid $action = null): void {
+        /**
+         * Категория производства
+         */
 
-            $working = null === $action ? [] : $this->workingChoice->getCollection($action);
+        $builder
+            ->add('category', ChoiceType::class, [
+                'choices' => $this->category->getCategoryCollection(),
+                'choice_value' => function(?ProductCategoryUid $category) {
+                    return $category?->getValue();
+                },
+                'choice_label' => function(ProductCategoryUid $category) {
+                    return $category->getOptions();
+                },
 
-            $form
-                ->add('working', ChoiceType::class, [
-                    'choices' => $working,
-                    'choice_value' => function (?UsersTableActionsWorkingUid $working) {
-                        return $working?->getValue();
-                    },
-                    'choice_label' => function (UsersTableActionsWorkingUid $working) {
-                        return $working->getOption();
-                    },
-                    'label' => false,
-                    'expanded' => false,
-                    'multiple' => false,
-                    'disabled' => ($working ? false : true)
-                ]);
-        };
-
-        $builder->addEventListener(
-            FormEvents::PRE_SET_DATA,
-            function (FormEvent $event) use ($formModifier): void {
-                /* @var UsersTableDTO $data */
-                $data = $event->getData();
-                $formModifier($event->getForm(), $data->getAction());
-            }
-        );
+                'label' => false,
+                'expanded' => false,
+                'multiple' => false,
+                'required' => true,
+            ]);
 
 
+        $builder
+            ->add('working', TextType::class, ['disabled' => true]);
 
-        $builder->get('action')->addEventListener(
-            FormEvents::POST_SUBMIT,
-            function (FormEvent $event) use ($formModifier): void {
+        $builder
+            ->add('action', ChoiceType::class, [
+                'choices' => $choice,
+                'choice_value' => function(?UsersTableActionsEventUid $action) {
+                    return $action?->getValue();
+                },
+                'choice_label' => function(UsersTableActionsEventUid $action) {
 
-                $action = $event->getForm()->getData();
-                $formModifier($event->getForm()->getParent(), $action);
-            }
-        );
+                    return $action->getAttr();
+                },
+                'label' => false,
+                'expanded' => false,
+                'multiple' => false,
+                'required' => true,
+                //'disabled' => true
+            ]);
 
+
+        /**
+         * Действие сотрудника
+         */
+
+        $builder
+            ->add('working', TextType::class, ['disabled' => true]);
+
+//        $builder
+//            ->add('working', ChoiceType::class, [
+//                'choices' => [],
+//                'label' => false,
+//                'expanded' => false,
+//                'multiple' => false
+//            ]);
+
+        /**
+         * Профиль пользователя.
+         */
+
+        $profiles = $this->profileChoice->getCollection($data->getAuthority()) ?: [];
+
+        $builder
+            ->add('profile', ChoiceType::class, [
+                'choices' => $profiles,
+                'choice_value' => function(?UserProfileUid $profile) {
+                    return $profile?->getValue();
+                },
+                'choice_label' => function(UserProfileUid $profile) {
+                    return $profile->getAttr();
+                },
+                'label' => false,
+                'expanded' => false,
+                'multiple' => false
+            ]);
 
 
         /**
          * Количество.
          */
-        $builder->add('quantity', IntegerType::class, [
-            'attr' => ['min' => 1]
-        ]);
+        $builder->add('quantity', IntegerType::class);
 
-        /*
+        /**
          * Дата
          */
         $builder->add('date', DateType::class, [
@@ -174,7 +229,130 @@ final class UsersTableForm extends AbstractType
             SubmitType::class,
             ['label' => 'Save', 'label_html' => true, 'attr' => ['class' => 'btn-primary']]
         );
+
+
+
+
+        //add listener to change the default values when loading the form
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, [$this, 'onPresetData']);
+
+        $builder->get('action')->addEventListener(FormEvents::POST_SUBMIT, [$this, 'onPostSubmitAction']);
+
+        $builder->get('category')->addEventListener(FormEvents::POST_SUBMIT, [$this, 'onPostSubmitCategory']);
+
     }
+
+
+        public function onPresetData(FormEvent $event) : void
+        {
+            $builder = $event->getForm();
+
+            /** @var UsersTableDTO $data */
+            $data = $event->getData();
+
+//            $choice = $this->actionsChoice->getCollection($data->getAuthority()) ?: [];
+
+//            $builder
+//                ->add('action', ChoiceType::class, [
+//                    'choices' => $choice,
+//                    'label' => false,
+//                    'expanded' => false,
+//                    'multiple' => false,
+//                    'required' => true,
+//                    'disabled' => true
+//                ]);
+        }
+
+
+    public function onPostSubmitAction(FormEvent $event): void
+    {
+
+       // dump('onPostSubmitAction');
+
+        $builder = $event->getForm()->getParent();
+
+        if(!$builder || !$event->getData())
+        {
+            return;
+        }
+
+        $action = new UsersTableActionsEventUid($event->getData());
+
+        $choice = $this->workingChoice->getCollection($action) ?: [];
+
+        $builder
+            ->add('working', ChoiceType::class, [
+                'choices' => $choice,
+                'choice_value' => function(?UsersTableActionsWorkingUid $working) {
+                    return $working?->getValue();
+                },
+                'choice_label' => function(UsersTableActionsWorkingUid $working) {
+                    return $working->getOption();
+                },
+                'label' => false,
+                'expanded' => false,
+                'multiple' => false,
+                'disabled' => !$choice
+            ]);
+    }
+
+
+    public function onPostSubmitCategory(FormEvent $event): void
+    {
+       // dump('onPostSubmitCategory');
+
+        $builder = $event->getForm()->getParent();
+
+
+        if(!$builder || !$event->getData())
+        {
+            return;
+        }
+
+        $category = new ProductCategoryUid($event->getData());
+
+        /** @var UsersTableDTO $data */
+        $data = $builder?->getData();
+
+
+        $choice = $this->actionsChoice->getCollection($data->getAuthority(), $category) ?: [];
+
+        $builder
+            ->add('action', ChoiceType::class, [
+                'choices' => $choice,
+                'choice_value' => function(?UsersTableActionsEventUid $action) {
+                    return $action?->getValue();
+                },
+                'choice_label' => function(UsersTableActionsEventUid $action) {
+
+                    return $action->getAttr();
+                },
+
+                'label' => false,
+                'expanded' => false,
+                'multiple' => false,
+                'required' => true,
+                'disabled' => !$choice
+            ]);
+
+        $choice = $this->workingChoice->getCollection() ?: [];
+
+        $builder
+            ->add('working', ChoiceType::class, [
+                'choices' => $choice,
+                'choice_value' => function(?UsersTableActionsWorkingUid $working) {
+                    return $working?->getValue();
+                },
+                'choice_label' => function(UsersTableActionsWorkingUid $working) {
+                    return $working->getOption();
+                },
+                'label' => false,
+                'expanded' => false,
+                'multiple' => false,
+                //'disabled' => true
+            ]);
+    }
+
 
     public function configureOptions(OptionsResolver $resolver): void
     {

@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace BaksDev\Users\UsersTable\UseCase\Admin\Table\NewEdit;
 
+use BaksDev\Products\Category\Type\Id\ProductCategoryUid;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use BaksDev\Users\UsersTable\Entity\Table\Event\UsersTableEventInterface;
 use BaksDev\Users\UsersTable\Type\Actions\Event\UsersTableActionsEventUid;
@@ -55,7 +56,7 @@ final class UsersTableDTO implements UsersTableEventInterface
      */
     //#[Assert\NotBlank]
     #[Assert\Uuid]
-    private UsersTableActionsWorkingUid $working;
+    private ?UsersTableActionsWorkingUid $working = null;
 
     /**
      * Дата.
@@ -76,16 +77,35 @@ final class UsersTableDTO implements UsersTableEventInterface
      *
      */
 
+
+
     /**
      * Категория производства
+     */
+    #[Assert\NotBlank]
+    #[Assert\Uuid]
+    public ?ProductCategoryUid $category = null;
+
+    /**
+     * Производственный процесс
      */
     #[Assert\Uuid]
     private ?UsersTableActionsEventUid $action = null;
 
 
-    public function __construct()
+    /**
+     * Профиль пользователя фильтрации производственных процессов
+     */
+    #[Assert\NotBlank]
+    #[Assert\Uuid]
+    private readonly UserProfileUid $authority;
+
+
+
+    public function __construct(UserProfileUid $authority)
     {
         $this->date = new DateTimeImmutable();
+        $this->authority = $authority;
     }
 
     /**
@@ -159,14 +179,33 @@ final class UsersTableDTO implements UsersTableEventInterface
     /**
      * Действие
      */
-    public function getWorking(): UsersTableActionsWorkingUid
+    public function getWorking(): ?UsersTableActionsWorkingUid
     {
         return $this->working;
     }
 
-    public function setWorking(UsersTableActionsWorkingUid $working): void
+    public function setWorking(UsersTableActionsWorkingUid|string $working): void
     {
+
+        if(is_string($working))
+        {
+            $working = new UsersTableActionsWorkingUid($working);
+        }
+
         $this->working = $working;
     }
-    
+
+
+    /**
+     * Authority
+     */
+    public function getAuthority(): UserProfileUid
+    {
+        return $this->authority;
+    }
+
+
+
+
+
 }

@@ -24,4 +24,27 @@
 
 {% block javascript %}
 <script async nonce="{{ csp_nonce() }}" class="lazy" data-src="/assets/plugins/nice-select2/nice-select2.min.js?v={{ version }}"></script>
+
+<script nonce="{{ csp_nonce() }}">
+
+
+document.addEventListener("DOMContentLoaded", (event) => {
+	const form = document.forms.month_table_filter_filter_form;
+	form.addEventListener('change', () => { form.submit(); });
+});
+
+/** Отпарвка формы при изменении даты */
+    function changeDatapicker(input) {
+        let forms = input.closest('form');
+
+		/** Пропускаем отпарвку формы, если "Добавить в табель" */
+       if (forms.name === 'users_table_form')
+           {
+               return;
+           }
+
+        forms.submit();
+    }
+</script>
+
 {% endblock %}

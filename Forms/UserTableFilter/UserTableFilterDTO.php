@@ -21,17 +21,17 @@
  *  THE SOFTWARE.
  */
 
-namespace BaksDev\Users\UsersTable\Forms\MonthUsersTableFilter\Admin;
+declare(strict_types=1);
+
+namespace BaksDev\Users\UsersTable\Forms\UserTableFilter;
 
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
-use BaksDev\Users\UsersTable\Forms\DayUsersTableFilter\DayUsersTableFilterInterface;
 use DateTimeImmutable;
 use Symfony\Component\HttpFoundation\Request;
 
-final class MonthTableFilterDTO implements DayUsersTableFilterInterface
+final class UserTableFilterDTO
 {
-    public const date = 'gofHaIWoav';
-
+    public const date = 'BdAbXWDVTK';
     public const profile = 'biOxIaADBD';
 
     private Request $request;
@@ -44,14 +44,6 @@ final class MonthTableFilterDTO implements DayUsersTableFilterInterface
     {
         $this->request = $request;
         $this->authority = $authority;
-    }
-
-    /**
-     * Authority
-     */
-    public function getAuthority(): ?UserProfileUid
-    {
-        return $this->authority;
     }
 
     /** Дата */
@@ -92,6 +84,14 @@ final class MonthTableFilterDTO implements DayUsersTableFilterInterface
     }
 
     /**
+     * Authority
+     */
+    public function getAuthority(): ?UserProfileUid
+    {
+        return $this->authority;
+    }
+
+    /**
      * Profile
      */
     public function getProfile(): ?UserProfileUid
@@ -112,4 +112,5 @@ final class MonthTableFilterDTO implements DayUsersTableFilterInterface
         $this->profile = $profile;
         return $this;
     }
+
 }

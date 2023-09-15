@@ -63,6 +63,7 @@ final class UsersTableHandler
         UsersTableDTO $command,
     ): string|UsersTable
     {
+
         /**
          *  Валидация UsersTableDTO
          */
@@ -72,6 +73,7 @@ final class UsersTableHandler
             $uniqid = uniqid('', false);
             $errorsString = (string)$errors;
             $this->logger->error($uniqid . ': ' . $errorsString);
+
             return $uniqid;
         }
 
@@ -103,7 +105,8 @@ final class UsersTableHandler
         $this->entityManager->clear();
 
         /** @var UsersTable $Main */
-        if ($Event->getMain()) {
+        if ($Event->getMain())
+        {
             $Main = $this->entityManager->getRepository(UsersTable::class)->findOneBy(
                 ['event' => $command->getEvent()]
             );
@@ -127,11 +130,9 @@ final class UsersTableHandler
             $Event->setMain($Main);
         }
 
-
         $Event->setEntity($command);
         $this->entityManager->persist($Event);
-
-
+        
         /**
          * Валидация Event
          */

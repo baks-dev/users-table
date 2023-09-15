@@ -39,12 +39,15 @@ use BaksDev\Users\Profile\UserProfile\Entity\Event\UserProfileEvent;
 use BaksDev\Users\Profile\UserProfile\Entity\Info\UserProfileInfo;
 use BaksDev\Users\Profile\UserProfile\Entity\Personal\UserProfilePersonal;
 use BaksDev\Users\Profile\UserProfile\Entity\UserProfile;
+use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use BaksDev\Users\UsersTable\Entity\Actions\Event\UsersTableActionsEvent;
-use BaksDev\Users\UsersTable\Entity\Actions\Trans\UsersTableActionsTrans;
+use BaksDev\Users\UsersTable\Entity\Actions\UsersTableActions;
 use BaksDev\Users\UsersTable\Entity\Actions\Working\Trans\UsersTableActionsWorkingTrans;
 use BaksDev\Users\UsersTable\Entity\Actions\Working\UsersTableActionsWorking;
 use BaksDev\Users\UsersTable\Entity\Table\Event\UsersTableEvent;
 use BaksDev\Users\UsersTable\Entity\Table\UsersTable;
+use BaksDev\Users\UsersTable\Forms\UserTableFilter\UserTableFilterDTO;
+use DateTimeImmutable;
 
 final class AllUsersTable implements AllUsersTableInterface
 {
@@ -55,17 +58,23 @@ final class AllUsersTable implements AllUsersTableInterface
     public function __construct(
         DBALQueryBuilder $DBALQueryBuilder,
         PaginatorInterface $paginator,
-    ) {
+    )
+    {
         $this->paginator = $paginator;
         $this->DBALQueryBuilder = $DBALQueryBuilder;
     }
 
     /** Метод возвращает пагинатор UsersTable */
-    public function fetchAllUsersTableAssociative(SearchDTO $search): PaginatorInterface
+    public function fetchAllUsersTableAssociative(
+        SearchDTO $search,
+        UserTableFilterDTO $filter,
+        UserProfileUid $profile,
+        ?UserProfileUid $authority
+    ): PaginatorInterface
     {
         $qb = $this->DBALQueryBuilder
             ->createQueryBuilder(self::class)
-        ->bindLocal();
+            ->bindLocal();
 
 
         $qb->addSelect('users_table.id');
@@ -81,6 +90,42 @@ final class AllUsersTable implements AllUsersTableInterface
             'event',
             'event.id = users_table.event'
         );
+
+
+        /** Если пользователь авторизован - и передан фильтр по профилю  */
+        if($authority && $filter?->getProfile())
+        {
+            $qb
+                ->andWhere('event.profile = :profile')
+                ->setParameter('profile', $filter?->getProfile(), UserProfileUid::TYPE);
+        }
+
+
+        //        /** Табели других пользователей */
+        //        if($authority)
+        //        {
+        //            /** Профили доверенных пользователей */
+        //            $qb->leftJoin(
+        //                'event',
+        //                ProfileGroupUsers::TABLE,
+        //                'profile_group_users',
+        //                'profile_group_users.authority = :authority OR profile_group_users.profile = :profile'
+        //            );
+        //
+        //            $qb
+        //                //->andWhere('(part_event.profile = :profile OR part_event.profile = :authority OR part_event.profile = profile_group_users.profile)')
+        //                ->andWhere('event.profile = profile_group_users.profile')
+        //                ->setParameter('authority', $authority, UserProfileUid::TYPE)
+        //                ->setParameter('profile', $profile, UserProfileUid::TYPE)
+        //            ;
+        //        }
+        //        else
+        //        {
+        //            $qb
+        //                ->andWhere('event.profile = :profile')
+        //                ->setParameter('profile', $profile, UserProfileUid::TYPE);
+        //
+        //        }
 
 
         /**
@@ -110,13 +155,33 @@ final class AllUsersTable implements AllUsersTableInterface
 
 
 
-/*        $qb->addSelect('action_trans.name AS table_action');
-        $qb->leftJoin(
-            'action_event',
-            UsersTableActionsTrans::TABLE,
-            'action_trans',
-            'action_trans.event = action_event.id AND action_trans.local = :local'
-        );*/
+        if($authority)
+        {
+            $qb->join(
+                'action_event',
+                UsersTableActions::TABLE,
+                'actions',
+                'actions.id = action_event.main AND actions.profile = :authority'
+            );
+
+            $qb->setParameter('authority', $authority, UserProfileUid::TYPE);
+        }
+        else
+        {
+
+            $qb->andWhere('event.profile = :profile')
+                ->setParameter('profile', $profile, UserProfileUid::TYPE)
+            ;
+        }
+
+
+        /*        $qb->addSelect('action_trans.name AS table_action');
+                $qb->leftJoin(
+                    'action_event',
+                    UsersTableActionsTrans::TABLE,
+                    'action_trans',
+                    'action_trans.event = action_event.id AND action_trans.local = :local'
+                );*/
 
 
         $qb->leftJoin(
@@ -134,7 +199,6 @@ final class AllUsersTable implements AllUsersTableInterface
             'trans',
             'trans.event = category.event AND trans.local = :local'
         );
-
 
 
         // ОТВЕТСТВЕННЫЙ
@@ -176,7 +240,7 @@ final class AllUsersTable implements AllUsersTableInterface
 
         // Avatar
 
-        $qb->addSelect("CONCAT ( '/upload/".UserProfileAvatar::TABLE."' , '/', users_profile_avatar.dir, '/', users_profile_avatar.name, '.') AS users_profile_avatar");
+        $qb->addSelect("CASE WHEN users_profile_avatar.name IS NULL THEN users_profile_avatar.name ELSE CONCAT ( '/upload/".UserProfileAvatar::TABLE."' , '/', users_profile_avatar.dir, '/', users_profile_avatar.name, '.') END AS users_profile_avatar");
         $qb->addSelect("CASE WHEN users_profile_avatar.cdn THEN  CONCAT ( 'small.', users_profile_avatar.ext) ELSE users_profile_avatar.ext END AS users_profile_avatar_ext");
         $qb->addSelect('users_profile_avatar.cdn AS users_profile_avatar_cdn');
 
@@ -187,44 +251,66 @@ final class AllUsersTable implements AllUsersTableInterface
             'users_profile_avatar.event = users_profile_event.id'
         );
 
-        // Группа
+        //        // Группа
+        //
+        //        $qb->leftJoin(
+        //            'users_profile_info',
+        //            CheckUsers::TABLE,
+        //            'check_user',
+        //            'check_user.usr = users_profile_info.usr'
+        //        );
+        //
+        //        $qb->leftJoin(
+        //            'check_user',
+        //            CheckUsersEvent::TABLE,
+        //            'check_user_event',
+        //            'check_user_event.id = check_user.event'
+        //        );
+        //
+        //        $qb->leftJoin(
+        //            'check_user_event',
+        //            Group::TABLE,
+        //            'groups',
+        //            'groups.id = check_user_event.group_id'
+        //        );
 
-        $qb->leftJoin(
-            'users_profile_info',
-            CheckUsers::TABLE,
-            'check_user',
-            'check_user.usr = users_profile_info.usr'
-        );
+        //        $qb->addSelect('groups_trans.name AS group_name'); // Название группы
+        //
+        //        $qb->leftJoin(
+        //            'groups',
+        //            GroupTrans::TABLE,
+        //            'groups_trans',
+        //            'groups_trans.event = groups.event AND groups_trans.local = :local'
+        //        );
 
-        $qb->leftJoin(
-            'check_user',
-            CheckUsersEvent::TABLE,
-            'check_user_event',
-            'check_user_event.id = check_user.event'
-        );
 
-        $qb->leftJoin(
-            'check_user_event',
-            Group::TABLE,
-            'groups',
-            'groups.id = check_user_event.group_id'
-        );
 
-        $qb->addSelect('groups_trans.name AS group_name'); // Название группы
+        if($filter && $filter->getDate())
+        {
+            $start = $filter->getDate()
+                ->setTime(0, 0);
 
-        $qb->leftJoin(
-            'groups',
-            GroupTrans::TABLE,
-            'groups_trans',
-            'groups_trans.event = groups.event AND groups_trans.local = :local'
-        );
+            $end = $filter->getDate()
+                ->setTime(23, 59, 59);
+        }
+        else
+        {
 
+            $start = (new DateTimeImmutable())
+                ->setTime(0, 0);
+
+
+            $end = (new DateTimeImmutable())
+                ->setTime(0, 0);
+        }
+
+        $qb->andWhere('event.date_table BETWEEN :start AND :end')
+            ->setParameter('start', $start->format("Y-m-d H:i:s"))
+            ->setParameter('end', $end->format("Y-m-d H:i:s"))
+        ;
 
 
         $qb->orderBy('event.date_table', 'DESC');
-
-
-
 
 
         return $this->paginator->fetchAllAssociative($qb);

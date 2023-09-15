@@ -32,6 +32,7 @@ use BaksDev\Core\Listeners\Event\Security\RoleSecurity;
 use BaksDev\Users\UsersTable\Forms\MonthUsersTableFilter\Admin\MonthTableFilterDTO;
 use BaksDev\Users\UsersTable\Forms\MonthUsersTableFilter\Admin\MonthTableFilterFilterForm;
 use BaksDev\Users\UsersTable\Repository\MonthUsersTable\MonthUsersTableInterface;
+use DateInterval;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
@@ -53,13 +54,37 @@ final class MonthController extends AbstractController
         $searchForm->handleRequest($request);
 
         // Фильтр
-        $ROLE_ADMIN = $this->isGranted('ROLE_ADMIN');
-        $filter = new MonthTableFilterDTO($request, $ROLE_ADMIN ? null : $this->getProfileUid());
+
+        $filter = new MonthTableFilterDTO($request, $this->getProfileUid());
         $filterForm = $this->createForm(MonthTableFilterFilterForm::class, $filter);
         $filterForm->handleRequest($request);
 
+
+        if($filterForm->isSubmitted())
+        {
+            if($filterForm->get('back')->isClicked())
+            {
+                $filter->setDate($filter->getDate()?->sub(new DateInterval('P1M')));
+                return $this->redirectToReferer();
+            }
+
+            if($filterForm->get('next')->isClicked())
+            {
+                $filter->setDate($filter->getDate()?->add(new DateInterval('P1M')));
+                return $this->redirectToReferer();
+            }
+        }
+
+
         // Получаем список
-        $UsersTable = $allUsersTable->fetchMonthUsersTableAssociative($search, $filter);
+        $UsersTable = $allUsersTable->fetchMonthUsersTableAssociative(
+            $search,
+            $this->getCurrentProfileUid(),
+            $filter,
+            $this->isGranted('ROLE_MANUFACTURE_PART_OTHER') ? $this->getProfileUid() : null
+        );
+
+
 
         return $this->render(
             [

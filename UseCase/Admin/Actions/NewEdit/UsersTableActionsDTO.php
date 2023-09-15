@@ -99,8 +99,14 @@ final class UsersTableActionsDTO implements UsersTableActionsEventInterface
         return $this->category;
     }
 
-    public function setCategory(ProductCategoryUid $category): void
+    public function setCategory(ProductCategoryUid|string $category): void
     {
+
+        if(is_string($category))
+        {
+            $category = new ProductCategoryUid($category);
+        }
+
         $this->category = $category;
     }
 

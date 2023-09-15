@@ -30,5 +30,5 @@ interface UsersTableActionsWorkingChoiceInterface
     /**
      * Метод возвращает коллекцию идентификаторов действий активного события UsersTableActions
      */
-    public function getCollection(UsersTableActionsEventUid $event): ?array;
+    public function getCollection(?UsersTableActionsEventUid $event = null): ?array;
 }
