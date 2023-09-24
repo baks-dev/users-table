@@ -30,10 +30,7 @@ use BaksDev\Core\Form\Search\SearchDTO;
 use BaksDev\Core\Services\Paginator\PaginatorInterface;
 use BaksDev\Products\Category\Entity\ProductCategory;
 use BaksDev\Products\Category\Entity\Trans\ProductCategoryTrans;
-use BaksDev\Users\Groups\Group\Entity\Group;
-use BaksDev\Users\Groups\Group\Entity\Trans\GroupTrans;
-use BaksDev\Users\Groups\Users\Entity\CheckUsers;
-use BaksDev\Users\Groups\Users\Entity\Event\CheckUsersEvent;
+use BaksDev\Users\Profile\Group\Entity\Users\ProfileGroupUsers;
 use BaksDev\Users\Profile\UserProfile\Entity\Avatar\UserProfileAvatar;
 use BaksDev\Users\Profile\UserProfile\Entity\Event\UserProfileEvent;
 use BaksDev\Users\Profile\UserProfile\Entity\Info\UserProfileInfo;
@@ -42,7 +39,6 @@ use BaksDev\Users\Profile\UserProfile\Entity\UserProfile;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use BaksDev\Users\UsersTable\Entity\Actions\Event\UsersTableActionsEvent;
 use BaksDev\Users\UsersTable\Entity\Actions\Trans\UsersTableActionsTrans;
-use BaksDev\Users\UsersTable\Entity\Actions\UsersTableActions;
 use BaksDev\Users\UsersTable\Entity\Actions\Working\Trans\UsersTableActionsWorkingTrans;
 use BaksDev\Users\UsersTable\Entity\Actions\Working\UsersTableActionsWorking;
 use BaksDev\Users\UsersTable\Entity\UsersTableMonth;
@@ -68,9 +64,10 @@ final class MonthUsersTable implements MonthUsersTableInterface
     /** Метод возвращает пагинатор UsersTableDay */
     public function fetchMonthUsersTableAssociative(
         SearchDTO $search,
+        DayUsersTableFilterInterface $filter,
         UserProfileUid $profile,
-        DayUsersTableFilterInterface $filter = null,
         ?UserProfileUid $authority = null,
+        bool $other = false,
     ): PaginatorInterface
     {
         $qb = $this->DBALQueryBuilder
@@ -86,14 +83,6 @@ final class MonthUsersTable implements MonthUsersTableInterface
         $qb->from(UsersTableMonth::TABLE, 'users_table_month');
 
 
-        if($authority && $filter?->getProfile())
-        {
-            $qb
-                ->andWhere('users_table_month.profile = :profile')
-                ->setParameter('profile', $filter?->getProfile(), UserProfileUid::TYPE);
-        }
-        
-        
         /**
          * Действие
          */
@@ -125,24 +114,36 @@ final class MonthUsersTable implements MonthUsersTableInterface
 
 
 
+        /** Табели других пользователей */
         if($authority)
         {
-            $qb->join(
-                'action_event',
-                UsersTableActions::TABLE,
-                'actions',
-                'actions.id = action_event.main AND actions.profile = :authority'
+            $qb->leftJoin(
+                'users_table_month',
+                ProfileGroupUsers::TABLE,
+                'profile_group_users',
+                'profile_group_users.authority = :authority '.($other ? '' : ' AND profile_group_users.profile = :profile')
             );
 
-            $qb->setParameter('authority', $authority, UserProfileUid::TYPE);
+            $qb
+                ->andWhere('users_table_month.profile = profile_group_users.profile')
+                ->setParameter('authority', $authority, UserProfileUid::TYPE)
+                ->setParameter('profile', $filter?->getProfile() ?: $profile, UserProfileUid::TYPE)
+            ;
+
+            /** Если пользователь авторизован - и передан фильтр по профилю  */
+            if($filter?->getProfile())
+            {
+                $qb
+                    ->andWhere('users_table_month.profile = :profile')
+                    ->setParameter('profile', $filter?->getProfile(), UserProfileUid::TYPE);
+            }
+
         }
         else
         {
-            $qb->andWhere('users_table_month.profile = :profile')
-                ->setParameter('profile', $profile, UserProfileUid::TYPE)
-            ;
-
-            // $qb->setParameter('authority', $profile, UserProfileUid::TYPE);
+            $qb
+                ->andWhere('users_table_month.profile = :profile')
+                ->setParameter('profile', $profile, UserProfileUid::TYPE);
         }
 
         $qb->addSelect('action_trans.name AS table_action');
@@ -231,37 +232,6 @@ final class MonthUsersTable implements MonthUsersTableInterface
             'users_profile_avatar.event = users_profile_event.id'
         );
 
-//        // Группа
-//
-//        $qb->leftJoin(
-//            'users_profile_info',
-//            CheckUsers::TABLE,
-//            'check_user',
-//            'check_user.usr = users_profile_info.usr'
-//        );
-//
-//        $qb->leftJoin(
-//            'check_user',
-//            CheckUsersEvent::TABLE,
-//            'check_user_event',
-//            'check_user_event.id = check_user.event'
-//        );
-//
-//        $qb->leftJoin(
-//            'check_user_event',
-//            Group::TABLE,
-//            'groups',
-//            'groups.id = check_user_event.group_id'
-//        );
-//
-//        $qb->addSelect('groups_trans.name AS group_name'); // Название группы
-//
-//        $qb->leftJoin(
-//            'groups',
-//            GroupTrans::TABLE,
-//            'groups_trans',
-//            'groups_trans.event = groups.event AND groups_trans.local = :local'
-//        );
 
         if($filter && $filter->getDate())
         {

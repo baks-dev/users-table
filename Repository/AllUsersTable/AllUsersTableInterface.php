@@ -35,6 +35,7 @@ interface AllUsersTableInterface
         SearchDTO $search,
         UserTableFilterDTO $filter,
         UserProfileUid $profile,
-        ?UserProfileUid $authority,
+        ?UserProfileUid $authority = null,
+        bool $other = false
     ): PaginatorInterface;
 }

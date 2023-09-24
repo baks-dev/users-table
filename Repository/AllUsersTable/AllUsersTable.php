@@ -30,10 +30,7 @@ use BaksDev\Core\Form\Search\SearchDTO;
 use BaksDev\Core\Services\Paginator\PaginatorInterface;
 use BaksDev\Products\Category\Entity\ProductCategory;
 use BaksDev\Products\Category\Entity\Trans\ProductCategoryTrans;
-use BaksDev\Users\Groups\Group\Entity\Group;
-use BaksDev\Users\Groups\Group\Entity\Trans\GroupTrans;
-use BaksDev\Users\Groups\Users\Entity\CheckUsers;
-use BaksDev\Users\Groups\Users\Entity\Event\CheckUsersEvent;
+use BaksDev\Users\Profile\Group\Entity\Users\ProfileGroupUsers;
 use BaksDev\Users\Profile\UserProfile\Entity\Avatar\UserProfileAvatar;
 use BaksDev\Users\Profile\UserProfile\Entity\Event\UserProfileEvent;
 use BaksDev\Users\Profile\UserProfile\Entity\Info\UserProfileInfo;
@@ -69,7 +66,8 @@ final class AllUsersTable implements AllUsersTableInterface
         SearchDTO $search,
         UserTableFilterDTO $filter,
         UserProfileUid $profile,
-        ?UserProfileUid $authority
+        ?UserProfileUid $authority = null,
+        bool $other = false
     ): PaginatorInterface
     {
         $qb = $this->DBALQueryBuilder
@@ -92,40 +90,55 @@ final class AllUsersTable implements AllUsersTableInterface
         );
 
 
-        /** Если пользователь авторизован - и передан фильтр по профилю  */
-        if($authority && $filter?->getProfile())
+
+        /** Табели других пользователей */
+
+
+        if($authority)
+        {
+            $qb->leftJoin(
+                'event',
+                ProfileGroupUsers::TABLE,
+                'profile_group_users',
+                'profile_group_users.authority = :authority '.($other ? '' : ' AND profile_group_users.profile = :profile')
+            );
+
+            $qb
+                ->andWhere('event.profile = profile_group_users.profile')
+                ->setParameter('authority', $authority, UserProfileUid::TYPE)
+                ->setParameter('profile', $filter?->getProfile() ?: $profile, UserProfileUid::TYPE)
+            ;
+
+            /** Если пользователь авторизован - и передан фильтр по профилю  */
+            if($filter?->getProfile())
+            {
+                $qb
+                    ->andWhere('event.profile = :profile')
+                    ->setParameter('profile', $filter?->getProfile(), UserProfileUid::TYPE);
+            }
+
+        }
+        else
         {
             $qb
                 ->andWhere('event.profile = :profile')
-                ->setParameter('profile', $filter?->getProfile(), UserProfileUid::TYPE);
+                ->setParameter('profile', $profile, UserProfileUid::TYPE);
         }
 
 
-        //        /** Табели других пользователей */
-        //        if($authority)
-        //        {
-        //            /** Профили доверенных пользователей */
-        //            $qb->leftJoin(
-        //                'event',
-        //                ProfileGroupUsers::TABLE,
-        //                'profile_group_users',
-        //                'profile_group_users.authority = :authority OR profile_group_users.profile = :profile'
-        //            );
-        //
-        //            $qb
-        //                //->andWhere('(part_event.profile = :profile OR part_event.profile = :authority OR part_event.profile = profile_group_users.profile)')
-        //                ->andWhere('event.profile = profile_group_users.profile')
-        //                ->setParameter('authority', $authority, UserProfileUid::TYPE)
-        //                ->setParameter('profile', $profile, UserProfileUid::TYPE)
-        //            ;
-        //        }
-        //        else
-        //        {
-        //            $qb
-        //                ->andWhere('event.profile = :profile')
-        //                ->setParameter('profile', $profile, UserProfileUid::TYPE);
-        //
-        //        }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         /**
@@ -250,39 +263,6 @@ final class AllUsersTable implements AllUsersTableInterface
             'users_profile_avatar',
             'users_profile_avatar.event = users_profile_event.id'
         );
-
-        //        // Группа
-        //
-        //        $qb->leftJoin(
-        //            'users_profile_info',
-        //            CheckUsers::TABLE,
-        //            'check_user',
-        //            'check_user.usr = users_profile_info.usr'
-        //        );
-        //
-        //        $qb->leftJoin(
-        //            'check_user',
-        //            CheckUsersEvent::TABLE,
-        //            'check_user_event',
-        //            'check_user_event.id = check_user.event'
-        //        );
-        //
-        //        $qb->leftJoin(
-        //            'check_user_event',
-        //            Group::TABLE,
-        //            'groups',
-        //            'groups.id = check_user_event.group_id'
-        //        );
-
-        //        $qb->addSelect('groups_trans.name AS group_name'); // Название группы
-        //
-        //        $qb->leftJoin(
-        //            'groups',
-        //            GroupTrans::TABLE,
-        //            'groups_trans',
-        //            'groups_trans.event = groups.event AND groups_trans.local = :local'
-        //        );
-
 
 
         if($filter && $filter->getDate())

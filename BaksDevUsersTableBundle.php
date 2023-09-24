@@ -35,15 +35,17 @@ class BaksDevUsersTableBundle extends AbstractBundle
 	public function prependExtension(ContainerConfigurator $container, ContainerBuilder $builder) : void
 	{
 		$path = __DIR__.'/Resources/config/';
-		
-		foreach(new DirectoryIterator($path) as $config)
+
+        /** @var DirectoryIterator $config */
+
+        foreach(new DirectoryIterator($path) as $config)
 		{
 			if($config->isDot() || $config->isDir())
 			{
 				continue;
 			}
 			
-			if($config->isFile() && $config->getFilename() !== 'routes.php')
+			if($config->isFile() && $config->getExtension() === 'php' && $config->getFilename() !== 'routes.php')
 			{
 				$container->import($config->getPathname());
 			}

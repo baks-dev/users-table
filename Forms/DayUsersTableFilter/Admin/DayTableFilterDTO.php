@@ -47,6 +47,7 @@ final class DayTableFilterDTO implements DayUsersTableFilterInterface
 
     /** Дата */
     private ?DateTimeImmutable $date = null;
+    
 
     /**
      * Date.

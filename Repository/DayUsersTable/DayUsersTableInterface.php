@@ -33,8 +33,9 @@ interface DayUsersTableInterface
     /** Метод возвращает пагинатор UsersTableDay */
     public function fetchDayUsersTableAssociative(
         SearchDTO $search,
+        DayUsersTableFilterInterface $filter,
         UserProfileUid $profile,
-        DayUsersTableFilterInterface $filter = null,
-        ?UserProfileUid $authority = null
+        ?UserProfileUid $authority = null,
+        bool $other = false
     ): PaginatorInterface;
 }

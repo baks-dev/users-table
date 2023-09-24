@@ -54,7 +54,6 @@ final class UsersTableDTO implements UsersTableEventInterface
     /**
      * Действие сотрудника
      */
-    //#[Assert\NotBlank]
     #[Assert\Uuid]
     private ?UsersTableActionsWorkingUid $working = null;
 
@@ -78,11 +77,9 @@ final class UsersTableDTO implements UsersTableEventInterface
      */
 
 
-
     /**
      * Категория производства
      */
-    #[Assert\NotBlank]
     #[Assert\Uuid]
     public ?ProductCategoryUid $category = null;
 

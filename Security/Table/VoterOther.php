@@ -21,26 +21,30 @@
  *  THE SOFTWARE.
  */
 
-namespace Symfony\Component\DependencyInjection\Loader\Configurator;
+declare(strict_types=1);
 
-use Symfony\Config\FrameworkConfig;
+namespace BaksDev\Users\UsersTable\Security\Table;
 
-return static function(FrameworkConfig $framework) {
+use BaksDev\Users\Profile\Group\Security\RoleInterface;
+use BaksDev\Users\Profile\Group\Security\VoterInterface;
+use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 
-    $messenger = $framework->messenger();
+#[AutoconfigureTag('baks.security.voter')]
+final class VoterOther implements VoterInterface
+{
+    /**
+     * Добавить
+     */
+    public const VOTER = 'OTHER';
 
+    public static function getVoter(): string
+    {
+        return Role::ROLE.'_'.self::VOTER;
+    }
 
-    $messenger
-        ->transport('users-table')
-        ->dsn('%env(MESSENGER_TRANSPORT_DSN)%')
-        ->options(['queue_name' => 'users-table'])
-        ->retryStrategy()
-        ->maxRetries(5)
-        ->delay(1000)
-        ->maxDelay(0)
-        ->multiplier(3) // увеличиваем задержку перед каждой повторной попыткой
-        ->service(null);
-
-};
-
+    public function equals(RoleInterface $role): bool
+    {
+        return $role->getRole() === Role::ROLE;
+    }
+}
 

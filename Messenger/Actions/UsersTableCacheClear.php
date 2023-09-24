@@ -25,22 +25,30 @@ declare(strict_types=1);
 
 namespace BaksDev\Users\UsersTable\Messenger\Actions;
 
-use Symfony\Component\Cache\Adapter\ApcuAdapter;
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use BaksDev\Core\Cache\AppCacheInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 #[AsMessageHandler(fromTransport: 'sync')]
 final class UsersTableCacheClear
 {
+    private AppCacheInterface $cache;
+    private LoggerInterface $messageDispatchLogger;
+
+    public function __construct(
+        AppCacheInterface $cache,
+        LoggerInterface $messageDispatchLogger,
+    ) {
+        $this->cache = $cache;
+        $this->messageDispatchLogger = $messageDispatchLogger;
+    }
+
     public function __invoke(UsersTableActionsMessage $message)
     {
         /* Чистим кеш модуля */
-        $cache = new FilesystemAdapter('UsersTable');
+        $cache = $this->cache->init('UsersTable');
         $cache->clear();
 
-        /* Сбрасываем индивидуальный кеш */
-        $cache = new ApcuAdapter('UsersTable');
-        $cache->clear();
-
+        $this->messageDispatchLogger->info('Очистили кеш UsersTable', [__LINE__ => __FILE__]);
     }
 }

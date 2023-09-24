@@ -32,6 +32,7 @@ use BaksDev\Users\Profile\Group\Security\RoleInterface;
 use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 
 #[AutoconfigureTag('baks.security.role')]
+#[AutoconfigureTag('baks.menu.admin')]
 final class Role implements RoleInterface, MenuAdminInterface
 {
     /** Этапы производства продукции */
@@ -41,7 +42,9 @@ final class Role implements RoleInterface, MenuAdminInterface
     {
         return self::ROLE;
     }
-    
+
+
+
     /**
      * Добавляем раздел в меню администрирования.
      */
@@ -83,5 +86,6 @@ final class Role implements RoleInterface, MenuAdminInterface
     {
         return false;
     }
+    
 }
 

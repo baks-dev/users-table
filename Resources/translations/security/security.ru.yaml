@@ -5,27 +5,46 @@ ROLE_USERS_TABLE:
   desc: 'Табели учета рабочего времени сотрудников'
 
 # Правила
+ROLE_USERS_TABLE_INDEX:
+  name: 'Просмотр'
+  desc: ''
 
 ROLE_USERS_TABLE_NEW:
   name: 'Добавить'
+  desc: ''
 
 ROLE_USERS_TABLE_EDIT:
   name: 'Редактировать'
+  desc: ''
 
 ROLE_USERS_TABLE_DELETE:
   name: 'Удалить'
+  desc: ''
+
+ROLE_USERS_TABLE_OTHER:
+  name: 'Табели всех пользователей'
+  desc: ''
+
+
+
 
 
 ROLE_USERS_TABLE_ACTIONS:
   name: 'Производственные процессы'
   desc: 'Этапы производства продукции'
 
+ROLE_USERS_TABLE_ACTIONS_INDEX:
+  name: 'Просмотр'
+  desc: ''
 
 ROLE_USERS_TABLE_ACTIONS_NEW:
   name: 'Добавить'
+  desc: ''
 
 ROLE_USERS_TABLE_ACTIONS_EDIT:
   name: 'Редактировать'
+  desc: ''
 
 ROLE_USERS_TABLE_ACTIONS_DELETE:
   name: 'Удалить'
+  desc: ''

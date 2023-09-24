@@ -47,6 +47,7 @@ final class Role implements RoleInterface, MenuAdminInterface
      * Добавляем раздел в меню администрирования.
      */
 
+
     /** Метод возвращает PATH раздела */
     public function getPath(): string
     {
@@ -84,5 +85,6 @@ final class Role implements RoleInterface, MenuAdminInterface
     {
         return false;
     }
+    
 }
 

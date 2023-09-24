@@ -4,26 +4,44 @@ ROLE_USERS_TABLE:
   name: 'Timesheets'
   desc: 'Employee Timesheets'
 
-# Rules
+ROLE_USERS_TABLE_INDEX:
+  name: 'View'
+  desc: ''
 
 ROLE_USERS_TABLE_NEW:
   name: 'Add'
+  desc: ''
 
 ROLE_USERS_TABLE_EDIT:
   name: 'Edit'
+  desc: ''
 
 ROLE_USERS_TABLE_DELETE:
   name: 'Delete'
+  desc: ''
+
+ROLE_USERS_TABLE_OTHER:
+  name: 'Timesheets of all users'
+  desc: ''
+
+
 
 ROLE_USERS_TABLE_ACTIONS:
   name: 'Production steps'
   desc: 'Production steps'
-  
+
+ROLE_USERS_TABLE_ACTIONS_INDEX:
+  name: 'View'
+  desc: ''
+
 ROLE_USERS_TABLE_ACTIONS_NEW:
   name: 'Add'
+  desc: ''
 
 ROLE_USERS_TABLE_ACTIONS_EDIT:
   name: 'Edit'
+  desc: ''
 
 ROLE_USERS_TABLE_ACTIONS_DELETE:
   name: 'Delete'
+  desc: ''

@@ -79,9 +79,10 @@ final class MonthController extends AbstractController
         // Получаем список
         $UsersTable = $allUsersTable->fetchMonthUsersTableAssociative(
             $search,
-            $this->getCurrentProfileUid(),
             $filter,
-            $this->isGranted('ROLE_MANUFACTURE_PART_OTHER') ? $this->getProfileUid() : null
+            $this->getCurrentProfileUid(),
+            $this->getProfileUid(),
+            $this->isGranted('ROLE_USERS_TABLE_OTHER')
         );
 
 

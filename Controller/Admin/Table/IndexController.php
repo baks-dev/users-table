@@ -80,7 +80,8 @@ final class IndexController extends AbstractController
             $search,
             $filter,
             $this->getCurrentProfileUid(),
-            $this->isGranted('ROLE_MANUFACTURE_PART_OTHER') ? $this->getProfileUid() : null
+            $this->getProfileUid(),
+            $this->isGranted('ROLE_USERS_TABLE_OTHER')
         );
 
         return $this->render(
