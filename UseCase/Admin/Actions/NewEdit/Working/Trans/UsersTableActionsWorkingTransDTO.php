@@ -54,7 +54,7 @@ final class UsersTableActionsWorkingTransDTO implements UsersTableActionsWorking
 
     public function setLocal(Locale $local): void
     {
-        if(!(new ReflectionProperty($this::class, 'local'))->isInitialized($this))
+        if(!(new ReflectionProperty(self::class, 'local'))->isInitialized($this))
         {
             $this->local = $local;
         }

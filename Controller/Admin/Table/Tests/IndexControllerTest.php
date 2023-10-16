@@ -22,7 +22,10 @@ use BaksDev\Users\User\Tests\TestUserAccount;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DependencyInjection\Attribute\When;
 
-/** @group users-table */
+/**
+ * @group users-table
+ * @group users-table-table
+ */
 #[When(env: 'test')]
 final class IndexControllerTest extends WebTestCase
 {

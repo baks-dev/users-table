@@ -49,18 +49,18 @@ final class UsersTableActionsForm extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
 
-        /**
-         * Коллекция продукции для привязки к процессу
-         */
-        $builder->add('product', CollectionType::class, [
-            'entry_type' => Products\UsersTableActionsProductForm::class,
-            'entry_options' => ['label' => false],
-            'label' => false,
-            'by_reference' => false,
-            'allow_delete' => true,
-            'allow_add' => true,
-            'prototype_name' => '__product__',
-        ]);
+//        /**
+//         * Коллекция продукции для привязки к процессу
+//         */
+//        $builder->add('product', CollectionType::class, [
+//            'entry_type' => Products\UsersTableActionsProductForm::class,
+//            'entry_options' => ['label' => false],
+//            'label' => false,
+//            'by_reference' => false,
+//            'allow_delete' => true,
+//            'allow_add' => true,
+//            'prototype_name' => '__product__',
+//        ]);
 
         /**
          * Категория производства

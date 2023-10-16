@@ -70,6 +70,11 @@ class UsersTableActions
         $this->profile = $profile;
     }
 
+    public function __toString(): string
+    {
+        return (string) $this->id;
+    }
+
     public function getId(): UsersTableActionsUid
     {
         return $this->id;

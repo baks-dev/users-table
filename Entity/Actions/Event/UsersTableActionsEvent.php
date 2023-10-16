@@ -105,7 +105,7 @@ class UsersTableActionsEvent extends EntityEvent
 
     public function __clone()
     {
-        $this->id = new UsersTableActionsEventUid();
+        $this->id = clone $this->id;
     }
 
     public function __toString(): string
@@ -131,6 +131,8 @@ class UsersTableActionsEvent extends EntityEvent
 
     public function getDto($dto): mixed
     {
+        $dto = is_string($dto) && class_exists($dto) ? new $dto() : $dto;
+
         if($dto instanceof UsersTableActionsEventInterface)
         {
             return parent::getDto($dto);
@@ -141,7 +143,7 @@ class UsersTableActionsEvent extends EntityEvent
 
     public function setEntity($dto): mixed
     {
-        if($dto instanceof UsersTableActionsEventInterface)
+        if($dto instanceof UsersTableActionsEventInterface || $dto instanceof self)
         {
             return parent::setEntity($dto);
         }

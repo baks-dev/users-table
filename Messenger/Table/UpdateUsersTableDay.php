@@ -65,67 +65,82 @@ final class UpdateUsersTableDay
         $this->logger->info('MessageHandler', ['handler' => self::class]);
 
         /** Получаем Добавленный табель пользователя */
-        $UsersTableEvent = $this->entityManager->getRepository(UsersTableEvent::class)->find($message->getEvent());
+        $UsersTableEvent = $this->entityManager
+            ->getRepository(UsersTableEvent::class)
+            ->find($message->getEvent());
 
-        if($UsersTableEvent)
+        if(!$UsersTableEvent)
         {
-            $UserTableDayDTO = new UsersTableDayDTO();
-            $UserTableDayDTO->setProfile($UsersTableEvent->getProfile());
-            $UserTableDayDTO->setWorking($UsersTableEvent->getWorking());
-            $UserTableDayDTO->setDate($UsersTableEvent->getDate());
+            $this->logger->error('Событие UsersTableEvent не найдено',
+                [
+                    __LINE__ .':'. __FILE__,
+                    $message->getEvent()
+                ]);
 
-            /** Получаем дневной табель */
-            $UsersTableDay = $this->entityManager->getRepository(UsersTableDay::class)->findOneBy([
-                'profile' => $UserTableDayDTO->getProfile(),
-                'working' => $UserTableDayDTO->getWorking(),
-                'date'    => $UserTableDayDTO->getDate()
-            ]);
-
-            $UsersTableDay?->getDto($UserTableDayDTO);
+            return;
+        }
 
 
-            /** Получаем действие и его настройку */
-            $UsersTableActionWorking = $this->entityManager->getRepository(UsersTableActionsWorking::class)->find(
-                $UsersTableEvent->getWorking()
-            );
+        $UserTableDayDTO = new UsersTableDayDTO();
+        $UserTableDayDTO->setProfile($UsersTableEvent->getProfile());
+        $UserTableDayDTO->setWorking($UsersTableEvent->getWorking());
+        $UserTableDayDTO->setDate($UsersTableEvent->getDate());
 
-            if(!$UsersTableActionWorking)
-            {
-                return;
-            }
+        /** Получаем дневной табель */
+        $UsersTableDay = $this->entityManager->getRepository(UsersTableDay::class)->findOneBy([
+            'profile' => $UserTableDayDTO->getProfile(),
+            'working' => $UserTableDayDTO->getWorking(),
+            'date' => $UserTableDayDTO->getDate()
+        ]);
 
-            /**
-             * Количество выполненной работы.
-             */
-            $UserTableDayDTO->addTotal($UsersTableEvent->getQuantity());
-
-            /**
-             * Стоимость работы с учетом коэффициента.
-             */
-            $moneyCoefficient = ($UserTableDayDTO->getTotal() * $UsersTableActionWorking->getCoefficient());
-            $UserTableDayDTO->setMoney(new Money($moneyCoefficient));
+        $UsersTableDay?->getDto($UserTableDayDTO);
 
 
-            /**
-             * Премия за переработку с учетом дневной нормы.
-             */
-            if($UserTableDayDTO->getTotal() > $UsersTableActionWorking->getNorm())
-            {
-                $premiumCoefficient = ($UsersTableActionWorking->getCoefficient(
-                        ) * $UsersTableActionWorking->getPremium()) / 100;
-                $premiumTotal = $UserTableDayDTO->getTotal() - $UsersTableActionWorking->getNorm();
-                $moneyPremium = $premiumTotal * $premiumCoefficient;
+        /** Получаем действие и его настройку */
+        $UsersTableActionWorking = $this->entityManager
+            ->getRepository(UsersTableActionsWorking::class)
+            ->find($UsersTableEvent->getWorking());
 
-                $UserTableDayDTO->setPremium(new Money($moneyPremium));
+        if(!$UsersTableActionWorking)
+        {
+            $this->logger->error('Действие UsersTableActionsWorking не найдено',
+                [
+                    __FILE__.':'.__LINE__,
+                    $UsersTableEvent->getWorking()
+                ]);
 
-            }
+            return;
+        }
 
-            $UserTableDayHandler = $this->tableDayHandler->handle($UserTableDayDTO);
+        /**
+         * Количество выполненной работы.
+         */
+        $UserTableDayDTO->addTotal($UsersTableEvent->getQuantity());
 
-            if(!$UserTableDayHandler instanceof UsersTableDay)
-            {
-                throw new DomainException(sprintf('%s: Ошибка при обновлении дневного табеля', $UserTableDayHandler));
-            }
+        /**
+         * Стоимость работы с учетом коэффициента.
+         */
+        $moneyCoefficient = ($UserTableDayDTO->getTotal() * $UsersTableActionWorking->getCoefficient());
+        $UserTableDayDTO->setMoney(new Money($moneyCoefficient));
+
+
+        /**
+         * Премия за переработку с учетом дневной нормы.
+         */
+        if($UserTableDayDTO->getTotal() > $UsersTableActionWorking->getNorm())
+        {
+            $premiumCoefficient = ($UsersTableActionWorking->getCoefficient() * $UsersTableActionWorking->getPremium()) / 100;
+            $premiumTotal = $UserTableDayDTO->getTotal() - $UsersTableActionWorking->getNorm();
+            $moneyPremium = $premiumTotal * $premiumCoefficient;
+
+            $UserTableDayDTO->setPremium(new Money($moneyPremium));
+        }
+
+        $UserTableDayHandler = $this->tableDayHandler->handle($UserTableDayDTO);
+
+        if(!$UserTableDayHandler instanceof UsersTableDay)
+        {
+            throw new DomainException(sprintf('%s: Ошибка при обновлении дневного табеля', $UserTableDayHandler));
         }
 
         $this->logger->info('MessageHandlerSuccess', ['handler' => self::class]);

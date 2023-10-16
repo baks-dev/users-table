@@ -221,8 +221,8 @@ final class MonthUsersTable implements MonthUsersTableInterface
 
         // Avatar
 
-        $qb->addSelect("CASE WHEN users_profile_avatar.name IS NULL THEN users_profile_avatar.name ELSE CONCAT ( '/upload/".UserProfileAvatar::TABLE."' , '/', users_profile_avatar.dir, '/', users_profile_avatar.name, '.') END AS users_profile_avatar");
-        $qb->addSelect("CASE WHEN users_profile_avatar.cdn THEN  CONCAT ( 'small.', users_profile_avatar.ext) ELSE users_profile_avatar.ext END AS users_profile_avatar_ext");
+        $qb->addSelect("CASE WHEN users_profile_avatar.name IS NULL THEN users_profile_avatar.name ELSE CONCAT ( '/upload/".UserProfileAvatar::TABLE."' , '/', users_profile_avatar.name) END AS users_profile_avatar");
+        $qb->addSelect("users_profile_avatar.ext AS users_profile_avatar_ext");
         $qb->addSelect('users_profile_avatar.cdn AS users_profile_avatar_cdn');
 
         $qb->leftJoin(
@@ -231,7 +231,6 @@ final class MonthUsersTable implements MonthUsersTableInterface
             'users_profile_avatar',
             'users_profile_avatar.event = users_profile_event.id'
         );
-
 
         if($filter && $filter->getDate())
         {

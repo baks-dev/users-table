@@ -103,8 +103,15 @@ class UsersTableMonth  extends EntityState
     private Money $premium;
 
 
+    public function __toString(): string
+    {
+        return (string) $this->profile;
+    }
+
     public function getDto($dto): mixed
     {
+        $dto = is_string($dto) && class_exists($dto) ? new $dto() : $dto;
+
         if ($dto instanceof UsersTableDayInterface)
         {
             return parent::getDto($dto);
@@ -115,7 +122,7 @@ class UsersTableMonth  extends EntityState
 
     public function setEntity($dto): mixed
     {
-        if ($dto instanceof UsersTableDayInterface)
+        if ($dto instanceof UsersTableDayInterface || $dto instanceof self)
         {
             return parent::setEntity($dto);
         }

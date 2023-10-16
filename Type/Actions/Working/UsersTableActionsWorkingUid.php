@@ -31,15 +31,18 @@ use Symfony\Component\Uid\AbstractUid;
 
 final class UsersTableActionsWorkingUid extends Uid
 {
-    public const TEST = '01895aa7-8acc-776f-b8b6-d726d029042c';
+    public const TEST = '018ae603-f6b0-763f-8ea1-7c11c2a1c0bd';
     
     public const TYPE = 'users_table_actions_working';
+
+
 
     /** Идентификатор Нового процесса */
     public const NEW = '0189a177-a104-7cf6-ac68-00b5e8c56137';
 
     /** Идентификатор завершенного процесса */
     public const COMPLETE = '01897e7c-3e0d-7350-90ba-bccaa2cf282a';
+
 
     private mixed $attr;
 
@@ -58,6 +61,7 @@ final class UsersTableActionsWorkingUid extends Uid
     )
     {
         parent::__construct($value);
+
         $this->attr = $attr;
         $this->option = $option;
         $this->property = $property;

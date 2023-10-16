@@ -30,5 +30,7 @@ use BaksDev\Core\Type\UidType\Uid;
 
 final class UsersTableActionsUid extends Uid
 {
+    public const TEST = '018ae5b8-4061-72d7-b936-efba1b103e5a';
+
     public const TYPE = 'users_table_actions';
 }

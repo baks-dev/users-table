@@ -25,9 +25,14 @@ declare(strict_types=1);
 
 namespace BaksDev\Users\UsersTable\Type\Table\Event;
 
+use App\Kernel;
 use BaksDev\Core\Type\UidType\Uid;
+use Symfony\Component\Uid\AbstractUid;
 
 final class UsersTableEventUid extends Uid
 {
+    public const TEST = '018ad880-8f1b-7942-bfb2-b59f4269b49c';
+
     public const TYPE = 'users_table_event';
+
 }

@@ -59,6 +59,11 @@ class UsersTable
         $this->id = new UsersTableUid();
     }
 
+    public function __toString(): string
+    {
+        return (string) $this->id;
+    }
+
     public function getId(): UsersTableUid
     {
         return $this->id;

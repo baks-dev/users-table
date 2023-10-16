@@ -74,94 +74,112 @@ final class UpdateUsersTableMonth
         /** Получаем добавленный табель пользователя */
         $UsersTableEvent = $this->entityManager->getRepository(UsersTableEvent::class)->find($message->getEvent());
 
-        if($UsersTableEvent)
+        if(!$UsersTableEvent)
         {
-            $UsersTableMonthDTO = new UsersTableMonthDTO();
-            $UsersTableMonthDTO->setProfile($UsersTableEvent->getProfile());
-            $UsersTableMonthDTO->setWorking($UsersTableEvent->getWorking());
-            $UsersTableMonthDTO->setDate($UsersTableEvent->getDate());
-
-
-            /** Получаем Ежемесячный табель сотрудника */
-
-            $UsersTableMonth = $this->entityManager->getRepository(UsersTableMonth::class)->findOneBy([
-                'profile' => $UsersTableMonthDTO->getProfile(),
-                'working' => $UsersTableMonthDTO->getWorking(),
-                'date' => $UsersTableMonthDTO->getDate()
-            ]);
-
-            $UsersTableMonth?->getDto($UsersTableMonthDTO);
-
-
-            /** Получаем действие и его настройку */
-            $UsersTableActionWorking = $this->entityManager->getRepository(UsersTableActionsWorking::class)->find(
-                $UsersTableEvent->getWorking()
-            );
-
-
-            if(!$UsersTableActionWorking)
-            {
-                return;
-            }
-
-
-            //$UsersTableDayDTO = new UsersTableDayDTO();
-
-            /** Получаем дневной табель сотрудника */
-            $UsersTableDateDay = $UsersTableEvent->getDate()->setTime(0, 0)->getTimestamp();
-            $UsersTableDay = $this->entityManager->getRepository(UsersTableDay::class)->findOneBy([
-                'profile' => $UsersTableMonthDTO->getProfile(),
-                'working' => $UsersTableMonthDTO->getWorking(),
-                'date' => $UsersTableDateDay
-            ]);
-
-
-            if(empty($UsersTableEvent->getQuantity()))
-            {
-                return;
-            }
-
-            /* Добавляем количество выполненной работы */
-            $UsersTableMonthDTO->addTotal($UsersTableEvent->getQuantity());
-
-            /* Делаем расчет стоимости действий пользователя */
-            $moneyCoefficient = ($UsersTableMonthDTO->getTotal() * $UsersTableActionWorking->getCoefficient());
-
-            if($UsersTableEvent->getQuantity() > 0)
-            {
-                $UsersTableMonthDTO->addMoney(new Money($moneyCoefficient));
-            }
-
-            if($UsersTableEvent->getQuantity() < 0)
-            {
-                $UsersTableMonthDTO->subMoney(new Money(abs($moneyCoefficient)));
-            }
-
-            if($UsersTableEvent->getQuantity() === 0)
-            {
-                $UsersTableMonthDTO->setMoney(new Money(0));
-            }
-
-            /**
-             *
-             * Если была Выполнена дневная норма - делаем перерасчет премии
-             */
-            if($UsersTableDay && $UsersTableDay->getTotal() > $UsersTableActionWorking->getNorm())
-            {
-                $moneyPremium = $this->premiumCurrentMonthRepository
-                    ->getSumPremium($UsersTableMonthDTO->getProfile(), $UsersTableMonthDTO->getWorking());
-
-                $UsersTableMonthDTO->setPremium(new Money($moneyPremium));
-            }
-
-            $UserTableDayHandler = $this->tableMonthHandler->handle($UsersTableMonthDTO);
-
-            if(!$UserTableDayHandler instanceof UsersTableMonth)
-            {
-                throw new DomainException(sprintf('%s: Ошибка при обновлении дневного табеля', $UserTableDayHandler));
-            }
-
+            $this->logger->error('Событие UsersTableEvent не найдено',
+                [
+                    __LINE__ => __FILE__,
+                    'event' => $message->getEvent()
+                ]);
         }
+
+
+        $UsersTableMonthDTO = new UsersTableMonthDTO();
+        $UsersTableMonthDTO->setProfile($UsersTableEvent->getProfile());
+        $UsersTableMonthDTO->setWorking($UsersTableEvent->getWorking());
+        $UsersTableMonthDTO->setDate($UsersTableEvent->getDate());
+
+
+        /** Получаем Ежемесячный табель сотрудника */
+
+        $UsersTableMonth = $this->entityManager->getRepository(UsersTableMonth::class)->findOneBy([
+            'profile' => $UsersTableMonthDTO->getProfile(),
+            'working' => $UsersTableMonthDTO->getWorking(),
+            'date' => $UsersTableMonthDTO->getDate()
+        ]);
+
+        $UsersTableMonth?->getDto($UsersTableMonthDTO);
+
+
+        /** Получаем действие и его настройку */
+        $UsersTableActionWorking = $this->entityManager
+            ->getRepository(UsersTableActionsWorking::class)
+            ->find($UsersTableEvent->getWorking());
+
+
+        if(!$UsersTableActionWorking)
+        {
+            $this->logger->error('Действие UsersTableActionsWorking не найдено',
+                [
+                    __FILE__.':'.__LINE__,
+                    $UsersTableEvent->getWorking()
+                ]);
+
+            return;
+        }
+
+
+        //$UsersTableDayDTO = new UsersTableDayDTO();
+
+        /** Получаем дневной табель сотрудника */
+        $UsersTableDateDay = $UsersTableEvent->getDate()->setTime(0, 0)->getTimestamp();
+        $UsersTableDay = $this->entityManager->getRepository(UsersTableDay::class)->findOneBy([
+            'profile' => $UsersTableMonthDTO->getProfile(),
+            'working' => $UsersTableMonthDTO->getWorking(),
+            'date' => $UsersTableDateDay
+        ]);
+
+
+        if(empty($UsersTableEvent->getQuantity()))
+        {
+            $this->logger->error('Дневной табель сотрудника UsersTableDay не найден',
+                [
+                    __FILE__.':'.__LINE__,
+                    'profile' => $UsersTableMonthDTO->getProfile(),
+                    'working' => $UsersTableMonthDTO->getWorking(),
+                    'date' => $UsersTableDateDay
+                ]);
+
+
+            return;
+        }
+
+        /* Добавляем количество выполненной работы */
+        $UsersTableMonthDTO->addTotal($UsersTableEvent->getQuantity());
+
+        /* Делаем расчет стоимости действий пользователя */
+        $moneyCoefficient = ($UsersTableMonthDTO->getTotal() * $UsersTableActionWorking->getCoefficient());
+
+
+        if($UsersTableEvent->getQuantity() > 0)
+        {
+            $UsersTableMonthDTO->addMoney(new Money($moneyCoefficient));
+        }
+
+        if($UsersTableEvent->getQuantity() < 0)
+        {
+            $UsersTableMonthDTO->subMoney(new Money(abs($moneyCoefficient)));
+        }
+
+        /**
+         *
+         * Если была Выполнена дневная норма - делаем перерасчет премии
+         */
+        if($UsersTableDay && $UsersTableDay->getTotal() > $UsersTableActionWorking->getNorm())
+        {
+            $moneyPremium = $this->premiumCurrentMonthRepository
+                ->getSumPremium($UsersTableMonthDTO->getProfile(), $UsersTableMonthDTO->getWorking());
+
+            $UsersTableMonthDTO->setPremium(new Money($moneyPremium));
+        }
+
+        $UserTableDayHandler = $this->tableMonthHandler->handle($UsersTableMonthDTO);
+
+        if(!$UserTableDayHandler instanceof UsersTableMonth)
+        {
+            throw new DomainException(sprintf('%s: Ошибка при обновлении дневного табеля', $UserTableDayHandler));
+        }
+
 
         $this->logger->info('MessageHandlerSuccess', ['handler' => self::class]);
     }

@@ -63,23 +63,19 @@ final class DeleteController extends AbstractController
 
         if($form->isSubmitted() && $form->isValid() && $form->has('users_table_actions_delete'))
         {
-            $UsersTableActions = $UsersTableActionsDeleteHandler->handle($UsersTableActionsDeleteDTO);
+            $handle = $UsersTableActionsDeleteHandler
+                ->handle($UsersTableActionsDeleteDTO, $this->getProfileUid());
 
-            if($UsersTableActions instanceof UsersTableActions)
-            {
-                $this->addFlash('admin.page.delete', 'admin.success.delete', 'admin.table.actions');
 
-                return $this->redirectToRoute('UsersTable:admin.action.index');
-            }
-
-            $this->addFlash(
+            $this->addFlash
+            (
                 'admin.page.delete',
-                'admin.danger.delete',
+                $handle instanceof UsersTableActions ? 'admin.success.delete' : 'admin.danger.delete',
                 'admin.table.actions',
-                $UsersTableActions
+                $handle
             );
 
-            return $this->redirectToRoute('UsersTable:admin.action.index', status: 400);
+            return $this->redirectToRoute('UsersTable:admin.action.index');
         }
 
         return $this->render([

@@ -86,6 +86,12 @@ class UsersTableDay extends EntityState
     #[ORM\Column(type: Money::TYPE)]
     private Money $premium;
 
+
+    public function __toString(): string
+    {
+        return (string) $this->profile;
+    }
+
     /**
      * Total
      */
@@ -97,6 +103,8 @@ class UsersTableDay extends EntityState
 
     public function getDto($dto): mixed
     {
+        $dto = is_string($dto) && class_exists($dto) ? new $dto() : $dto;
+
         if($dto instanceof UsersTableDayInterface)
         {
             return parent::getDto($dto);
@@ -107,7 +115,7 @@ class UsersTableDay extends EntityState
 
     public function setEntity($dto): mixed
     {
-        if($dto instanceof UsersTableDayInterface)
+        if($dto instanceof UsersTableDayInterface || $dto instanceof self)
         {
             return parent::setEntity($dto);
         }

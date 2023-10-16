@@ -62,7 +62,7 @@ class UsersTableActionsWorking extends EntityEvent
     #[Assert\NotBlank]
     #[Assert\Uuid]
     #[ORM\Column(type: UsersTableActionsWorkingConst::TYPE)]
-    private UsersTableActionsWorkingConst $const;
+    private readonly UsersTableActionsWorkingConst $const;
 
 
     /** Перевод */
@@ -107,12 +107,12 @@ class UsersTableActionsWorking extends EntityEvent
 
     public function __clone()
     {
-        $this->id = new UsersTableActionsWorkingUid();
+        $this->id = clone $this->id;
     }
 
     public function __toString(): string
     {
-        return (string)$this->id;
+        return (string) $this->id;
     }
 
     public function getId(): UsersTableActionsWorkingUid
@@ -120,11 +120,12 @@ class UsersTableActionsWorking extends EntityEvent
         return $this->id;
     }
 
-
-
     public function getDto($dto): mixed
     {
-        if ($dto instanceof UsersTableActionsWorkingInterface) {
+        $dto = is_string($dto) && class_exists($dto) ? new $dto() : $dto;
+
+        if ($dto instanceof UsersTableActionsWorkingInterface)
+        {
             return parent::getDto($dto);
         }
 
@@ -133,7 +134,8 @@ class UsersTableActionsWorking extends EntityEvent
 
     public function setEntity($dto): mixed
     {
-        if ($dto instanceof UsersTableActionsWorkingInterface) {
+        if ($dto instanceof UsersTableActionsWorkingInterface || $dto instanceof self)
+        {
             return parent::setEntity($dto);
         }
 
@@ -164,33 +166,4 @@ class UsersTableActionsWorking extends EntityEvent
         return $this->premium;
     }
 
-
-
-
-
-//	public function isModifyActionEquals(ModifyActionEnum $action) : bool
-//	{
-//		return $this->modify->equals($action);
-//	}
-
-//	public function getUploadClass() : UsersTableActionsWorkingImage
-//	{
-//		return $this->image ?: $this->image = new UsersTableActionsWorkingImage($this);
-//	}
-
-//	public function getNameByLocale(Locale $locale) : ?string
-//	{
-//		$name = null;
-//
-//		/** @var UsersTableActionsWorkingTrans $trans */
-//		foreach($this->translate as $trans)
-//		{
-//			if($name = $trans->name($locale))
-//			{
-//				break;
-//			}
-//		}
-//
-//		return $name;
-//	}
 }

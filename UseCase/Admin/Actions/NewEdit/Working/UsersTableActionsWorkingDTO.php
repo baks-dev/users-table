@@ -79,16 +79,18 @@ final class UsersTableActionsWorkingDTO implements UsersTableActionsWorkingInter
     /** Постоянный неизменяемый идентификатор */
     public function getConst(): UsersTableActionsWorkingConst
     {
-        if (!(new ReflectionProperty($this::class, 'const'))->isInitialized($this)) {
+        if (!(new ReflectionProperty(self::class, 'const'))->isInitialized($this)) {
             $this->const = new UsersTableActionsWorkingConst();
         }
 
         return $this->const;
     }
 
+
     public function setConst(UsersTableActionsWorkingConst $const): void
     {
-        if (!(new ReflectionProperty($this::class, 'const'))->isInitialized($this)) {
+        /** Запрет на изменение readonly   */
+        if (!(new ReflectionProperty(self::class, 'const'))->isInitialized($this)) {
             $this->const = $const;
         }
     }

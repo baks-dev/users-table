@@ -55,13 +55,11 @@ final class UsersTableDeleteHandler
         $this->validator = $validator;
         $this->logger = $logger;
         $this->messageDispatch = $messageDispatch;
-
     }
 
-    /** @see UsersTableDelete */
+
     public function handle(
         UsersTableDeleteDTO $command,
-
     ): string|UsersTable
     {
         /**
@@ -72,106 +70,68 @@ final class UsersTableDeleteHandler
         if(count($errors) > 0)
         {
             $uniqid = uniqid('', false);
-            $errorsString = (string)$errors;
-            $this->logger->error($uniqid . ': ' . $errorsString);
+            $errorsString = (string) $errors;
+            $this->logger->error($uniqid.': '.$errorsString);
             return $uniqid;
         }
 
 
-        if($command->getEvent())
+        /* Обязательно передается идентификатор события */
+        if($command->getEvent() === null)
         {
-            $EventRepo = $this->entityManager->getRepository(UsersTableEvent::class)->find(
+            $uniqid = uniqid('', false);
+            $errorsString = sprintf(
+                'Not found event id in class: %s',
+                $command::class
+            );
+            $this->logger->error($uniqid.': '.$errorsString);
+
+            return $uniqid;
+        }
+
+
+        /** Получаем событие */
+        $Event = $this->entityManager->getRepository(UsersTableEvent::class)
+            ->find($command->getEvent());
+
+        if($Event === null)
+        {
+            $uniqid = uniqid('', false);
+            $errorsString = sprintf(
+                'Not found %s by id: %s',
+                UsersTableEvent::class,
                 $command->getEvent()
             );
+            $this->logger->error($uniqid.': '.$errorsString);
 
-            if($EventRepo === null)
-            {
-                $uniqid = uniqid('', false);
-                $errorsString = sprintf(
-                    'Not found %s by id: %s',
-                    UsersTableEvent::class,
-                    $command->getEvent()
-                );
-                $this->logger->error($uniqid . ': ' . $errorsString);
-
-                return $uniqid;
-            }
-
-            $Event = $EventRepo->cloneEntity();
-
-        }
-        else
-        {
-            $Event = new UsersTableEvent();
-            $this->entityManager->persist($Event);
+            return $uniqid;
         }
 
-        $this->entityManager->clear();
 
-        /** @var UsersTable $Main */
-        if($Event->getMain())
+        /** Получаем корень */
+        $Main = $this->entityManager->getRepository(UsersTable::class)
+            ->findOneBy(['event' => $command->getEvent()]);
+
+        if(empty($Main))
         {
-            $Main = $this->entityManager->getRepository(UsersTable::class)->findOneBy(
-                ['event' => $command->getEvent()]
+            $uniqid = uniqid('', false);
+            $errorsString = sprintf(
+                'Not found %s by event: %s',
+                UsersTable::class,
+                $command->getEvent()
             );
+            $this->logger->error($uniqid.': '.$errorsString);
 
-            if(empty($Main))
-            {
-                $uniqid = uniqid('', false);
-                $errorsString = sprintf(
-                    'Not found %s by event: %s',
-                    UsersTable::class,
-                    $command->getEvent()
-                );
-                $this->logger->error($uniqid . ': ' . $errorsString);
-
-                return $uniqid;
-            }
-
-        }
-        else
-        {
-
-            $Main = new UsersTable();
-            $this->entityManager->persist($Main);
-            $Event->setMain($Main);
+            return $uniqid;
         }
 
 
+        /** Применяем изменения к событию */
         $Event->setEntity($command);
         $this->entityManager->persist($Event);
 
-
-        /**
-         * Валидация Event
-         */
-        $errors = $this->validator->validate($Event);
-
-        if(count($errors) > 0)
-        {
-            $uniqid = uniqid('', false);
-            $errorsString = (string)$errors;
-            $this->logger->error($uniqid . ': ' . $errorsString);
-            return $uniqid;
-        }
-
-
-        /* присваиваем событие корню */
-        $Main->setEvent($Event);
-
-        /**
-         * Валидация Main
-         */
-        $errors = $this->validator->validate($Main);
-
-        if(count($errors) > 0)
-        {
-            $uniqid = uniqid('', false);
-            $errorsString = (string)$errors;
-            $this->logger->error($uniqid . ': ' . $errorsString);
-            return $uniqid;
-        }
-
+        /* Удаляем корень агрегата */
+        $this->entityManager->remove($Main);
 
         $this->entityManager->flush();
 
@@ -180,7 +140,9 @@ final class UsersTableDeleteHandler
             message: new UsersTableMessage($Main->getId(), $Main->getEvent(), $command->getEvent()),
             transport: 'users-table'
         );
-        
+
         return $Main;
+
+
     }
 }

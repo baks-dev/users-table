@@ -29,7 +29,7 @@ use BaksDev\Core\Cache\AppCacheInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
-#[AsMessageHandler(fromTransport: 'sync')]
+#[AsMessageHandler]
 final class UsersTableCacheClear
 {
     private AppCacheInterface $cache;
@@ -49,6 +49,6 @@ final class UsersTableCacheClear
         $cache = $this->cache->init('UsersTable');
         $cache->clear();
 
-        $this->messageDispatchLogger->info('Очистили кеш UsersTable', [__LINE__ => __FILE__]);
+        $this->messageDispatchLogger->info('Очистили кеш UsersTable', [__FILE__.':'.__LINE__]);
     }
 }

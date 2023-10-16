@@ -45,9 +45,9 @@ final class UsersTableActionsHandler
     private MessageDispatchInterface $messageDispatch;
 
     public function __construct(
-        EntityManagerInterface   $entityManager,
-        ValidatorInterface       $validator,
-        LoggerInterface          $logger,
+        EntityManagerInterface $entityManager,
+        ValidatorInterface $validator,
+        LoggerInterface $logger,
         MessageDispatchInterface $messageDispatch
     )
     {
@@ -61,7 +61,7 @@ final class UsersTableActionsHandler
     /** @see UsersTableActions */
     public function handle(
         UsersTableActionsDTO $command,
-        UserProfileUid $profile,
+        ?UserProfileUid $profile,
     ): string|UsersTableActions
     {
 
@@ -70,96 +70,122 @@ final class UsersTableActionsHandler
          */
         $errors = $this->validator->validate($command);
 
-        if (count($errors) > 0) {
+        if(count($errors) > 0)
+        {
+            /** Ошибка валидации */
             $uniqid = uniqid('', false);
-            $errorsString = (string)$errors;
-            $this->logger->error($uniqid . ': ' . $errorsString);
+            $this->logger->error(sprintf('%s: %s', $uniqid, $errors), [__FILE__.':'.__LINE__]);
+
             return $uniqid;
         }
 
+        if($command->getEvent())
+        {
+            $EventRepo = $this->entityManager
+                ->getRepository(UsersTableActionsEvent::class)
+                ->find($command->getEvent());
 
-        if ($command->getEvent()) {
-            $EventRepo = $this->entityManager->getRepository(UsersTableActionsEvent::class)->find(
-                $command->getEvent()
-            );
-
-            if ($EventRepo === null) {
+            if($EventRepo === null)
+            {
                 $uniqid = uniqid('', false);
-                $errorsString = sprintf(
-                    'Not found %s by id: %s',
-                    UsersTableActionsEvent::class,
-                    $command->getEvent()
+
+                $this->logger->error(
+                    $uniqid.': Событие UsersTableActionsEvent не найдено',
+                    [
+                        __FILE__.':'.__LINE__,
+                        $command->getEvent()
+                    ]
                 );
-                $this->logger->error($uniqid . ': ' . $errorsString);
 
                 return $uniqid;
             }
 
+            $EventRepo->setEntity($command);
+            $EventRepo->setEntityManager($this->entityManager);
             $Event = $EventRepo->cloneEntity();
-
-        } else {
+        }
+        else
+        {
             $Event = new UsersTableActionsEvent();
+            $Event->setEntity($command);
             $this->entityManager->persist($Event);
         }
 
-        $this->entityManager->clear();
+//        $this->entityManager->clear();
+//        $this->entityManager->persist($Event);
+
 
         /** @var UsersTableActions $Main */
-        if ($Event->getMain()) {
-            $Main = $this->entityManager->getRepository(UsersTableActions::class)->findOneBy(
-                ['event' => $command->getEvent(), 'profile' => $profile]
-            );
+        if($Event->getMain())
+        {
+            $findOneBy['event'] = $command->getEvent();
 
-            if (empty($Main)) {
+            if($profile)
+            {
+                $findOneBy['profile'] = $profile;
+            }
+
+            $Main = $this->entityManager
+                ->getRepository(UsersTableActions::class)
+                ->findOneBy($findOneBy);
+
+            if(empty($Main))
+            {
                 $uniqid = uniqid('', false);
-                $errorsString = sprintf(
-                    'Not found %s by event: %s',
-                    UsersTableActions::class,
-                    $command->getEvent()
+
+                $this->logger->error(
+                    $uniqid.': Корень агрегата UsersTableActions с указанным событием и профилем не найден',
+                    [
+                        __FILE__.':'.__LINE__,
+                        $command->getEvent(),
+                        $profile
+                    ]
                 );
-                $this->logger->error($uniqid . ': ' . $errorsString);
 
                 return $uniqid;
             }
 
-        } else {
-
+        }
+        else
+        {
             $Main = new UsersTableActions($profile);
             $this->entityManager->persist($Main);
             $Event->setMain($Main);
         }
 
-        $Event->setEntity($command);
-        $this->entityManager->persist($Event);
+        /* присваиваем событие корню */
+        $Main->setEvent($Event);
 
 
         /**
          * Валидация Event
          */
+
         $errors = $this->validator->validate($Event);
 
-        if (count($errors) > 0) {
+        if(count($errors) > 0)
+        {
+            /** Ошибка валидации */
             $uniqid = uniqid('', false);
-            $errorsString = (string)$errors;
-            $this->logger->error($uniqid . ': ' . $errorsString);
+            $this->logger->error(sprintf('%s: %s', $uniqid, $errors), [__FILE__.':'.__LINE__]);
+
             return $uniqid;
         }
 
-
-        /* присваиваем событие корню */
-        $Main->setEvent($Event);
 
         /**
          * Валидация Main
          */
         $errors = $this->validator->validate($Main);
 
-        if (count($errors) > 0) {
+        if(count($errors) > 0)
+        {
+            /** Ошибка валидации */
             $uniqid = uniqid('', false);
-            $errorsString = (string)$errors;
-            $this->logger->error($uniqid . ': ' . $errorsString);
+            $this->logger->error(sprintf('%s: %s', $uniqid, $errors), [__FILE__.':'.__LINE__]);
             return $uniqid;
         }
+
 
         $this->entityManager->flush();
 

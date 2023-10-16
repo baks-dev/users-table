@@ -62,18 +62,21 @@ final class EditController extends AbstractController
 
         if($form->isSubmitted() && $form->isValid() && $form->has('users_table_actions'))
         {
-            $UsersTableActions = $UsersTableActionsHandler->handle($UsersTableActionsDTO, $this->getProfileUid());
+            $handle = $UsersTableActionsHandler->handle(
+                $UsersTableActionsDTO,
+                $this->getAdminFilterProfile()
+            );
 
-            if($UsersTableActions instanceof UsersTableActions)
-            {
-                $this->addFlash('success', 'admin.success.new', 'admin.table.actions');
+            $this->addFlash
+            (
+                'admin.page.edit',
+                $handle instanceof UsersTableActions ? 'admin.success.edit' : 'admin.danger.edit',
+                'admin.table.actions',
+                $handle
+            );
 
-                return $this->redirectToRoute('UsersTable:admin.action.index');
-            }
+            return $this->redirectToRoute('UsersTable:admin.action.index');
 
-            $this->addFlash('danger', 'admin.danger.new', 'admin.table.actions', $UsersTableActions);
-
-            return $this->redirectToReferer();
         }
 
         return $this->render(['form' => $form->createView()]);

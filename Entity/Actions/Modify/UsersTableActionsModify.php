@@ -96,10 +96,17 @@ class UsersTableActionsModify extends EntityEvent
         $this->agent = 'console';
     }
 
+    public function __toString(): string
+    {
+        return (string) $this->event;
+    }
 
     public function getDto($dto): mixed
     {
-        if ($dto instanceof UsersTableActionsModifyInterface) {
+        $dto = is_string($dto) && class_exists($dto) ? new $dto() : $dto;
+
+        if ($dto instanceof UsersTableActionsModifyInterface)
+        {
             return parent::getDto($dto);
         }
 
@@ -108,7 +115,7 @@ class UsersTableActionsModify extends EntityEvent
 
     public function setEntity($dto): mixed
     {
-        if ($dto instanceof UsersTableActionsModifyInterface) {
+        if ($dto instanceof UsersTableActionsModifyInterface || $dto instanceof self) {
             return parent::setEntity($dto);
         }
 

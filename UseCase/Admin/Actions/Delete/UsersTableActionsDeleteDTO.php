@@ -36,6 +36,7 @@ final class UsersTableActionsDeleteDTO implements UsersTableActionsEventInterfac
      * Идентификатор события
      */
     #[Assert\Uuid]
+    #[Assert\NotBlank]
     private ?UsersTableActionsEventUid $id = null;
 
     #[Assert\Valid]

@@ -133,7 +133,7 @@ final class AllUsersTableActions implements AllUsersTableActionsInterface
         $qb->addSelect("
 			CASE
 			   WHEN category_cover.name IS NOT NULL THEN
-					CONCAT ( '/upload/".ProductCategoryCover::TABLE."' , '/', category_cover.dir, '/', category_cover.name, '.')
+					CONCAT ( '/upload/".ProductCategoryCover::TABLE."' , '/', category_cover.name)
 			   ELSE NULL
 			END AS category_cover_name
 		"

@@ -83,11 +83,13 @@ final class UsersTableDTO implements UsersTableEventInterface
     #[Assert\Uuid]
     public ?ProductCategoryUid $category = null;
 
+
     /**
      * Производственный процесс
      */
     #[Assert\Uuid]
     private ?UsersTableActionsEventUid $action = null;
+
 
 
     /**

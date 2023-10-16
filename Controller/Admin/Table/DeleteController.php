@@ -48,7 +48,12 @@ final class DeleteController extends AbstractController
     ): Response
     {
 
+        return new Response('OK');
+
+        /** TODO: если удаляется табель  сделать пересчет */
         dd('/admin/users/table/delete');
+
+
 
         $UsersTableDeleteDTO = new UsersTableDeleteDTO();
         $UsersTableEvent->getDto($UsersTableDeleteDTO);

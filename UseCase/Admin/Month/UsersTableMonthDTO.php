@@ -26,11 +26,14 @@ declare(strict_types=1);
 namespace BaksDev\Users\UsersTable\UseCase\Admin\Month;
 
 use BaksDev\Reference\Money\Type\Money;
+use BaksDev\Users\Profile\UserProfile\Entity\UserProfile;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
+use BaksDev\Users\UsersTable\Entity\Actions\Working\UsersTableActionsWorking;
 use BaksDev\Users\UsersTable\Entity\UsersTableDayInterface;
 use BaksDev\Users\UsersTable\Entity\UsersTableMonth;
 use BaksDev\Users\UsersTable\Type\Actions\Working\UsersTableActionsWorkingUid;
 use DateTimeImmutable;
+use ReflectionProperty;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /** @see UsersTableMonth */
@@ -86,9 +89,12 @@ final class UsersTableMonthDTO implements UsersTableDayInterface
         return $this->profile;
     }
 
-    public function setProfile(UserProfileUid $profile): void
+    public function setProfile(UserProfile|UserProfileUid $profile): void
     {
-        $this->profile = $profile;
+        if(!(new ReflectionProperty(self::class, 'profile'))->isInitialized($this))
+        {
+            $this->profile = $profile instanceof UserProfile ? $profile->getId() : $profile;
+        }
     }
 
     /**
@@ -101,13 +107,16 @@ final class UsersTableMonthDTO implements UsersTableDayInterface
 
     public function setDate(int|DateTimeImmutable $date): void
     {
-        if($date instanceof DateTimeImmutable)
+        if(!(new ReflectionProperty(self::class, 'date'))->isInitialized($this))
         {
-            $date = $date->modify('first day of') // Устанавливает первый день текущего месяца
+            if($date instanceof DateTimeImmutable)
+            {
+                $date = $date->modify('first day of') // Устанавливает первый день текущего месяца
                 ->setTime(0, 0)->getTimestamp();
-        }
+            }
 
-        $this->date = $date;
+            $this->date = $date;
+        }
     }
 
     /**
@@ -137,9 +146,12 @@ final class UsersTableMonthDTO implements UsersTableDayInterface
         return $this->working;
     }
 
-    public function setWorking(UsersTableActionsWorkingUid $working): void
+    public function setWorking(UsersTableActionsWorking|UsersTableActionsWorkingUid $working): void
     {
-        $this->working = $working;
+        if(!(new ReflectionProperty(self::class, 'working'))->isInitialized($this))
+        {
+            $this->working = $working instanceof UsersTableActionsWorking ? $working->getId() : $working;
+        }
     }
 
     /**

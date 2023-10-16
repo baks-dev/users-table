@@ -90,7 +90,6 @@ final class DayController extends AbstractController
                 'query' => $UsersTable,
                 'search' => $searchForm->createView(),
                 'filter' => $filterForm->createView(),
-
             ]
         );
     }

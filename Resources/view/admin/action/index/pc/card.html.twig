@@ -9,11 +9,21 @@
     <td>
 
         <div class="w-100 d-flex align-items-center gap-3">
-            {% set img_path = item.category_cover_cdn == true ? CDN_HOST : '' %}
-            {% set category_cover_ext = item.category_cover_cdn == true ? 'small.'~item.category_cover_ext : item.category_cover_ext %}
+
+            {# Обложка #}
+            {% set image_path = '/assets/img/blank.svg' %}
+
+            {% if item.category_cover_ext is defined and item.category_cover_ext is not null %}
+                {% set img_host =  item.category_cover_cdn == true  ? CDN_HOST : '' %}
+                {% set img_table = '/upload/' ~ constant('BaksDev\\Payment\\Entity\\Cover\\PaymentCover::TABLE') %}
+                {% set img_dir = item.category_cover_name %}
+                {% set img_file = (img_host is empty ? '/image.' : '/small.') ~ item.category_cover_ext %}
+                {% set image_path = img_host ~ img_table ~ img_dir ~ img_file %}
+            {% endif %}
+
 
             <div class="rounded-circle bg-cover lazy p-1" style="width: 50px; height: 50px;"
-                 data-bg="{{ item.category_cover_name ? img_path ~ item.category_cover_name ~ category_cover_ext : '/assets/img/blank.svg' }}">
+                 data-bg="{{ image_path }}">
             </div>
 
             {{ item.category_name }}
@@ -27,9 +37,6 @@
            class="text-decoration-none fw-bolder"
            title="{{ 'btn.edit'|trans({}, 'core.btn') }}"
         >
-            {% set img_path = item.category_cover_cdn == true ? CDN_HOST : '' %}
-            {% set category_cover_ext = item.category_cover_cdn == true ? 'small.'~item.category_cover_ext : item.category_cover_ext %}
-
             {{ item.action_name }}
         </a>
     </td>

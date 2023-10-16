@@ -27,6 +27,7 @@ namespace BaksDev\Users\UsersTable\UseCase\Admin\Actions\Delete;
 
 
 use BaksDev\Core\Messenger\MessageDispatchInterface;
+use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use BaksDev\Users\UsersTable\Entity\Actions\Event\UsersTableActionsEvent;
 use BaksDev\Users\UsersTable\Entity\Actions\UsersTableActions;
 use BaksDev\Users\UsersTable\Messenger\Actions\UsersTableActionsMessage;
@@ -45,9 +46,9 @@ final class UsersTableActionsDeleteHandler
     private MessageDispatchInterface $messageDispatch;
 
     public function __construct(
-        EntityManagerInterface   $entityManager,
-        ValidatorInterface       $validator,
-        LoggerInterface          $logger,
+        EntityManagerInterface $entityManager,
+        ValidatorInterface $validator,
+        LoggerInterface $logger,
         MessageDispatchInterface $messageDispatch
     )
     {
@@ -61,7 +62,7 @@ final class UsersTableActionsDeleteHandler
     /** @see UsersTableActionsDelete */
     public function handle(
         UsersTableActionsDeleteDTO $command,
-        //?UploadedFile $cover = null
+        UserProfileUid $profile
     ): string|UsersTableActions
     {
         /**
@@ -69,13 +70,13 @@ final class UsersTableActionsDeleteHandler
          */
         $errors = $this->validator->validate($command);
 
-        if (count($errors) > 0) {
+        if(count($errors) > 0)
+        {
             $uniqid = uniqid('', false);
-            $errorsString = (string)$errors;
-            $this->logger->error($uniqid . ': ' . $errorsString);
+            $errorsString = (string) $errors;
+            $this->logger->error($uniqid.': '.$errorsString);
             return $uniqid;
         }
-
 
 
         /* Обязательно передается идентификатор события */
@@ -93,9 +94,8 @@ final class UsersTableActionsDeleteHandler
 
 
         /** Получаем событие */
-        $Event = $this->entityManager->getRepository(UsersTableActionsEvent::class)->find(
-            $command->getEvent()
-        );
+        $Event = $this->entityManager->getRepository(UsersTableActionsEvent::class)
+            ->find($command->getEvent());
 
         if($Event === null)
         {
@@ -109,12 +109,11 @@ final class UsersTableActionsDeleteHandler
 
             return $uniqid;
         }
-        
 
-        /** Получаем корень агрегата */
-        $Main = $this->entityManager->getRepository(UsersTableActions::class)->findOneBy(
-            ['event' => $command->getEvent()]
-        );
+
+        /** Получаем корень */
+        $Main = $this->entityManager->getRepository(UsersTableActions::class)
+            ->findOneBy(['event' => $command->getEvent(), 'profile' => $profile]);
 
         if(empty($Main))
         {
@@ -128,7 +127,6 @@ final class UsersTableActionsDeleteHandler
 
             return $uniqid;
         }
-
 
 
         /** Применяем изменения к событию */
