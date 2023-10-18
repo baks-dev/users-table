@@ -52,7 +52,7 @@ final class Role implements RoleInterface, MenuAdminInterface
     /** Метод возвращает PATH раздела */
     public function getPath(): string
     {
-        return 'UsersTable:admin.action.index';
+        return 'users-table:admin.action.index';
     }
 
     /**

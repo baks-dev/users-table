@@ -136,6 +136,11 @@ final class UsersTableActionsWorkingDTO implements UsersTableActionsWorkingInter
 
     public function addTranslate(Trans\UsersTableActionsWorkingTransDTO $trans): void
     {
+        if(empty($trans->getLocal()->getLocalValue()))
+        {
+            return;
+        }
+
         if(!$this->translate->contains($trans))
         {
             $this->translate->add($trans);

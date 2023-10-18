@@ -47,7 +47,7 @@
                             {% set image_path = img_host ~ img_table ~ img_dir ~ img_file %}
                         {% endif %}
 
-                        <a href="{# {{ is_granted('ROLE_ADMIN') ? path('UserProfile:admin.newedit.edit', { id: item.users_profile_event }) : '#' }} #}"
+                        <a href="{# {{ is_granted('ROLE_ADMIN') ? path('users-profile-user:admin.newedit.edit', { id: item.users_profile_event }) : '#' }} #}"
                            class="icon rounded-circle bg-cover lazy p-1"
                            data-bg="{{ image_path }}"
                         > </a>
@@ -55,7 +55,7 @@
 
 
                     <div class="ms-0">
-                        <a href="{{ is_granted('ROLE_ADMIN') ? path('UserProfile:admin.newedit.edit', { id: item.users_profile_event }) : '#' }}"
+                        <a href="{{ is_granted('ROLE_ADMIN') ? path('users-profile-user:admin.newedit.edit', { id: item.users_profile_event }) : '#' }}"
                            class="fw-bolder mb- text-decoration-none text-dark">
                             {{ item.users_profile_username }}
                         </a>

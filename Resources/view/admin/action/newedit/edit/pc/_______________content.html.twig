@@ -17,7 +17,7 @@
         </div>
 
         <div class="modal-body">
-            {{ include('@UsersTable/admin/action/newedit/_form/pc/form.html.twig') }}
+            {{ include('@users-table/admin/action/newedit/_form/pc/form.html.twig') }}
         </div>
 
         <div class="modal-footer">
@@ -27,7 +27,7 @@
                     <button type="button"
                             id="workingAddCollection"
                             class="btn btn-sm btn-outline-primary border-0 working-add-collection"
-                            data-prototype="{{ include('@UsersTable/admin/action/newedit/_form/pc/working/_working.prototype.html.twig')|e('html_attr') }}"
+                            data-prototype="{{ include('@users-table/admin/action/newedit/_form/pc/working/_working.prototype.html.twig')|e('html_attr') }}"
 
                             data-collection="{{ form.working.vars.id }}-collection"
                             data-index="{{ form.working.count }}"

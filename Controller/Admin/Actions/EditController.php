@@ -55,7 +55,7 @@ final class EditController extends AbstractController
 
         // Форма
         $form = $this->createForm(UsersTableActionsForm::class, $UsersTableActionsDTO, [
-            'action' => $this->generateUrl('UsersTable:admin.action.newedit.edit', ['id' => $UsersTableActionsDTO->getEvent()]),
+            'action' => $this->generateUrl('users-table:admin.action.newedit.edit', ['id' => $UsersTableActionsDTO->getEvent()]),
         ]);
 
         $form->handleRequest($request);
@@ -75,7 +75,7 @@ final class EditController extends AbstractController
                 $handle
             );
 
-            return $this->redirectToRoute('UsersTable:admin.action.index');
+            return $this->redirectToRoute('users-table:admin.action.index');
 
         }
 

@@ -60,7 +60,7 @@ final class DeleteController extends AbstractController
         $form = $this->createForm(
             UsersTableDeleteForm::class,
             $UsersTableDeleteDTO,
-            ['action' => $this->generateUrl('UsersTable:admin.delete', ['id' => $UsersTableDeleteDTO->getEvent()]),]
+            ['action' => $this->generateUrl('users-table:admin.delete', ['id' => $UsersTableDeleteDTO->getEvent()]),]
         );
         $form->handleRequest($request);
 
@@ -72,7 +72,7 @@ final class DeleteController extends AbstractController
             {
                 $this->addFlash('admin.page.delete', 'admin.success.delete', 'admin.users.table');
 
-                return $this->redirectToRoute('UsersTable:admin.index');
+                return $this->redirectToRoute('users-table:admin.index');
             }
 
             $this->addFlash(
@@ -82,7 +82,7 @@ final class DeleteController extends AbstractController
                 $UsersTable
             );
 
-            return $this->redirectToRoute('UsersTable:admin.index', status: 400);
+            return $this->redirectToRoute('users-table:admin.index', status: 400);
         }
 
         return $this->render(

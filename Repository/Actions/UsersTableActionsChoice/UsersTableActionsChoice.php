@@ -88,6 +88,6 @@ final class UsersTableActionsChoice implements UsersTableActionsChoiceInterface
 
 
         /* Кешируем результат ORM */
-        return $qb->enableCache('UsersTable', 86400)->getResult();
+        return $qb->enableCache('users-table', 86400)->getResult();
     }
 }

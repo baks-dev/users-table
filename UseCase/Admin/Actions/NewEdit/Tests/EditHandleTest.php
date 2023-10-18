@@ -25,16 +25,12 @@ declare(strict_types=1);
 
 namespace BaksDev\Users\UsersTable\UseCase\Admin\Actions\NewEdit\Tests;
 
-use BaksDev\Core\Type\Locale\Locale;
-use BaksDev\Core\Type\Locale\LocaleEnum;
 use BaksDev\Products\Category\Type\Id\ProductCategoryUid;
-use BaksDev\Products\Product\Type\Id\ProductUid;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use BaksDev\Users\UsersTable\Entity\Actions\Event\UsersTableActionsEvent;
 use BaksDev\Users\UsersTable\Entity\Actions\UsersTableActions;
 use BaksDev\Users\UsersTable\Type\Actions\Const\UsersTableActionsWorkingConst;
 use BaksDev\Users\UsersTable\Type\Actions\Event\UsersTableActionsEventUid;
-use BaksDev\Users\UsersTable\Type\Actions\Id\UsersTableActionsUid;
 use BaksDev\Users\UsersTable\UseCase\Admin\Actions\NewEdit\Products\UsersTableActionsProductDTO;
 use BaksDev\Users\UsersTable\UseCase\Admin\Actions\NewEdit\Trans\UsersTableActionsTransDTO;
 use BaksDev\Users\UsersTable\UseCase\Admin\Actions\NewEdit\UsersTableActionsDTO;

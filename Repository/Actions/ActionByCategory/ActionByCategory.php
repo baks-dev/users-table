@@ -71,6 +71,6 @@ final class ActionByCategory implements ActionByCategoryInterface
 
         $qb->andWhere('product.event IS NULL');
         
-        return $qb->enableCache('UsersTable', 86400)->getOneOrNullResult();
+        return $qb->enableCache('users-table', 86400)->getOneOrNullResult();
     }
 }

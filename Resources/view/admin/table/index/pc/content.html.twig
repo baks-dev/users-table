@@ -36,7 +36,7 @@
 
                 {# Список закупок продукции #}
 
-                <a href="{{ path('UsersTable:admin.day') }}"
+                <a href="{{ path('users-table:admin.day') }}"
                    class="btn btn-light"
                    data-bs-toggle="tooltip"
                    data-bs-placement="bottom"
@@ -51,7 +51,7 @@
                     </svg>
                 </a>
 
-                <a href="{{ path('UsersTable:admin.month') }}"
+                <a href="{{ path('users-table:admin.month') }}"
                    class="btn btn-light"
                    data-bs-toggle="tooltip"
                    data-bs-placement="bottom"
@@ -69,7 +69,7 @@
 
                 {# Добавить #}
                 {% if is_granted(ROLE~'_NEW') or is_granted('ROLE_ADMIN') %}
-                    <a href="{{ path('UsersTable:admin.table.new') }}"
+                    <a href="{{ path('users-table:admin.table.new') }}"
                        class="btn btn-primary fw-bolder modal-link"
                        data-bs-toggle="modal"
                        data-bs-target="#modal"
@@ -81,7 +81,7 @@
 
                 {#{% if is_granted('ROLE_USERS_TABLE_ACTIONS') or is_granted('ROLE_ADMIN') %}
 
-                    <a href="{{ path('UsersTable:admin.action.index') }}"
+                    <a href="{{ path('users-table:admin.action.index') }}"
                        class="btn btn-light"
                        data-bs-toggle="tooltip"
                        data-bs-placement="bottom"

@@ -54,7 +54,7 @@ final class NewController extends AbstractController
         // Форма
         $form = $this->createForm(
             UsersTableActionsForm::class, $UsersTableActionsDTO,
-            ['action' => $this->generateUrl('UsersTable:admin.action.newedit.new'),]
+            ['action' => $this->generateUrl('users-table:admin.action.newedit.new'),]
         );
 
         $form->handleRequest($request);
@@ -68,7 +68,7 @@ final class NewController extends AbstractController
             {
                 $this->addFlash('success', 'admin.success.new', 'admin.table.actions');
 
-                return $this->redirectToRoute('UsersTable:admin.action.index');
+                return $this->redirectToRoute('users-table:admin.action.index');
             }
 
             $this->addFlash('danger', 'admin.danger.new', 'admin.table.actions', $UsersTableActions);

@@ -204,6 +204,11 @@ final class UsersTableActionsDTO implements UsersTableActionsEventInterface
 
     public function addTranslate(Trans\UsersTableActionsTransDTO $trans): void
     {
+        if(empty($trans->getLocal()->getLocalValue()))
+        {
+            return;
+        }
+
         if(!$this->translate->contains($trans))
         {
             $this->translate->add($trans);

@@ -54,7 +54,7 @@ final class NewController extends AbstractController
 
         // Форма
         $form = $this->createForm(UsersTableForm::class, $UsersTableDTO, [
-            'action' => $this->generateUrl('UsersTable:admin.table.new'),
+            'action' => $this->generateUrl('users-table:admin.table.new'),
         ]);
 
         $form->handleRequest($request);

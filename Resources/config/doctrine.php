@@ -53,11 +53,11 @@ return static function(ContainerConfigurator $container, DoctrineConfig $doctrin
 
     $MODULE = substr(__DIR__, 0, strpos(__DIR__, "Resources"));
 
-    $emDefault->mapping('UsersTable')
+    $emDefault->mapping('users-table')
 		->type('attribute')
 		->dir($MODULE.'Entity')
 		->isBundle(false)
 		->prefix('BaksDev\Users\UsersTable')
-		->alias('UsersTable')
+		->alias('users-table')
 	;
 };

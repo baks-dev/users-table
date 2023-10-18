@@ -33,7 +33,7 @@
     </td>
 
     <td>
-        <a href="{{ is_granted('ROLE_ADMIN') or is_granted('ROLE_USERS_TABLE_ACTIONS_EDIT') ? path('UsersTable:admin.action.newedit.edit', { id: item.event }) : '#' }}"
+        <a href="{{ is_granted('ROLE_ADMIN') or is_granted('ROLE_USERS_TABLE_ACTIONS_EDIT') ? path('users-table:admin.action.newedit.edit', { id: item.event }) : '#' }}"
            class="text-decoration-none fw-bolder"
            title="{{ 'btn.edit'|trans({}, 'core.btn') }}"
         >

@@ -25,7 +25,7 @@
 
             <div class="w-100 d-flex align-items-center gap-3 justify-content-end">
 
-                <a href="{{ path('UsersTable:admin.table.index') }}"
+                <a href="{{ path('users-table:admin.table.index') }}"
                    class="btn btn-light"
                    data-bs-toggle="tooltip"
                    data-bs-placement="bottom"
@@ -58,7 +58,7 @@
                 </button>
 
 
-                <a href="{{ path('UsersTable:admin.month') }}"
+                <a href="{{ path('users-table:admin.month') }}"
                    class="btn btn-light"
                    data-bs-toggle="tooltip"
                    data-bs-placement="bottom"
@@ -76,7 +76,7 @@
 
                 {# Добавить #}
                 {% if is_granted(ROLE~'_NEW') or is_granted('ROLE_ADMIN') %}
-                    <a href="{{ path('UsersTable:admin.table.new') }}"
+                    <a href="{{ path('users-table:admin.table.new') }}"
                        class="btn btn-primary fw-bolder modal-link"
                        data-bs-toggle="modal"
                        data-bs-target="#modal"
