@@ -267,8 +267,6 @@ final class UsersTableForm extends AbstractType
     public function onPostSubmitAction(FormEvent $event): void
     {
 
-       // dump('onPostSubmitAction');
-
         $builder = $event->getForm()->getParent();
 
         if(!$builder || !$event->getData())
@@ -299,7 +297,6 @@ final class UsersTableForm extends AbstractType
 
     public function onPostSubmitCategory(FormEvent $event): void
     {
-       // dump('onPostSubmitCategory');
 
         $builder = $event->getForm()->getParent();
 
