@@ -18,8 +18,10 @@
 
 namespace BaksDev\Users\UsersTable\UseCase\Admin\Actions\Delete\Modify;
 
+use BaksDev\Core\Type\Modify\Modify\ModifyActionDelete;
 use BaksDev\Core\Type\Modify\ModifyAction;
-use BaksDev\Core\Type\Modify\ModifyActionEnum;
+use BaksDev\Core\Type\Modify\Modify\ModifyActionNew;
+use BaksDev\Core\Type\Modify\Modify\ModifyActionUpdate;
 use BaksDev\Users\UsersTable\Entity\Actions\Modify\UsersTableActionsModifyInterface;
 
 final class ModifyDTO implements UsersTableActionsModifyInterface
@@ -30,7 +32,7 @@ final class ModifyDTO implements UsersTableActionsModifyInterface
 	
 	public function __construct()
 	{
-		$this->action = new ModifyAction(ModifyActionEnum::DELETE);
+		$this->action = new ModifyAction(ModifyActionDelete::class);
 	}
 
 	public function getAction() : ModifyAction
