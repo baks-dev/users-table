@@ -49,7 +49,7 @@ use Symfony\Component\DependencyInjection\Attribute\When;
  * @depends BaksDev\Users\UsersTable\Controller\Admin\Actions\Tests\DeleteControllerTest::class
  * @depends BaksDev\Users\UsersTable\UseCase\Admin\Table\Delete\Tests\DeleteHandleTest::class
  *
- * @see NewHandleTest
+ * @see     UserNewUserProfileHandleTest
  * @see DeleteControllerTest
  */
 #[When(env: 'test')]

@@ -185,32 +185,4 @@ class UsersTableEvent extends EntityEvent
         return $this->working;
     }
 
-
-
-
-//	public function isModifyActionEquals(ModifyActionEnum $action) : bool
-//	{
-//		return $this->modify->equals($action);
-//	}
-
-//	public function getUploadClass() : UsersTableImage
-//	{
-//		return $this->image ?: $this->image = new UsersTableImage($this);
-//	}
-
-//	public function getNameByLocale(Locale $locale) : ?string
-//	{
-//		$name = null;
-//
-//		/** @var UsersTableTrans $trans */
-//		foreach($this->translate as $trans)
-//		{
-//			if($name = $trans->name($locale))
-//			{
-//				break;
-//			}
-//		}
-//
-//		return $name;
-//	}
 }
