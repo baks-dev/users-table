@@ -32,7 +32,7 @@
 
 document.addEventListener("DOMContentLoaded", (event) => {
 	const form = document.forms.day_table_filter_filter_form;
-	form.addEventListener('change', () => { form.submit(); });
+	form.addEventListener('change', () => { setTimeout(() => { form.submit(); }, 300); });
 });
 
     function changeDatapicker(input) {
