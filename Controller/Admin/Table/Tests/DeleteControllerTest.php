@@ -58,6 +58,7 @@ final class DeleteControllerTest extends WebTestCase
             self::assertResponseIsSuccessful();
         }
 
+
     }
 
     // доступ по роли ROLE_ADMIN
