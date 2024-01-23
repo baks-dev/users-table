@@ -80,6 +80,9 @@ final class NewHandleTest extends KernelTestCase
 
             $em->flush();
         }
+
+        $em->clear();
+        //$em->close();
     }
 
 
@@ -142,6 +145,9 @@ final class NewHandleTest extends KernelTestCase
         $em = $container->get(EntityManagerInterface::class);
         $UsersTable = $em->getRepository(UsersTable::class)->find(UsersTableUid::TEST);
         self::assertNotNull($UsersTable);
+
+        $em->clear();
+        //$em->close();
 
     }
 

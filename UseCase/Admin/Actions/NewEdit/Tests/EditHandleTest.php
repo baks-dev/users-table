@@ -138,6 +138,9 @@ final class EditHandleTest extends KernelTestCase
         $UsersTableActionsHandler = self::getContainer()->get(UsersTableActionsHandler::class);
         $handle = $UsersTableActionsHandler->handle($UsersTableActionsDTO, new UserProfileUid());
         self::assertTrue(($handle instanceof UsersTableActions), $handle.': Ошибка UsersTableActions');
+
+        $em->clear();
+        //$em->close();
     }
 
     public function testComplete(): void

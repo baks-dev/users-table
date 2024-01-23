@@ -72,6 +72,8 @@ final class NewHandleTest extends KernelTestCase
             $em->flush();
         }
 
+        $em->clear();
+        //$em->close();
     }
 
 
@@ -172,6 +174,9 @@ final class NewHandleTest extends KernelTestCase
         $UsersTableActions = $em->getRepository(UsersTableActions::class)
             ->findOneBy(['id' => UsersTableActionsUid::TEST, 'profile' => UserProfileUid::TEST]);
         self::assertNotNull($UsersTableActions);
+
+        $em->clear();
+        //$em->close();
 
     }
 

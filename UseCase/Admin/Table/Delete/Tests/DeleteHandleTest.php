@@ -140,6 +140,8 @@ final class DeleteHandleTest extends KernelTestCase
 
         self::assertNull($UsersTable);
 
+        $em->clear();
+        //$em->close();
     }
 
 }
