@@ -51,13 +51,13 @@ final class UpdateUsersTableMonth
 
     public function __construct(
         EntityManagerInterface $entityManager,
-        LoggerInterface $messageDispatchLogger,
+        LoggerInterface $usersTableLogger,
         UserTableMonthHandler $tableMonthHandler,
         PremiumCurrentMonthRepositoryInterface $premiumCurrentMonthRepository
     )
     {
         $this->entityManager = $entityManager;
-        $this->logger = $messageDispatchLogger;
+        $this->logger = $usersTableLogger;
         $this->tableMonthHandler = $tableMonthHandler;
         $this->premiumCurrentMonthRepository = $premiumCurrentMonthRepository;
     }

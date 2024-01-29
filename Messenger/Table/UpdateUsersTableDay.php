@@ -48,12 +48,12 @@ final class UpdateUsersTableDay
 
     public function __construct(
         EntityManagerInterface $entityManager,
-        LoggerInterface $messageDispatchLogger,
+        LoggerInterface $usersTableLogger,
         UserTableDayHandler $tableDayHandler
     )
     {
         $this->entityManager = $entityManager;
-        $this->logger = $messageDispatchLogger;
+        $this->logger = $usersTableLogger;
         $this->tableDayHandler = $tableDayHandler;
     }
 
