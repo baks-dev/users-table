@@ -70,7 +70,7 @@
                 {# Добавить #}
                 {% if is_granted(ROLE~'_NEW') or is_granted('ROLE_ADMIN') %}
                     <a href="{{ path('users-table:admin.table.new') }}"
-                       class="btn btn-primary fw-bolder modal-link"
+                       class="btn btn-primary fw-bolder modal-link disabled"
                        data-bs-toggle="modal"
                        data-bs-target="#modal"
                        title='Добавить табель сотруднику'
@@ -106,7 +106,7 @@
                             title="{{ 'admin.page.settings'|trans({}, 'admin.users.table.telegram.settings') }}"
                     >
                          <a href="{{ path('UsersTableTelegram:admin.settings') }}"
-                            class="btn btn-light modal-link"
+                            class="btn btn-light modal-link disabled"
                             data-bs-toggle="modal"
                             data-bs-target="#modal"
                          >
