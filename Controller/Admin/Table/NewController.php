@@ -50,8 +50,6 @@ final class NewController extends AbstractController
         
         $UsersTableDTO = new UsersTableDTO($this->getProfileUid());
 
-        //dd($UsersTableDTO);
-
         // Форма
         $form = $this->createForm(UsersTableForm::class, $UsersTableDTO, [
             'action' => $this->generateUrl('users-table:admin.table.new'),
