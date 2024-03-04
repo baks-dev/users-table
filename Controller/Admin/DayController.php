@@ -51,7 +51,9 @@ final class DayController extends AbstractController
     {
         // Поиск
         $search = new SearchDTO();
-        $searchForm = $this->createForm(SearchForm::class, $search);
+        $searchForm = $this->createForm(SearchForm::class, $search,
+            ['action' => $this->generateUrl('users-table:admin.day')]
+        );
         $searchForm->handleRequest($request);
 
         // Фильтр

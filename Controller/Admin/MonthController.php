@@ -50,7 +50,9 @@ final class MonthController extends AbstractController
     ): Response {
         // Поиск
         $search = new SearchDTO();
-        $searchForm = $this->createForm(SearchForm::class, $search);
+        $searchForm = $this->createForm(SearchForm::class, $search,
+            ['action' => $this->generateUrl('users-table:admin.month')]
+        );
         $searchForm->handleRequest($request);
 
         // Фильтр
