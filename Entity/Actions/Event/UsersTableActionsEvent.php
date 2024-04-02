@@ -73,27 +73,27 @@ class UsersTableActionsEvent extends EntityEvent
     /**
      * Модификатор
      */
-    #[ORM\OneToOne(mappedBy: 'event', targetEntity: UsersTableActionsModify::class, cascade: ['all'])]
+    #[ORM\OneToOne(targetEntity: UsersTableActionsModify::class, mappedBy: 'event', cascade: ['all'])]
     private UsersTableActionsModify $modify;
 
     /**
      * Действия
      */
-    #[ORM\OneToMany(mappedBy: 'event', targetEntity: UsersTableActionsWorking::class, cascade: ['all'])]
+    #[ORM\OneToMany(targetEntity: UsersTableActionsWorking::class, mappedBy: 'event', cascade: ['all'])]
     #[ORM\OrderBy(['sort' => 'ASC'])]
     private Collection $working;
 
     /**
      * Привязать продукцию к указанному процессу
      */
-    #[ORM\OneToMany(mappedBy: 'event', targetEntity: UsersTableActionsProduct::class, cascade: ['all'])]
+    #[ORM\OneToMany(targetEntity: UsersTableActionsProduct::class, mappedBy: 'event', cascade: ['all'])]
     private Collection $product;
 
 
     /**
      * Переводы
      */
-    #[ORM\OneToMany(mappedBy: 'event', targetEntity: UsersTableActionsTrans::class, cascade: ['all'], indexBy: 'local')]
+    #[ORM\OneToMany(targetEntity: UsersTableActionsTrans::class, mappedBy: 'event', cascade: ['all'], indexBy: 'local')]
     private Collection $translate;
 
     

@@ -32,7 +32,7 @@ use BaksDev\Users\UsersTable\Type\Actions\Working\UsersTableActionsWorkingUid;
 use DateTimeImmutable;
 use Doctrine\DBAL\ParameterType;
 
-final class PremiumCurrentMonthRepository implements PremiumCurrentMonthRepositoryInterface
+final class PremiumCurrentMonthRepository implements PremiumCurrentMonthInterface
 {
 
     private DBALQueryBuilder $DBALQueryBuilder;

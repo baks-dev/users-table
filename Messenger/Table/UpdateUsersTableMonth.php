@@ -31,7 +31,7 @@ use BaksDev\Users\UsersTable\Entity\Actions\Working\UsersTableActionsWorking;
 use BaksDev\Users\UsersTable\Entity\Table\Event\UsersTableEvent;
 use BaksDev\Users\UsersTable\Entity\UsersTableDay;
 use BaksDev\Users\UsersTable\Entity\UsersTableMonth;
-use BaksDev\Users\UsersTable\Repository\DayUsersTable\PremiumCurrentMonth\PremiumCurrentMonthRepositoryInterface;
+use BaksDev\Users\UsersTable\Repository\DayUsersTable\PremiumCurrentMonth\PremiumCurrentMonthInterface;
 use BaksDev\Users\UsersTable\UseCase\Admin\Month\UsersTableMonthDTO;
 use BaksDev\Users\UsersTable\UseCase\Admin\Month\UserTableMonthHandler;
 use Doctrine\ORM\EntityManagerInterface;
@@ -47,13 +47,13 @@ final class UpdateUsersTableMonth
     private LoggerInterface $logger;
 
     private UserTableMonthHandler $tableMonthHandler;
-    private PremiumCurrentMonthRepositoryInterface $premiumCurrentMonthRepository;
+    private PremiumCurrentMonthInterface $premiumCurrentMonthRepository;
 
     public function __construct(
         EntityManagerInterface $entityManager,
         LoggerInterface $usersTableLogger,
         UserTableMonthHandler $tableMonthHandler,
-        PremiumCurrentMonthRepositoryInterface $premiumCurrentMonthRepository
+        PremiumCurrentMonthInterface $premiumCurrentMonthRepository
     )
     {
         $this->entityManager = $entityManager;

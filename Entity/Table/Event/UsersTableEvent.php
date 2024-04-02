@@ -97,7 +97,7 @@ class UsersTableEvent extends EntityEvent
     /**
      * Модификатор
      */
-    #[ORM\OneToOne(mappedBy: 'event', targetEntity: UsersTableModify::class, cascade: ['all'])]
+    #[ORM\OneToOne(targetEntity: UsersTableModify::class, mappedBy: 'event', cascade: ['all'])]
     private UsersTableModify $modify;
 
     public function __construct()

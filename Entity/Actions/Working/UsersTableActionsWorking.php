@@ -66,7 +66,7 @@ class UsersTableActionsWorking extends EntityEvent
 
 
     /** Перевод */
-    #[ORM\OneToMany(mappedBy: 'working', targetEntity: UsersTableActionsWorkingTrans::class, cascade: ['all'])]
+    #[ORM\OneToMany(targetEntity: UsersTableActionsWorkingTrans::class, mappedBy: 'working', cascade: ['all'])]
     private Collection $translate;
 
     /** Сортировка */
