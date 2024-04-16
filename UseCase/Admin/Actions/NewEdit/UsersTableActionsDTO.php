@@ -26,7 +26,7 @@ declare(strict_types=1);
 namespace BaksDev\Users\UsersTable\UseCase\Admin\Actions\NewEdit;
 
 use BaksDev\Core\Type\Locale\Locale;
-use BaksDev\Products\Category\Type\Id\ProductCategoryUid;
+use BaksDev\Products\Category\Type\Id\CategoryProductUid;
 use BaksDev\Users\UsersTable\Entity\Actions\Event\UsersTableActionsEventInterface;
 use BaksDev\Users\UsersTable\Type\Actions\Event\UsersTableActionsEventUid;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -46,7 +46,7 @@ final class UsersTableActionsDTO implements UsersTableActionsEventInterface
      */
     #[Assert\NotBlank]
     #[Assert\Uuid]
-    private ProductCategoryUid $category;
+    private CategoryProductUid $category;
 
     /**
      * Действия
@@ -94,17 +94,17 @@ final class UsersTableActionsDTO implements UsersTableActionsEventInterface
      * Категория производства
      */
 
-    public function getCategory(): ProductCategoryUid
+    public function getCategory(): CategoryProductUid
     {
         return $this->category;
     }
 
-    public function setCategory(ProductCategoryUid|string $category): void
+    public function setCategory(CategoryProductUid|string $category): void
     {
 
         if(is_string($category))
         {
-            $category = new ProductCategoryUid($category);
+            $category = new CategoryProductUid($category);
         }
 
         $this->category = $category;

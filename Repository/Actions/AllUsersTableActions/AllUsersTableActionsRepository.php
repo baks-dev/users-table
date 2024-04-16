@@ -28,9 +28,9 @@ namespace BaksDev\Users\UsersTable\Repository\Actions\AllUsersTableActions;
 use BaksDev\Core\Doctrine\DBALQueryBuilder;
 use BaksDev\Core\Form\Search\SearchDTO;
 use BaksDev\Core\Services\Paginator\PaginatorInterface;
-use BaksDev\Products\Category\Entity\Cover\ProductCategoryCover;
-use BaksDev\Products\Category\Entity\ProductCategory;
-use BaksDev\Products\Category\Entity\Trans\ProductCategoryTrans;
+use BaksDev\Products\Category\Entity\Cover\CategoryProductCover;
+use BaksDev\Products\Category\Entity\CategoryProduct;
+use BaksDev\Products\Category\Entity\Trans\CategoryProductTrans;
 use BaksDev\Users\Profile\UserProfile\Entity\Personal\UserProfilePersonal;
 use BaksDev\Users\Profile\UserProfile\Entity\UserProfile;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
@@ -113,7 +113,7 @@ final class AllUsersTableActionsRepository implements AllUsersTableActionsInterf
 
         $qb->leftJoin(
             'event',
-            ProductCategory::TABLE,
+            CategoryProduct::TABLE,
             'category',
             'category.id = event.category'
         );
@@ -122,7 +122,7 @@ final class AllUsersTableActionsRepository implements AllUsersTableActionsInterf
 
         $qb->leftJoin(
             'category',
-            ProductCategoryTrans::TABLE,
+            CategoryProductTrans::TABLE,
             'trans',
             'trans.event = category.event AND trans.local = :local'
         );
@@ -133,7 +133,7 @@ final class AllUsersTableActionsRepository implements AllUsersTableActionsInterf
         $qb->addSelect("
 			CASE
 			   WHEN category_cover.name IS NOT NULL THEN
-					CONCAT ( '/upload/".ProductCategoryCover::TABLE."' , '/', category_cover.name)
+					CONCAT ( '/upload/".CategoryProductCover::TABLE."' , '/', category_cover.name)
 			   ELSE NULL
 			END AS category_cover_name
 		"
@@ -145,7 +145,7 @@ final class AllUsersTableActionsRepository implements AllUsersTableActionsInterf
 
         $qb->leftJoin(
             'category',
-            ProductCategoryCover::TABLE,
+            CategoryProductCover::TABLE,
             'category_cover',
             'category_cover.event = category.event'
         );

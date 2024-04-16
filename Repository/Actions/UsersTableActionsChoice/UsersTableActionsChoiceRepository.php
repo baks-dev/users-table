@@ -26,7 +26,7 @@ declare(strict_types=1);
 namespace BaksDev\Users\UsersTable\Repository\Actions\UsersTableActionsChoice;
 
 use BaksDev\Core\Doctrine\ORMQueryBuilder;
-use BaksDev\Products\Category\Type\Id\ProductCategoryUid;
+use BaksDev\Products\Category\Type\Id\CategoryProductUid;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use BaksDev\Users\UsersTable\Entity\Actions\Event\UsersTableActionsEvent;
 use BaksDev\Users\UsersTable\Entity\Actions\Trans\UsersTableActionsTrans;
@@ -47,7 +47,7 @@ final class UsersTableActionsChoiceRepository implements UsersTableActionsChoice
     /**
      * Метод возвращает коллекцию идентификаторов активных процессов производства
      */
-    public function getCollection(UserProfileUid $profile, ?ProductCategoryUid $category = null): ?array
+    public function getCollection(UserProfileUid $profile, ?CategoryProductUid $category = null): ?array
     {
         $qb = $this->ORMQueryBuilder->createQueryBuilder(self::class)->bindLocal();
 
@@ -74,7 +74,7 @@ final class UsersTableActionsChoiceRepository implements UsersTableActionsChoice
 
             $qb
                 ->andWhere('event.category = :category')
-                ->setParameter('category', $category, ProductCategoryUid::TYPE);
+                ->setParameter('category', $category, CategoryProductUid::TYPE);
 
         }
 

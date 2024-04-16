@@ -26,7 +26,7 @@ declare(strict_types=1);
 namespace BaksDev\Users\UsersTable\Repository\Actions\ActionByCategory;
 
 use BaksDev\Core\Doctrine\ORMQueryBuilder;
-use BaksDev\Products\Category\Type\Id\ProductCategoryUid;
+use BaksDev\Products\Category\Type\Id\CategoryProductUid;
 use BaksDev\Users\UsersTable\Entity\Actions\Event\UsersTableActionsEvent;
 use BaksDev\Users\UsersTable\Entity\Actions\Products\UsersTableActionsProduct;
 use BaksDev\Users\UsersTable\Entity\Actions\UsersTableActions;
@@ -44,7 +44,7 @@ final class ActionByCategoryRepository implements ActionByCategoryInterface
     /**
      * Метод возвращает идентификатор события UsersTableActionsEventUid без привязки продукта
      */
-    public function findUsersTableActionsByCategory(ProductCategoryUid $category) : ?UsersTableActionsEventUid
+    public function findUsersTableActionsByCategory(CategoryProductUid $category) : ?UsersTableActionsEventUid
     {
         $qb = $this->ORMQueryBuilder->createQueryBuilder(self::class);
 
@@ -54,7 +54,7 @@ final class ActionByCategoryRepository implements ActionByCategoryInterface
         $qb->from(UsersTableActionsEvent::class, 'event');
 
         $qb->where('event.category = :category');
-        $qb->setParameter('category', $category, ProductCategoryUid::TYPE);
+        $qb->setParameter('category', $category, CategoryProductUid::TYPE);
 
         $qb->join(UsersTableActions::class,
             'action',

@@ -25,7 +25,7 @@ declare(strict_types=1);
 
 namespace BaksDev\Users\UsersTable\UseCase\Admin\Actions\NewEdit\Tests;
 
-use BaksDev\Products\Category\Type\Id\ProductCategoryUid;
+use BaksDev\Products\Category\Type\Id\CategoryProductUid;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use BaksDev\Users\UsersTable\Entity\Actions\Event\UsersTableActionsEvent;
 use BaksDev\Users\UsersTable\Entity\Actions\UsersTableActions;
@@ -74,7 +74,7 @@ final class EditHandleTest extends KernelTestCase
         $UsersTableActionsDTO = new UsersTableActionsDTO();
         $UsersTableActionsEvent->getDto($UsersTableActionsDTO);
 
-        self::assertEquals(ProductCategoryUid::TEST, (string) $UsersTableActionsDTO->getCategory());
+        self::assertEquals(CategoryProductUid::TEST, (string) $UsersTableActionsDTO->getCategory());
         $UsersTableActionsDTO->setCategory(clone $UsersTableActionsDTO->getCategory());
 
 

@@ -28,8 +28,8 @@ namespace BaksDev\Users\UsersTable\Repository\AllUsersTable;
 use BaksDev\Core\Doctrine\DBALQueryBuilder;
 use BaksDev\Core\Form\Search\SearchDTO;
 use BaksDev\Core\Services\Paginator\PaginatorInterface;
-use BaksDev\Products\Category\Entity\ProductCategory;
-use BaksDev\Products\Category\Entity\Trans\ProductCategoryTrans;
+use BaksDev\Products\Category\Entity\CategoryProduct;
+use BaksDev\Products\Category\Entity\Trans\CategoryProductTrans;
 use BaksDev\Users\Profile\Group\Entity\Users\ProfileGroupUsers;
 use BaksDev\Users\Profile\UserProfile\Entity\Avatar\UserProfileAvatar;
 use BaksDev\Users\Profile\UserProfile\Entity\Event\UserProfileEvent;
@@ -199,7 +199,7 @@ final class AllUsersTableRepository implements AllUsersTableInterface
 
         $qb->leftJoin(
             'action_event',
-            ProductCategory::TABLE,
+            CategoryProduct::TABLE,
             'category',
             'category.id = action_event.category'
         );
@@ -208,7 +208,7 @@ final class AllUsersTableRepository implements AllUsersTableInterface
 
         $qb->leftJoin(
             'category',
-            ProductCategoryTrans::TABLE,
+            CategoryProductTrans::TABLE,
             'trans',
             'trans.event = category.event AND trans.local = :local'
         );

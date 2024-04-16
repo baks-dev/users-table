@@ -23,7 +23,7 @@
 
 namespace BaksDev\Users\UsersTable\Repository\Actions\UsersTableActionsChoice;
 
-use BaksDev\Products\Category\Type\Id\ProductCategoryUid;
+use BaksDev\Products\Category\Type\Id\CategoryProductUid;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 
 interface UsersTableActionsChoiceInterface
@@ -31,6 +31,6 @@ interface UsersTableActionsChoiceInterface
     /**
      * Метод возвращает коллекцию идентификаторов активных процессов производства
      */
-    public function getCollection(UserProfileUid $profile, ?ProductCategoryUid $category = null): ?array;
+    public function getCollection(UserProfileUid $profile, ?CategoryProductUid $category = null): ?array;
 
 }

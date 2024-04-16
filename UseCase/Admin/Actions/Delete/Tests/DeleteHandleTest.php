@@ -26,7 +26,7 @@ declare(strict_types=1);
 namespace BaksDev\Users\UsersTable\UseCase\Admin\Actions\Delete\Tests;
 
 use BaksDev\Core\Doctrine\ORMQueryBuilder;
-use BaksDev\Products\Category\Type\Id\ProductCategoryUid;
+use BaksDev\Products\Category\Type\Id\CategoryProductUid;
 use BaksDev\Products\Product\Type\Id\ProductUid;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use BaksDev\Users\UsersTable\Entity\Actions\Event\UsersTableActionsEvent;
@@ -101,7 +101,7 @@ final class DeleteHandleTest extends KernelTestCase
 
         $UsersTableActionsDTO = new UsersTableActionsDTO();
         $UsersTableActionsEvent->getDto($UsersTableActionsDTO);
-        self::assertNotEquals(ProductCategoryUid::TEST, (string) $UsersTableActionsDTO->getCategory());
+        self::assertNotEquals(CategoryProductUid::TEST, (string) $UsersTableActionsDTO->getCategory());
 
 
 //        /** @var UsersTableActionsProductDTO $UsersTableActionsProductDTO */

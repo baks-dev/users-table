@@ -23,7 +23,7 @@
 
 namespace BaksDev\Users\UsersTable\Repository\Actions\ActionByCategory;
 
-use BaksDev\Products\Category\Type\Id\ProductCategoryUid;
+use BaksDev\Products\Category\Type\Id\CategoryProductUid;
 use BaksDev\Users\UsersTable\Type\Actions\Event\UsersTableActionsEventUid;
 
 interface ActionByCategoryInterface
@@ -31,5 +31,5 @@ interface ActionByCategoryInterface
     /**
      * Метод возвращает идентификатор события UsersTableActionsEventUid без привязки продукта
      */
-    public function findUsersTableActionsByCategory(ProductCategoryUid $category): ?UsersTableActionsEventUid;
+    public function findUsersTableActionsByCategory(CategoryProductUid $category): ?UsersTableActionsEventUid;
 }

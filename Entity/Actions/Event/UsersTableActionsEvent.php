@@ -27,7 +27,7 @@ namespace BaksDev\Users\UsersTable\Entity\Actions\Event;
 
 use BaksDev\Core\Entity\EntityEvent;
 use BaksDev\Core\Type\Locale\Locale;
-use BaksDev\Products\Category\Type\Id\ProductCategoryUid;
+use BaksDev\Products\Category\Type\Id\CategoryProductUid;
 use BaksDev\Users\UsersTable\Entity\Actions\Modify\UsersTableActionsModify;
 use BaksDev\Users\UsersTable\Entity\Actions\Products\UsersTableActionsProduct;
 use BaksDev\Users\UsersTable\Entity\Actions\Trans\UsersTableActionsTrans;
@@ -67,8 +67,8 @@ class UsersTableActionsEvent extends EntityEvent
      */
     #[Assert\NotBlank]
     #[Assert\Uuid]
-    #[ORM\Column(type: ProductCategoryUid::TYPE)]
-    private ProductCategoryUid $category;
+    #[ORM\Column(type: CategoryProductUid::TYPE)]
+    private CategoryProductUid $category;
 
     /**
      * Модификатор

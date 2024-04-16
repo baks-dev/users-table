@@ -26,7 +26,7 @@ declare(strict_types=1);
 namespace BaksDev\Users\UsersTable\UseCase\Admin\Table\NewEdit;
 
 use BaksDev\Products\Category\Repository\CategoryChoice\CategoryChoiceInterface;
-use BaksDev\Products\Category\Type\Id\ProductCategoryUid;
+use BaksDev\Products\Category\Type\Id\CategoryProductUid;
 use BaksDev\Users\Profile\Group\Repository\UserProfileChoice\UserProfileChoiceInterface;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use BaksDev\Users\UsersTable\Repository\Actions\UsersTableActionsChoice\UsersTableActionsChoiceInterface;
@@ -136,10 +136,10 @@ final class UsersTableForm extends AbstractType
         $builder
             ->add('category', ChoiceType::class, [
                 'choices' => $this->category->getCategoryCollection(),
-                'choice_value' => function(?ProductCategoryUid $category) {
+                'choice_value' => function(?CategoryProductUid $category) {
                     return $category?->getValue();
                 },
-                'choice_label' => function(ProductCategoryUid $category) {
+                'choice_label' => function(CategoryProductUid $category) {
                     return $category->getOptions();
                 },
 
@@ -306,7 +306,7 @@ final class UsersTableForm extends AbstractType
             return;
         }
 
-        $category = new ProductCategoryUid($event->getData());
+        $category = new CategoryProductUid($event->getData());
 
         /** @var UsersTableDTO $data */
         $data = $builder?->getData();

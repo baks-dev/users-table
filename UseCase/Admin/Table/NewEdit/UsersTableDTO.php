@@ -25,7 +25,7 @@ declare(strict_types=1);
 
 namespace BaksDev\Users\UsersTable\UseCase\Admin\Table\NewEdit;
 
-use BaksDev\Products\Category\Type\Id\ProductCategoryUid;
+use BaksDev\Products\Category\Type\Id\CategoryProductUid;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use BaksDev\Users\UsersTable\Entity\Table\Event\UsersTableEventInterface;
 use BaksDev\Users\UsersTable\Type\Actions\Event\UsersTableActionsEventUid;
@@ -81,7 +81,7 @@ final class UsersTableDTO implements UsersTableEventInterface
      * Категория производства
      */
     #[Assert\Uuid]
-    public ?ProductCategoryUid $category = null;
+    public ?CategoryProductUid $category = null;
 
 
     /**

@@ -25,7 +25,7 @@ declare(strict_types=1);
 
 namespace BaksDev\Users\UsersTable\UseCase\Admin\Actions\NewEdit\Tests;
 
-use BaksDev\Products\Category\Type\Id\ProductCategoryUid;
+use BaksDev\Products\Category\Type\Id\CategoryProductUid;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use BaksDev\Users\UsersTable\Entity\Actions\Event\UsersTableActionsEvent;
 use BaksDev\Users\UsersTable\Entity\Actions\UsersTableActions;
@@ -84,9 +84,9 @@ final class NewHandleTest extends KernelTestCase
 
         $UsersTableActionsDTO = new UsersTableActionsDTO();
 
-        $ProductCategoryUid = new ProductCategoryUid();
-        $UsersTableActionsDTO->setCategory($ProductCategoryUid);
-        self::assertSame($ProductCategoryUid, $UsersTableActionsDTO->getCategory());
+        $CategoryProductUid = new CategoryProductUid();
+        $UsersTableActionsDTO->setCategory($CategoryProductUid);
+        self::assertSame($CategoryProductUid, $UsersTableActionsDTO->getCategory());
 
 
 //        /** @var UsersTableActionsProductDTO $UsersTableActionsProductDTO */
