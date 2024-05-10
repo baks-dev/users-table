@@ -38,12 +38,12 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 final class UsersTableActionsForm extends AbstractType
 {
 
-    private CategoryChoiceInterface $category;
+    private CategoryChoiceInterface $categoryChoice;
 
 
-    public function __construct(CategoryChoiceInterface $category)
+    public function __construct(CategoryChoiceInterface $categoryChoice)
     {
-        $this->category = $category;
+        $this->categoryChoice = $categoryChoice;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -68,7 +68,7 @@ final class UsersTableActionsForm extends AbstractType
 
         $builder
             ->add('category', ChoiceType::class, [
-                'choices' => $this->category->getCategoryCollection(),
+                'choices' => $this->categoryChoice->findAll(),
                 'choice_value' => function(?CategoryProductUid $category) {
                     return $category?->getValue();
                 },

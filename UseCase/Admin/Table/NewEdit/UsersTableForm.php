@@ -49,7 +49,7 @@ final class UsersTableForm extends AbstractType
     private UserProfileChoiceInterface $profileChoice;
     private UsersTableActionsChoiceInterface $actionsChoice;
     private UsersTableActionsWorkingChoiceInterface $workingChoice;
-    private CategoryChoiceInterface $category;
+    private CategoryChoiceInterface $categoryChoice;
 
     public function __construct(
         UserProfileChoiceInterface $profileChoice,
@@ -61,7 +61,7 @@ final class UsersTableForm extends AbstractType
         $this->profileChoice = $profileChoice;
         $this->actionsChoice = $actionsChoice;
         $this->workingChoice = $workingChoice;
-        $this->category = $category;
+        $this->categoryChoice = $category;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -135,7 +135,7 @@ final class UsersTableForm extends AbstractType
 
         $builder
             ->add('category', ChoiceType::class, [
-                'choices' => $this->category->getCategoryCollection(),
+                'choices' => $this->categoryChoice->findAll(),
                 'choice_value' => function(?CategoryProductUid $category) {
                     return $category?->getValue();
                 },
