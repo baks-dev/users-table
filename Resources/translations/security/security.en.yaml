@@ -1,6 +1,7 @@
 # Role
 
 ROLE_USERS_TABLE:
+  header: 'Manufacture'
   name: 'Timesheets'
   desc: 'Employee Timesheets'
 

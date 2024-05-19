@@ -23,60 +23,55 @@
 
 declare(strict_types=1);
 
-namespace BaksDev\Users\UsersTable\Security\Actions;
+namespace BaksDev\Users\UsersTable\Security\Table;
 
 use BaksDev\Menu\Admin\Command\Upgrade\MenuAdminInterface;
 use BaksDev\Menu\Admin\Type\SectionGroup\Group\Collection\MenuAdminSectionGroupCollectionInterface;
-use BaksDev\Menu\Admin\Type\SectionGroup\Group\MenuGroupSettings;
-use BaksDev\Users\Profile\Group\Security\RoleInterface;
+use BaksDev\Menu\Admin\Type\SectionGroup\Group\MenuGroupUser;
 use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 
-#[AutoconfigureTag('baks.security.role')]
 #[AutoconfigureTag('baks.menu.admin')]
-final class Role implements RoleInterface, MenuAdminInterface
+final class Header implements MenuAdminInterface
 {
-    /** Этапы производства продукции */
-    public const ROLE = 'ROLE_USERS_TABLE_ACTIONS';
 
     public function getRole(): string
     {
-        return self::ROLE;
+        return Role::ROLE;
     }
 
-
     /**
-     * Добавляем раздел в меню администрирования.
+     * Добавляем заголовок в меню администрирования.
      */
 
-    /** Метод возвращает PATH раздела */
-    public function getPath(): string
+    public function getPath(): ?string
     {
-        return 'users-table:admin.action.index';
+        return null;
     }
 
     /**
-     * Метод возвращает секцию, в которую помещается ссылка на раздел.
+     * Метод возвращает секцию, в которую помещается ссылка на раздел
      */
     public function getGroupMenu(): MenuAdminSectionGroupCollectionInterface|bool
     {
-        return new MenuGroupSettings();
+        return new MenuGroupUser();
     }
 
     /**
-     * Метод возвращает позицию, в которую располагается ссылка в секции меню.
+     * Метод возвращает позицию, в которую располагается ссылка в секции меню
      */
     public function getSortMenu(): int
     {
-        return 40;
+        return 400;
     }
 
     /**
-     * Метод возвращает флаг "Показать в выпадающем меню".
+     * Метод возвращает флаг "Показать в выпадающем меню"
      */
     public function getDropdownMenu(): bool
     {
         return true;
     }
+
 
     /**
      * Метод возвращает флаг "Модальное окно".
@@ -85,6 +80,5 @@ final class Role implements RoleInterface, MenuAdminInterface
     {
         return false;
     }
-    
-}
 
+}
