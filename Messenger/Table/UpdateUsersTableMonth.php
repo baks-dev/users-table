@@ -67,10 +67,6 @@ final class UpdateUsersTableMonth
      */
     public function __invoke(UsersTableMessage $message): void
     {
-        $this->logger->info('MessageHandler', ['handler' => self::class]);
-        $this->logger->info('MessageData', [$message->getId(), $message->getEvent()]);
-
-
         /** Получаем добавленный табель пользователя */
         $UsersTableEvent = $this->entityManager->getRepository(UsersTableEvent::class)->find($message->getEvent());
 

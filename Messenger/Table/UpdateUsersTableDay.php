@@ -62,8 +62,6 @@ final class UpdateUsersTableDay
      */
     public function __invoke(UsersTableMessage $message): void
     {
-        $this->logger->info('MessageHandler', ['handler' => self::class]);
-
         /** Получаем Добавленный табель пользователя */
         $UsersTableEvent = $this->entityManager
             ->getRepository(UsersTableEvent::class)
