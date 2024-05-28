@@ -62,6 +62,8 @@ final class EditController extends AbstractController
 
         if($form->isSubmitted() && $form->isValid() && $form->has('users_table_actions'))
         {
+            $this->refreshTokenForm($form);
+
             $handle = $UsersTableActionsHandler->handle(
                 $UsersTableActionsDTO,
                 $this->getAdminFilterProfile()

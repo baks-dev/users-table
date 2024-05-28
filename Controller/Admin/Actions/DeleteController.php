@@ -63,6 +63,8 @@ final class DeleteController extends AbstractController
 
         if($form->isSubmitted() && $form->isValid() && $form->has('users_table_actions_delete'))
         {
+            $this->refreshTokenForm($form);
+
             $handle = $UsersTableActionsDeleteHandler
                 ->handle($UsersTableActionsDeleteDTO, $this->getProfileUid());
 

@@ -59,6 +59,8 @@ final class NewController extends AbstractController
 
         if($form->isSubmitted() && $form->isValid() && $form->has('users_table'))
         {
+            $this->refreshTokenForm($form);
+
             $UsersTable = $UsersTableHandler->handle($UsersTableDTO);
 
             $this->addFlash(
