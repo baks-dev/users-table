@@ -24,6 +24,7 @@
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
 
+use BaksDev\Users\UsersTable\BaksDevUsersTableBundle;
 use BaksDev\Users\UsersTable\Type\Actions\Const\UsersTableActionsWorkingConst;
 use BaksDev\Users\UsersTable\Type\Actions\Const\UsersTableActionsWorkingConstType;
 use BaksDev\Users\UsersTable\Type\Actions\Event\UsersTableActionsEventType;
@@ -51,11 +52,10 @@ return static function(ContainerConfigurator $container, DoctrineConfig $doctrin
 
     $emDefault = $doctrine->orm()->entityManager('default')->autoMapping(true);
 
-    $MODULE = substr(__DIR__, 0, strpos(__DIR__, "Resources"));
 
     $emDefault->mapping('users-table')
 		->type('attribute')
-		->dir($MODULE.'Entity')
+		->dir(BaksDevUsersTableBundle::PATH.'Entity')
 		->isBundle(false)
 		->prefix('BaksDev\Users\UsersTable')
 		->alias('users-table')
