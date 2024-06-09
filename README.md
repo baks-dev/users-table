@@ -13,21 +13,21 @@ $ composer require baks-dev/users-table
 
 ## Дополнительно
 
-Изменения в схеме базы данных с помощью миграции
-
-``` bash
-$ php bin/console doctrine:migrations:diff
-
-$ php bin/console doctrine:migrations:migrate
-```
-
-Установка файловых ресурсов в публичную директорию (javascript, css, image ...):
+Установка конфигурации и файловых ресурсов:
 
 ``` bash
 $ php bin/console baks:assets:install
 ```
 
-Тесты
+Изменения в схеме базы данных с помощью миграции
+
+``` bash
+$ php bin/console doctrine:migrations:diff
+$ php bin/console doctrine:migrations:migrate
+```
+
+
+## Тестирование
 
 ``` bash
 $ php bin/phpunit --group=users-table
