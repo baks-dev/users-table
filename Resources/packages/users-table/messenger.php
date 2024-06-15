@@ -32,8 +32,8 @@ return static function(FrameworkConfig $framework) {
 
     $messenger
         ->transport('users-table')
-        ->dsn('%env(MESSENGER_TRANSPORT_DSN)%')
-        ->options(['queue_name' => 'users-table'])
+        ->dsn('redis://%env(REDIS_PASSWORD)%@%env(REDIS_HOST)%:%env(REDIS_PORT)%?auto_setup=true')
+        ->options(['stream' => 'users-table'])
         ->failureTransport('failed-users-table')
         ->retryStrategy()
         ->maxRetries(3)
@@ -44,7 +44,9 @@ return static function(FrameworkConfig $framework) {
 
     ;
 
-    $messenger->transport('failed-users-table')
+    $failure = $framework->messenger();
+
+    $failure->transport('failed-users-table')
         ->dsn('%env(MESSENGER_TRANSPORT_DSN)%')
         ->options(['queue_name' => 'failed-users-table'])
     ;
