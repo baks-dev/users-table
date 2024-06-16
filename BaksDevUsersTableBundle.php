@@ -48,6 +48,7 @@ class BaksDevUsersTableBundle extends AbstractBundle
                 self::PATH.'{Entity,Resources,Type}',
                 self::PATH.'**/*Message.php',
                 self::PATH.'**/*DTO.php',
+                self::PATH.'**/*Test.php',
             ]);
     }
 }
