@@ -21,6 +21,7 @@
 
                 <button
                         class="btn btn-light opacity-25"
+                        role="tooltip"
                         data-bs-toggle="tooltip"
                         data-bs-placement="bottom"
                         data-bs-delay='{"show":600,"hide":100}'
@@ -38,6 +39,7 @@
 
                 <a href="{{ path('users-table:admin.day') }}"
                    class="btn btn-light"
+                   role="tooltip"
                    data-bs-toggle="tooltip"
                    data-bs-placement="bottom"
                    data-bs-delay='{"show":600,"hide":100}'
@@ -53,6 +55,7 @@
 
                 <a href="{{ path('users-table:admin.month') }}"
                    class="btn btn-light"
+                   role="tooltip"
                    data-bs-toggle="tooltip"
                    data-bs-placement="bottom"
                    data-bs-delay='{"show":600,"hide":100}'
@@ -83,6 +86,7 @@
 
                     <a href="{{ path('users-table:admin.action.index') }}"
                        class="btn btn-light"
+              role="tooltip"
                        data-bs-toggle="tooltip"
                        data-bs-placement="bottom"
                        title="Настройки этапов производства продукции"
@@ -100,6 +104,8 @@
                 {% if constant('BaksDev\\Users\\UsersTable\\Telegram\\Entity\\UsersTableTelegramSettings::TABLE') is defined %}
 
                     <span
+
+                            role="tooltip"
                             data-bs-toggle="tooltip"
                             data-bs-placement="bottom"
                             data-bs-delay='{"show":600,"hide":100}'
