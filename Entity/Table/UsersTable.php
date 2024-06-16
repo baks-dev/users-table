@@ -31,7 +31,6 @@ use BaksDev\Users\UsersTable\Type\Table\Id\UsersTableUid;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-
 /* UsersTable */
 
 #[ORM\Entity]

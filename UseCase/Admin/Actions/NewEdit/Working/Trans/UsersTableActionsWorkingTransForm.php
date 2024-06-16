@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace BaksDev\Users\UsersTable\UseCase\Admin\Actions\NewEdit\Working\Trans;
 
-
 use BaksDev\Core\Type\Locale\Locale;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
@@ -36,7 +35,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 final class UsersTableActionsWorkingTransForm extends AbstractType
 {
-
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         /**
@@ -46,12 +44,13 @@ final class UsersTableActionsWorkingTransForm extends AbstractType
 
         $builder->get('local')->addModelTransformer(
             new CallbackTransformer(
-                function($local) {
+                function ($local) {
                     return $local instanceof Locale ? $local->getLocalValue() : $local;
-                }, function($local) {
+                },
+                function ($local) {
 
-                return new Locale($local);
-            }
+                    return new Locale($local);
+                }
             )
         );
 
@@ -65,8 +64,8 @@ final class UsersTableActionsWorkingTransForm extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => UsersTableActionsWorkingTransDTO::class,
-            'method'     => 'POST',
-            'attr'       => ['class' => 'w-100'],
+            'method' => 'POST',
+            'attr' => ['class' => 'w-100'],
         ]);
     }
 }

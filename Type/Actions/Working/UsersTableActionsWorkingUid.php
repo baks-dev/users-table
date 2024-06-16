@@ -28,13 +28,11 @@ namespace BaksDev\Users\UsersTable\Type\Actions\Working;
 use BaksDev\Core\Type\UidType\Uid;
 use Symfony\Component\Uid\AbstractUid;
 
-
 final class UsersTableActionsWorkingUid extends Uid
 {
     public const TEST = '018ae603-f6b0-763f-8ea1-7c11c2a1c0bd';
-    
-    public const TYPE = 'users_table_actions_working';
 
+    public const TYPE = 'users_table_actions_working';
 
 
     /** Идентификатор Нового процесса */
@@ -58,8 +56,7 @@ final class UsersTableActionsWorkingUid extends Uid
         mixed $option = null,
         mixed $property = null,
         mixed $characteristic = null,
-    )
-    {
+    ) {
         parent::__construct($value);
 
         $this->attr = $attr;

@@ -42,7 +42,8 @@ final class UsersTableActionsDeleteDTO implements UsersTableActionsEventInterfac
     #[Assert\Valid]
     private Modify\ModifyDTO $modify;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->modify = new Modify\ModifyDTO();
     }
 
@@ -52,7 +53,7 @@ final class UsersTableActionsDeleteDTO implements UsersTableActionsEventInterfac
     }
 
 
-    public function getModify() : Modify\ModifyDTO
+    public function getModify(): Modify\ModifyDTO
     {
         return $this->modify;
     }

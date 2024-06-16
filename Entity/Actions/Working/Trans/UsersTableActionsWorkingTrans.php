@@ -77,7 +77,7 @@ class UsersTableActionsWorkingTrans extends EntityEvent
     {
         $dto = is_string($dto) && class_exists($dto) ? new $dto() : $dto;
 
-        if ($dto instanceof UsersTableActionsWorkingTransInterface)
+        if($dto instanceof UsersTableActionsWorkingTransInterface)
         {
             return parent::getDto($dto);
         }
@@ -88,7 +88,7 @@ class UsersTableActionsWorkingTrans extends EntityEvent
     public function setEntity($dto): mixed
     {
 
-        if ($dto instanceof UsersTableActionsWorkingTransInterface || $dto instanceof self)
+        if($dto instanceof UsersTableActionsWorkingTransInterface || $dto instanceof self)
         {
             return parent::setEntity($dto);
         }
@@ -98,7 +98,8 @@ class UsersTableActionsWorkingTrans extends EntityEvent
 
     public function name(Locale $locale): ?string
     {
-        if ($this->local->getLocalValue() === $locale->getLocalValue()) {
+        if($this->local->getLocalValue() === $locale->getLocalValue())
+        {
             return $this->name;
         }
 

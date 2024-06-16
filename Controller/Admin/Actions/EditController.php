@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace BaksDev\Users\UsersTable\Controller\Admin\Actions;
 
-
 use BaksDev\Core\Controller\AbstractController;
 use BaksDev\Core\Listeners\Event\Security\RoleSecurity;
 use BaksDev\Users\UsersTable\Entity\Actions\Event\UsersTableActionsEvent;
@@ -48,8 +47,7 @@ final class EditController extends AbstractController
         Request $request,
         #[MapEntity] UsersTableActionsEvent $UsersTableActionsEvent,
         UsersTableActionsHandler $UsersTableActionsHandler,
-    ): Response
-    {
+    ): Response {
         $UsersTableActionsDTO = new UsersTableActionsDTO();
         $UsersTableActionsEvent->getDto($UsersTableActionsDTO);
 
@@ -69,8 +67,7 @@ final class EditController extends AbstractController
                 $this->getAdminFilterProfile()
             );
 
-            $this->addFlash
-            (
+            $this->addFlash(
                 'admin.page.edit',
                 $handle instanceof UsersTableActions ? 'admin.success.edit' : 'admin.danger.edit',
                 'admin.table.actions',

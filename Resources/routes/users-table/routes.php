@@ -34,6 +34,5 @@ return function (RoutingConfigurator $routes) {
         $MODULE.'Controller/**/*Test.php'
     )
         ->prefix(\BaksDev\Core\Type\Locale\Locale::routes())
-        ->namePrefix('users-table:')
-    ;
+        ->namePrefix('users-table:');
 };

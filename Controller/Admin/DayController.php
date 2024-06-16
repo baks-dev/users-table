@@ -47,11 +47,12 @@ final class DayController extends AbstractController
         Request $request,
         DayUsersTableInterface $allUsersTable,
         int $page = 0,
-    ): Response
-    {
+    ): Response {
         // Поиск
         $search = new SearchDTO();
-        $searchForm = $this->createForm(SearchForm::class, $search,
+        $searchForm = $this->createForm(
+            SearchForm::class,
+            $search,
             ['action' => $this->generateUrl('users-table:admin.day')]
         );
         $searchForm->handleRequest($request);
@@ -86,7 +87,7 @@ final class DayController extends AbstractController
             $this->getProfileUid(),
             $this->isGranted('ROLE_USERS_TABLE_OTHER')
         );
-        
+
         return $this->render(
             [
                 'query' => $UsersTable,

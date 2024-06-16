@@ -47,7 +47,7 @@ final class DayTableFilterDTO implements DayUsersTableFilterInterface
 
     /** Дата */
     private ?DateTimeImmutable $date = null;
-    
+
 
     /**
      * Date.
@@ -66,12 +66,12 @@ final class DayTableFilterDTO implements DayUsersTableFilterInterface
             $this->date = new DateTimeImmutable();
         }
 
-        return $this->date ?: $sessionDate ;
+        return $this->date ?: $sessionDate;
     }
 
     public function setDate(?DateTimeImmutable $date): void
     {
-        if ($date === null)
+        if($date === null)
         {
             $this->request->getSession()->remove(self::date);
         }
@@ -104,7 +104,7 @@ final class DayTableFilterDTO implements DayUsersTableFilterInterface
 
     public function setProfile(?UserProfileUid $profile): self
     {
-        if ($profile === null)
+        if($profile === null)
         {
             $this->request->getSession()->remove(self::profile);
         }

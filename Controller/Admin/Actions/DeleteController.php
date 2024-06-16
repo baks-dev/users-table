@@ -47,15 +47,17 @@ final class DeleteController extends AbstractController
         Request $request,
         #[MapEntity] UsersTableActionsEvent $UsersTableActionsEvent,
         UsersTableActionsDeleteHandler $UsersTableActionsDeleteHandler
-    ): Response
-    {
+    ): Response {
         $UsersTableActionsDeleteDTO = new UsersTableActionsDeleteDTO();
         $UsersTableActionsEvent->getDto($UsersTableActionsDeleteDTO);
 
         $form = $this->createForm(
-            UsersTableActionsDeleteForm::class, $UsersTableActionsDeleteDTO, [
+            UsersTableActionsDeleteForm::class,
+            $UsersTableActionsDeleteDTO,
+            [
                 'action' => $this->generateUrl(
-                    'users-table:admin.action.delete', ['id' => $UsersTableActionsDeleteDTO->getEvent()]
+                    'users-table:admin.action.delete',
+                    ['id' => $UsersTableActionsDeleteDTO->getEvent()]
                 ),
             ]
         );
@@ -69,8 +71,7 @@ final class DeleteController extends AbstractController
                 ->handle($UsersTableActionsDeleteDTO, $this->getProfileUid());
 
 
-            $this->addFlash
-            (
+            $this->addFlash(
                 'admin.page.delete',
                 $handle instanceof UsersTableActions ? 'admin.success.delete' : 'admin.danger.delete',
                 'admin.table.actions',

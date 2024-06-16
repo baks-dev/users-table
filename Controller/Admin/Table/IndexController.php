@@ -52,15 +52,17 @@ final class IndexController extends AbstractController
 
         // Поиск
         $search = new SearchDTO();
-        $searchForm = $this->createForm(SearchForm::class, $search,
+        $searchForm = $this->createForm(
+            SearchForm::class,
+            $search,
             ['action' => $this->generateUrl('users-table:admin.table.index')]
         );
         $searchForm->handleRequest($request);
 
         // Фильтр
-         $filter = new UserTableFilterDTO($request, $this->getProfileUid());
-         $filterForm = $this->createForm(UserTableFilterForm::class, $filter);
-         $filterForm->handleRequest($request);
+        $filter = new UserTableFilterDTO($request, $this->getProfileUid());
+        $filterForm = $this->createForm(UserTableFilterForm::class, $filter);
+        $filterForm->handleRequest($request);
 
         if($filterForm->isSubmitted())
         {

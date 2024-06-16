@@ -26,19 +26,18 @@ use BaksDev\Users\UsersTable\Entity\Actions\Modify\UsersTableActionsModifyInterf
 
 final class ModifyDTO implements UsersTableActionsModifyInterface
 {
-	/** Модификатор */
-	private readonly ModifyAction $action;
-	
-	
-	public function __construct()
-	{
-		$this->action = new ModifyAction(ModifyActionDelete::class);
-	}
+    /** Модификатор */
+    private readonly ModifyAction $action;
 
-	public function getAction() : ModifyAction
-	{
-		return $this->action;
-	}
-	
+
+    public function __construct()
+    {
+        $this->action = new ModifyAction(ModifyActionDelete::class);
+    }
+
+    public function getAction(): ModifyAction
+    {
+        return $this->action;
+    }
+
 }
-

@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace BaksDev\Users\UsersTable\UseCase\Admin\Table\Delete;
 
-
 use BaksDev\Core\Messenger\MessageDispatchInterface;
 use BaksDev\Users\UsersTable\Entity\Table\Event\UsersTableEvent;
 use BaksDev\Users\UsersTable\Entity\Table\UsersTable;
@@ -49,8 +48,7 @@ final class UsersTableDeleteHandler
         ValidatorInterface $validator,
         LoggerInterface $logger,
         MessageDispatchInterface $messageDispatch
-    )
-    {
+    ) {
         $this->entityManager = $entityManager;
         $this->validator = $validator;
         $this->logger = $logger;
@@ -60,8 +58,7 @@ final class UsersTableDeleteHandler
 
     public function handle(
         UsersTableDeleteDTO $command,
-    ): string|UsersTable
-    {
+    ): string|UsersTable {
         /**
          *  Валидация UsersTableDeleteDTO
          */

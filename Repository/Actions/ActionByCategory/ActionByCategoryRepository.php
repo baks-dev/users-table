@@ -44,7 +44,7 @@ final class ActionByCategoryRepository implements ActionByCategoryInterface
     /**
      * Метод возвращает идентификатор события UsersTableActionsEventUid без привязки продукта
      */
-    public function findUsersTableActionsByCategory(CategoryProductUid $category) : ?UsersTableActionsEventUid
+    public function findUsersTableActionsByCategory(CategoryProductUid $category): ?UsersTableActionsEventUid
     {
         $qb = $this->ORMQueryBuilder->createQueryBuilder(self::class);
 
@@ -56,7 +56,8 @@ final class ActionByCategoryRepository implements ActionByCategoryInterface
         $qb->where('event.category = :category');
         $qb->setParameter('category', $category, CategoryProductUid::TYPE);
 
-        $qb->join(UsersTableActions::class,
+        $qb->join(
+            UsersTableActions::class,
             'action',
             'WITH',
             'action.event = event.id'
@@ -67,10 +68,11 @@ final class ActionByCategoryRepository implements ActionByCategoryInterface
             'product',
             'WITH',
             'product.event = event.id
-            ');
+            '
+        );
 
         $qb->andWhere('product.event IS NULL');
-        
+
         return $qb->enableCache('users-table', 86400)->getOneOrNullResult();
     }
 }

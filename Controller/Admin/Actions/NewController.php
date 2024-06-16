@@ -45,15 +45,15 @@ final class NewController extends AbstractController
     public function news(
         Request $request,
         UsersTableActionsHandler $UsersTableActionsHandler,
-    ): Response
-    {
+    ): Response {
         $UsersTableActionsDTO = new UsersTableActionsDTO();
         $UsersTableActionsWorkingDTO = new UsersTableActionsWorkingDTO();
         $UsersTableActionsDTO->addWorking($UsersTableActionsWorkingDTO);
 
         // Форма
         $form = $this->createForm(
-            UsersTableActionsForm::class, $UsersTableActionsDTO,
+            UsersTableActionsForm::class,
+            $UsersTableActionsDTO,
             ['action' => $this->generateUrl('users-table:admin.action.newedit.new'),]
         );
 

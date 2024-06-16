@@ -35,7 +35,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class UsersTableActionsWorkingChoiceRepository implements UsersTableActionsWorkingChoiceInterface
 {
-
     private TranslatorInterface $translator;
     private ORMQueryBuilder $ORMQueryBuilder;
 

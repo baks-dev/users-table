@@ -32,7 +32,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 /** @see UsersTableEvent */
 final class UsersTableDeleteDTO implements UsersTableEventInterface
 {
-
     /** Идентификатор события */
     #[Assert\Uuid]
     private ?UsersTableEventUid $id = null;

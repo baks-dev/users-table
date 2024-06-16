@@ -91,14 +91,12 @@ final class UsersTableDTO implements UsersTableEventInterface
     private ?UsersTableActionsEventUid $action = null;
 
 
-
     /**
      * Профиль пользователя фильтрации производственных процессов
      */
     #[Assert\NotBlank]
     #[Assert\Uuid]
     private readonly UserProfileUid $authority;
-
 
 
     public function __construct(UserProfileUid $authority)
@@ -202,9 +200,6 @@ final class UsersTableDTO implements UsersTableEventInterface
     {
         return $this->authority;
     }
-
-
-
 
 
 }

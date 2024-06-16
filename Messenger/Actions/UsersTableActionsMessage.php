@@ -39,8 +39,11 @@ final class UsersTableActionsMessage
     /** Идентификатор предыдущего события */
     private ?UsersTableActionsEventUid $last;
 
-    public function __construct(UsersTableActionsUid $id, UsersTableActionsEventUid $event, ?UsersTableActionsEventUid $last = null)
-    {
+    public function __construct(
+        UsersTableActionsUid $id,
+        UsersTableActionsEventUid $event,
+        ?UsersTableActionsEventUid $last = null
+    ) {
         $this->last = $last;
         $this->id = $id;
         $this->event = $event;

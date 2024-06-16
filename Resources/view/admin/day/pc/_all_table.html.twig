@@ -129,26 +129,26 @@
 
 
     <tfoot>
-        <tr>
-            <th class="text-end text-primary">Итого</th>
+    <tr>
+        <th class="text-end text-primary">Итого</th>
 
-            {% for work_key, work in working_colums %}
+        {% for work_key, work in working_colums %}
 
-                {% set total = 0 %}
+            {% set total = 0 %}
 
-                {% for item in query.data %}
+            {% for item in query.data %}
 
-                    {% if item.table_working_id == work_key %}
-                        {% set total = total + item.table_total %}
-                    {% endif %}
-
-                {% endfor %}
-
-                <th class="text-end text-primary">{{ total }}</th>
+                {% if item.table_working_id == work_key %}
+                    {% set total = total + item.table_total %}
+                {% endif %}
 
             {% endfor %}
-            <th class="text-end text-danger">{{ all_total }}</th>
-        </tr>
+
+            <th class="text-end text-primary">{{ total }}</th>
+
+        {% endfor %}
+        <th class="text-end text-danger">{{ all_total }}</th>
+    </tr>
     </tfoot>
 
 </table>

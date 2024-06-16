@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace BaksDev\Users\UsersTable\Controller\Admin\Table;
 
-
 use BaksDev\Core\Controller\AbstractController;
 use BaksDev\Core\Listeners\Event\Security\RoleSecurity;
 use BaksDev\Users\UsersTable\Entity\Table\Event\UsersTableEvent;
@@ -45,14 +44,12 @@ final class DeleteController extends AbstractController
         Request $request,
         #[MapEntity] UsersTableEvent $UsersTableEvent,
         UsersTableDeleteHandler $UsersTableDeleteHandler,
-    ): Response
-    {
+    ): Response {
 
         return new Response('OK');
 
         /** TODO: если удаляется табель  сделать пересчет */
         dd('/admin/users/table/delete');
-
 
 
         $UsersTableDeleteDTO = new UsersTableDeleteDTO();

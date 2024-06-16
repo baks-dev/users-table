@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace BaksDev\Users\UsersTable\Type\Table\Id;
 
-
 use BaksDev\Core\Type\UidType\UidType;
 
 final class UsersTableType extends UidType

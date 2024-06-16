@@ -47,19 +47,19 @@ final class UsersTableMessage
     }
 
     /** Идентификатор */
-    public function getId() : UsersTableUid
+    public function getId(): UsersTableUid
     {
         return $this->id;
     }
 
     /** Идентификатор события */
-    public function getEvent() : UsersTableEventUid
+    public function getEvent(): UsersTableEventUid
     {
         return $this->event;
     }
 
     /** Идентификатор предыдущего события */
-    public function getLast() : ?UsersTableEventUid
+    public function getLast(): ?UsersTableEventUid
     {
         return $this->last;
     }

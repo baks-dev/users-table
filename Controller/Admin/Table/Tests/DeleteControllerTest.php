@@ -24,14 +24,13 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DependencyInjection\Attribute\When;
 use BaksDev\Users\UsersTable\UseCase\Admin\Table\NewEdit\Tests\NewHandleTest;
 
-
 /**
  * @group users-table
  * @group users-table-table
  *
  * @depends BaksDev\Users\UsersTable\UseCase\Admin\Table\NewEdit\Tests\NewHandleTest::class
  *
- * @see NewHandleTest
+ * @see     NewHandleTest
  */
 #[When(env: 'test')]
 final class DeleteControllerTest extends WebTestCase

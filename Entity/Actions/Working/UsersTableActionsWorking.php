@@ -36,7 +36,6 @@ use Doctrine\ORM\Mapping as ORM;
 use InvalidArgumentException;
 use Symfony\Component\Validator\Constraints as Assert;
 
-
 /* UsersTableActionsWorking */
 
 #[ORM\Entity]
@@ -124,7 +123,7 @@ class UsersTableActionsWorking extends EntityEvent
     {
         $dto = is_string($dto) && class_exists($dto) ? new $dto() : $dto;
 
-        if ($dto instanceof UsersTableActionsWorkingInterface)
+        if($dto instanceof UsersTableActionsWorkingInterface)
         {
             return parent::getDto($dto);
         }
@@ -134,7 +133,7 @@ class UsersTableActionsWorking extends EntityEvent
 
     public function setEntity($dto): mixed
     {
-        if ($dto instanceof UsersTableActionsWorkingInterface || $dto instanceof self)
+        if($dto instanceof UsersTableActionsWorkingInterface || $dto instanceof self)
         {
             return parent::setEntity($dto);
         }

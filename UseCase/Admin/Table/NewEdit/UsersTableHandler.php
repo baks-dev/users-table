@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace BaksDev\Users\UsersTable\UseCase\Admin\Table\NewEdit;
 
-
 use BaksDev\Core\Messenger\MessageDispatchInterface;
 use BaksDev\Users\UsersTable\Entity\Table\Event\UsersTableEvent;
 use BaksDev\Users\UsersTable\Entity\Table\UsersTable;
@@ -49,8 +48,7 @@ final class UsersTableHandler
         ValidatorInterface $validator,
         LoggerInterface $logger,
         MessageDispatchInterface $messageDispatch
-    )
-    {
+    ) {
         $this->entityManager = $entityManager;
         $this->validator = $validator;
         $this->logger = $logger;
@@ -61,8 +59,7 @@ final class UsersTableHandler
     /** @see UsersTable */
     public function handle(
         UsersTableDTO $command,
-    ): string|UsersTable
-    {
+    ): string|UsersTable {
 
         /**
          *  Валидация UsersTableDTO
@@ -109,8 +106,8 @@ final class UsersTableHandler
             $this->entityManager->persist($Event);
         }
 
-//        $this->entityManager->clear();
-//        $this->entityManager->persist($Event);
+        //        $this->entityManager->clear();
+        //        $this->entityManager->persist($Event);
 
         /** @var UsersTable $Main */
         if($Event->getMain())
@@ -142,7 +139,6 @@ final class UsersTableHandler
 
         /* присваиваем событие корню */
         $Main->setEvent($Event);
-
 
 
         /**

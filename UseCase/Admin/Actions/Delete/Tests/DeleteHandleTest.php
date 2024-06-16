@@ -62,15 +62,14 @@ use BaksDev\Wildberries\Products\Controller\Admin\Settings\Tests\DeleteControlle
  * @depends BaksDev\Users\UsersTable\Controller\Admin\Actions\Tests\DeleteControllerTest::class
  * @depends BaksDev\Users\UsersTable\UseCase\Admin\Table\Delete\Tests\DeleteHandleTest::class
  *
- * @see NewHandleTest
- * @see EditHandleTest
- * @see DeleteControllerTest
+ * @see     NewHandleTest
+ * @see     EditHandleTest
+ * @see     DeleteControllerTest
  *
  */
 #[When(env: 'test')]
 final class DeleteHandleTest extends KernelTestCase
 {
-
     public function testUseCase(): void
     {
         self::bootKernel();
@@ -79,7 +78,7 @@ final class DeleteHandleTest extends KernelTestCase
         /** @var ORMQueryBuilder $ORMQueryBuilder */
         $ORMQueryBuilder = $container->get(ORMQueryBuilder::class);
         $qb = $ORMQueryBuilder->createQueryBuilder(self::class);
-        
+
         $qb
             ->from(UsersTableActions::class, 'main')
             ->where('main.id = :main')
@@ -87,7 +86,8 @@ final class DeleteHandleTest extends KernelTestCase
 
         $qb
             ->select('event')
-            ->leftJoin(UsersTableActionsEvent::class,
+            ->leftJoin(
+                UsersTableActionsEvent::class,
                 'event',
                 'WITH',
                 'event.id = main.event'
@@ -104,11 +104,10 @@ final class DeleteHandleTest extends KernelTestCase
         self::assertNotEquals(CategoryProductUid::TEST, (string) $UsersTableActionsDTO->getCategory());
 
 
-//        /** @var UsersTableActionsProductDTO $UsersTableActionsProductDTO */
-//
-//        $UsersTableActionsProductDTO = $UsersTableActionsDTO->getProduct()->current();
-//        self::assertNotEquals(ProductUid::TEST, (string) $UsersTableActionsProductDTO->getProduct());
-
+        //        /** @var UsersTableActionsProductDTO $UsersTableActionsProductDTO */
+        //
+        //        $UsersTableActionsProductDTO = $UsersTableActionsDTO->getProduct()->current();
+        //        self::assertNotEquals(ProductUid::TEST, (string) $UsersTableActionsProductDTO->getProduct());
 
 
         /** @var UsersTableActionsTransDTO $UsersTableActionsTransDTO */
@@ -121,7 +120,6 @@ final class DeleteHandleTest extends KernelTestCase
         }
 
 
-
         /** @var UsersTableActionsWorkingDTO $UsersTableActionsWorkingDTO */
 
         $UsersTableActionsWorkingDTO = $UsersTableActionsDTO->getWorking()->current();
@@ -132,17 +130,16 @@ final class DeleteHandleTest extends KernelTestCase
         self::assertEquals(2.2, $UsersTableActionsWorkingDTO->getCoefficient());
 
 
-
         /** @var UsersTableActionsWorkingTransDTO $UsersTableActionsWorkingTransDTO */
 
-        $UsersTableActionsWorkingTransDTO =  $UsersTableActionsWorkingDTO->getTranslate();
+        $UsersTableActionsWorkingTransDTO = $UsersTableActionsWorkingDTO->getTranslate();
 
         foreach($UsersTableActionsWorkingTransDTO as $workingTrans)
         {
             self::assertEquals('zkJQyYdqGl', $workingTrans->getName());
         }
 
-        
+
         /** DELETE */
 
         $UsersTableActionsDeleteDTO = new UsersTableActionsDeleteDTO();
@@ -151,7 +148,7 @@ final class DeleteHandleTest extends KernelTestCase
         /** @var UsersTableActionsDeleteHandler $UsersTableActionsDeleteHandler */
         $UsersTableActionsDeleteHandler = $container->get(UsersTableActionsDeleteHandler::class);
         $handle = $UsersTableActionsDeleteHandler->handle($UsersTableActionsDeleteDTO, new UserProfileUid());
-        self::assertTrue(($handle instanceof  UsersTableActions), $handle.': Ошибка UsersTableActions');
+        self::assertTrue(($handle instanceof UsersTableActions), $handle.': Ошибка UsersTableActions');
 
     }
 

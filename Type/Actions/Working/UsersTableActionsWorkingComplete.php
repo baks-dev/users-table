@@ -27,11 +27,10 @@ namespace BaksDev\Users\UsersTable\Type\Actions\Working;
 
 use BaksDev\Core\Type\UidType\Uid;
 
-
 final class UsersTableActionsWorkingComplete extends Uid
 {
     public const TEST = '01895aa7-8acc-776f-b8b6-d726d029042c';
-    
+
     public const TYPE = 'users_table_actions_working';
 
     /** Идентификатор завершенного процесса */

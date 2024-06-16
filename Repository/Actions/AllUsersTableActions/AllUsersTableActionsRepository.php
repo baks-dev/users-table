@@ -40,25 +40,25 @@ use BaksDev\Users\UsersTable\Entity\Actions\UsersTableActions;
 
 final class AllUsersTableActionsRepository implements AllUsersTableActionsInterface
 {
-
     private PaginatorInterface $paginator;
     private DBALQueryBuilder $DBALQueryBuilder;
 
     public function __construct(
         DBALQueryBuilder $DBALQueryBuilder,
         PaginatorInterface $paginator,
-    )
-    {
+    ) {
 
         $this->paginator = $paginator;
         $this->DBALQueryBuilder = $DBALQueryBuilder;
     }
 
     /** Метод возвращает пагинатор AllUsersTableActions */
-    public function fetchAllUsersTableActionsAssociative(SearchDTO $search, ?UserProfileUid $profile): PaginatorInterface
-    {
+    public function fetchAllUsersTableActionsAssociative(
+        SearchDTO $search,
+        ?UserProfileUid $profile
+    ): PaginatorInterface {
         $qb = $this->DBALQueryBuilder->createQueryBuilder(self::class)
-        ->bindLocal();
+            ->bindLocal();
 
         $qb->select('actions.id');
         $qb->addSelect('actions.event');
@@ -69,8 +69,7 @@ final class AllUsersTableActionsRepository implements AllUsersTableActionsInterf
         {
             $qb
                 ->where('actions.profile = :profile')
-                ->setParameter('profile', $profile, UserProfileUid::TYPE)
-            ;
+                ->setParameter('profile', $profile, UserProfileUid::TYPE);
         }
 
 
@@ -110,7 +109,6 @@ final class AllUsersTableActionsRepository implements AllUsersTableActionsInterf
         );
 
 
-
         $qb->leftJoin(
             'event',
             CategoryProduct::TABLE,
@@ -130,7 +128,8 @@ final class AllUsersTableActionsRepository implements AllUsersTableActionsInterf
 
         // Обложка
 
-        $qb->addSelect("
+        $qb->addSelect(
+            "
 			CASE
 			   WHEN category_cover.name IS NOT NULL THEN
 					CONCAT ( '/upload/".CategoryProductCover::TABLE."' , '/', category_cover.name)
@@ -161,8 +160,7 @@ final class AllUsersTableActionsRepository implements AllUsersTableActionsInterf
                 ->addSearchEqualUid('actions.event')
                 ->addSearchEqualUid('actions.profile')
                 ->addSearchLike('trans.name')
-                ->addSearchLike('users_profile_personal.username')
-            ;
+                ->addSearchLike('users_profile_personal.username');
 
         }
 

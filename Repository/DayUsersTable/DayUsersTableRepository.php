@@ -56,8 +56,7 @@ final class DayUsersTableRepository implements DayUsersTableInterface
     public function __construct(
         DBALQueryBuilder $DBALQueryBuilder,
         PaginatorInterface $paginator,
-    )
-    {
+    ) {
 
         $this->paginator = $paginator;
         $this->DBALQueryBuilder = $DBALQueryBuilder;
@@ -70,20 +69,16 @@ final class DayUsersTableRepository implements DayUsersTableInterface
         UserProfileUid $profile,
         ?UserProfileUid $authority = null,
         bool $other = false
-
-    ): PaginatorInterface
-    {
+    ): PaginatorInterface {
         $qb = $this->DBALQueryBuilder
             ->createQueryBuilder(self::class)
-            ->bindLocal()
-        ;
+            ->bindLocal();
 
         $qb->addSelect('users_table_day.total AS table_total');
         $qb->addSelect('users_table_day.money AS table_money');
         $qb->addSelect('users_table_day.premium AS table_premium');
         $qb->addSelect('users_table_day.date_table AS table_date');
         $qb->from(UsersTableDay::TABLE, 'users_table_day');
-
 
 
         /** Табели других пользователей */
@@ -101,8 +96,7 @@ final class DayUsersTableRepository implements DayUsersTableInterface
             $qb
                 ->andWhere('users_table_day.profile = profile_group_users.profile')
                 ->setParameter('authority', $authority, UserProfileUid::TYPE)
-                ->setParameter('profile', $filter?->getProfile() ?: $profile, UserProfileUid::TYPE)
-            ;
+                ->setParameter('profile', $filter?->getProfile() ?: $profile, UserProfileUid::TYPE);
 
             /** Если пользователь авторизован - и передан фильтр по профилю  */
             if($filter?->getProfile())
@@ -119,7 +113,7 @@ final class DayUsersTableRepository implements DayUsersTableInterface
                 ->andWhere('users_table_day.profile = :profile')
                 ->setParameter('profile', $profile, UserProfileUid::TYPE);
         }
-        
+
 
         /**
          * Действие
@@ -142,7 +136,6 @@ final class DayUsersTableRepository implements DayUsersTableInterface
         );
 
 
-
         $qb->addSelect('action_event.id AS table_action_id');
         $qb->leftJoin(
             'working',
@@ -150,7 +143,6 @@ final class DayUsersTableRepository implements DayUsersTableInterface
             'action_event',
             'action_event.id = working.event'
         );
-
 
 
         if($authority)
@@ -164,11 +156,11 @@ final class DayUsersTableRepository implements DayUsersTableInterface
 
             $qb->setParameter('authority', $authority, UserProfileUid::TYPE);
         }
-        else{
+        else
+        {
 
             $qb->andWhere('users_table_day.profile = :profile')
-                ->setParameter('profile', $profile, UserProfileUid::TYPE)
-            ;
+                ->setParameter('profile', $profile, UserProfileUid::TYPE);
 
             //$qb->setParameter('authority', $profile, UserProfileUid::TYPE);
         }
@@ -182,7 +174,6 @@ final class DayUsersTableRepository implements DayUsersTableInterface
             'action_trans',
             'action_trans.event = action_event.id AND action_trans.local = :local'
         );
-
 
 
         $qb->addSelect('category.id AS table_category_id');
@@ -201,7 +192,6 @@ final class DayUsersTableRepository implements DayUsersTableInterface
             'category_trans',
             'category_trans.event = category.event AND category_trans.local = :local'
         );
-
 
 
         // ОТВЕТСТВЕННЫЙ

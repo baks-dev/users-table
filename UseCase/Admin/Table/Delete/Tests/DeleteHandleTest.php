@@ -52,13 +52,12 @@ use BaksDev\Users\UsersTable\Controller\Admin\Table\Tests\DeleteControllerTest;
  * @depends BaksDev\Users\UsersTable\UseCase\Admin\Table\NewEdit\Tests\NewHandleTest::class
  * @depends BaksDev\Users\UsersTable\Controller\Admin\Table\Tests\DeleteControllerTest::class
  *
- * @see NewHandleTest
- * @see DeleteControllerTest
+ * @see     NewHandleTest
+ * @see     DeleteControllerTest
  */
 #[When(env: 'test')]
 final class DeleteHandleTest extends KernelTestCase
 {
-
     public function testUseCase(): void
     {
         //self::bootKernel();
@@ -67,7 +66,7 @@ final class DeleteHandleTest extends KernelTestCase
         /** @var ORMQueryBuilder $ORMQueryBuilder */
         $ORMQueryBuilder = $container->get(ORMQueryBuilder::class);
         $qb = $ORMQueryBuilder->createQueryBuilder(self::class);
-        
+
         $qb
             ->from(UsersTable::class, 'main')
             ->where('main.id = :main')
@@ -75,7 +74,8 @@ final class DeleteHandleTest extends KernelTestCase
 
         $qb
             ->select('event')
-            ->leftJoin(UsersTableEvent::class,
+            ->leftJoin(
+                UsersTableEvent::class,
                 'event',
                 'WITH',
                 'event.id = main.event'

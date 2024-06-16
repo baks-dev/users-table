@@ -79,7 +79,8 @@ final class UsersTableActionsWorkingDTO implements UsersTableActionsWorkingInter
     /** Постоянный неизменяемый идентификатор */
     public function getConst(): UsersTableActionsWorkingConst
     {
-        if (!(new ReflectionProperty(self::class, 'const'))->isInitialized($this)) {
+        if(!(new ReflectionProperty(self::class, 'const'))->isInitialized($this))
+        {
             $this->const = new UsersTableActionsWorkingConst();
         }
 
@@ -90,7 +91,8 @@ final class UsersTableActionsWorkingDTO implements UsersTableActionsWorkingInter
     public function setConst(UsersTableActionsWorkingConst $const): void
     {
         /** Запрет на изменение readonly   */
-        if (!(new ReflectionProperty(self::class, 'const'))->isInitialized($this)) {
+        if(!(new ReflectionProperty(self::class, 'const'))->isInitialized($this))
+        {
             $this->const = $const;
         }
     }
@@ -125,7 +127,7 @@ final class UsersTableActionsWorkingDTO implements UsersTableActionsWorkingInter
         /* Вычисляем расхождение и добавляем неопределенные локали */
         foreach(Locale::diffLocale($this->translate) as $locale)
         {
-            $UsersTableActionsWorkingDTO = new Trans\UsersTableActionsWorkingTransDTO;
+            $UsersTableActionsWorkingDTO = new Trans\UsersTableActionsWorkingTransDTO();
             $UsersTableActionsWorkingDTO->setLocal($locale);
             $this->addTranslate($UsersTableActionsWorkingDTO);
         }
@@ -192,8 +194,6 @@ final class UsersTableActionsWorkingDTO implements UsersTableActionsWorkingInter
     {
         $this->premium = $premium;
     }
-
-
 
 
 }

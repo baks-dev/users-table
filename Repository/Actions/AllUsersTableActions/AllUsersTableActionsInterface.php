@@ -30,5 +30,8 @@ use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 interface AllUsersTableActionsInterface
 {
     /** Метод возвращает пагинатор AllUsersTableActions */
-    public function fetchAllUsersTableActionsAssociative(SearchDTO $search, ?UserProfileUid $profile): PaginatorInterface;
+    public function fetchAllUsersTableActionsAssociative(
+        SearchDTO $search,
+        ?UserProfileUid $profile
+    ): PaginatorInterface;
 }

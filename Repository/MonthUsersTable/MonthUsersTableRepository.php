@@ -54,8 +54,7 @@ final class MonthUsersTableRepository implements MonthUsersTableInterface
     public function __construct(
         DBALQueryBuilder $DBALQueryBuilder,
         PaginatorInterface $paginator,
-    )
-    {
+    ) {
 
         $this->paginator = $paginator;
         $this->DBALQueryBuilder = $DBALQueryBuilder;
@@ -68,12 +67,10 @@ final class MonthUsersTableRepository implements MonthUsersTableInterface
         UserProfileUid $profile,
         ?UserProfileUid $authority = null,
         bool $other = false,
-    ): PaginatorInterface
-    {
+    ): PaginatorInterface {
         $qb = $this->DBALQueryBuilder
             ->createQueryBuilder(self::class)
-            ->bindLocal()
-        ;
+            ->bindLocal();
 
         $qb->addSelect('users_table_month.total AS table_total');
         $qb->addSelect('users_table_month.date_table AS table_date');
@@ -111,9 +108,6 @@ final class MonthUsersTableRepository implements MonthUsersTableInterface
         );
 
 
-
-
-
         /** Табели других пользователей */
         if($authority)
         {
@@ -127,8 +121,7 @@ final class MonthUsersTableRepository implements MonthUsersTableInterface
             $qb
                 ->andWhere('users_table_month.profile = profile_group_users.profile')
                 ->setParameter('authority', $authority, UserProfileUid::TYPE)
-                ->setParameter('profile', $filter?->getProfile() ?: $profile, UserProfileUid::TYPE)
-            ;
+                ->setParameter('profile', $filter?->getProfile() ?: $profile, UserProfileUid::TYPE);
 
             /** Если пользователь авторизован - и передан фильтр по профилю  */
             if($filter?->getProfile())
@@ -179,7 +172,6 @@ final class MonthUsersTableRepository implements MonthUsersTableInterface
             'category_trans',
             'category_trans.event = category.event AND category_trans.local = :local'
         );
-
 
 
         // ОТВЕТСТВЕННЫЙ
@@ -249,7 +241,7 @@ final class MonthUsersTableRepository implements MonthUsersTableInterface
 
         $qb->andWhere('users_table_month.date_table = :date');
         $qb->setParameter('date', $date, ParameterType::INTEGER);
-        
+
         return $this->paginator->fetchAllAssociative($qb);
 
     }

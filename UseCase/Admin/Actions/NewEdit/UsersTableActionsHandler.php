@@ -49,8 +49,7 @@ final class UsersTableActionsHandler
         ValidatorInterface $validator,
         LoggerInterface $logger,
         MessageDispatchInterface $messageDispatch
-    )
-    {
+    ) {
         $this->entityManager = $entityManager;
         $this->validator = $validator;
         $this->logger = $logger;
@@ -62,8 +61,7 @@ final class UsersTableActionsHandler
     public function handle(
         UsersTableActionsDTO $command,
         ?UserProfileUid $profile,
-    ): string|UsersTableActions
-    {
+    ): string|UsersTableActions {
 
         /**
          *  Валидация UsersTableActionsDTO
@@ -111,8 +109,8 @@ final class UsersTableActionsHandler
             $this->entityManager->persist($Event);
         }
 
-//        $this->entityManager->clear();
-//        $this->entityManager->persist($Event);
+        //        $this->entityManager->clear();
+        //        $this->entityManager->persist($Event);
 
 
         /** @var UsersTableActions $Main */

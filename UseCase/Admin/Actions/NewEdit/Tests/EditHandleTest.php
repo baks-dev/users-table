@@ -50,12 +50,11 @@ use Symfony\Component\DependencyInjection\Attribute\When;
  * @depends BaksDev\Users\UsersTable\UseCase\Admin\Table\Delete\Tests\DeleteHandleTest::class
  *
  * @see     UserNewUserProfileHandleTest
- * @see DeleteControllerTest
+ * @see     DeleteControllerTest
  */
 #[When(env: 'test')]
 final class EditHandleTest extends KernelTestCase
 {
-
     public function testUseCase(): void
     {
 
@@ -78,13 +77,13 @@ final class EditHandleTest extends KernelTestCase
         $UsersTableActionsDTO->setCategory(clone $UsersTableActionsDTO->getCategory());
 
 
-//        /** @var UsersTableActionsProductDTO $UsersTableActionsProductDTO */
-//
-//
-//        $UsersTableActionsProductDTO = $UsersTableActionsDTO->getProduct()->current();
-//
-//        self::assertEquals(ProductUid::TEST, (string) $UsersTableActionsProductDTO->getProduct());
-//        $UsersTableActionsProductDTO->setProduct(clone $UsersTableActionsProductDTO->getProduct());
+        //        /** @var UsersTableActionsProductDTO $UsersTableActionsProductDTO */
+        //
+        //
+        //        $UsersTableActionsProductDTO = $UsersTableActionsDTO->getProduct()->current();
+        //
+        //        self::assertEquals(ProductUid::TEST, (string) $UsersTableActionsProductDTO->getProduct());
+        //        $UsersTableActionsProductDTO->setProduct(clone $UsersTableActionsProductDTO->getProduct());
 
 
         /** @var UsersTableActionsTransDTO $UsersTableActionsTransDTO */
@@ -120,11 +119,10 @@ final class EditHandleTest extends KernelTestCase
         $UsersTableActionsWorkingDTO->setCoefficient(2.2);
 
 
-
         /** @var UsersTableActionsWorkingTransDTO $UsersTableActionsWorkingTransDTO */
 
 
-        $UsersTableActionsWorkingTransDTO =  $UsersTableActionsWorkingDTO->getTranslate();
+        $UsersTableActionsWorkingTransDTO = $UsersTableActionsWorkingDTO->getTranslate();
 
         foreach($UsersTableActionsWorkingTransDTO as $workingTrans)
         {

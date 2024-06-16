@@ -45,18 +45,18 @@ final class UsersTableActionsModifyListener
         $this->request = $request;
         $this->token = $token;
     }
-    
+
     public function prePersist(UsersTableActionsModify $data, LifecycleEventArgs $event): void
     {
         $token = $this->token->getToken();
 
-        if ($token)
+        if($token)
         {
             $data->setUsr($token->getUser());
         }
 
         /* Если пользователь не из консоли */
-        if ($this->request->getCurrentRequest())
+        if($this->request->getCurrentRequest())
         {
             $data->upModifyAgent(
                 new IpAddress($this->request->getCurrentRequest()->getClientIp()), /* Ip */

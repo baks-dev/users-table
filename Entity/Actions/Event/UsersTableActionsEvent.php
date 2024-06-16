@@ -40,7 +40,6 @@ use Doctrine\ORM\Mapping as ORM;
 use InvalidArgumentException;
 use Symfony\Component\Validator\Constraints as Assert;
 
-
 /* UsersTableActionsEvent */
 
 #[ORM\Entity]
@@ -96,7 +95,7 @@ class UsersTableActionsEvent extends EntityEvent
     #[ORM\OneToMany(targetEntity: UsersTableActionsTrans::class, mappedBy: 'event', cascade: ['all'], indexBy: 'local')]
     private Collection $translate;
 
-    
+
     public function __construct()
     {
         $this->id = new UsersTableActionsEventUid();
@@ -156,12 +155,11 @@ class UsersTableActionsEvent extends EntityEvent
         $lng = (string) $locale;
 
 
-//        if (!isset($this->translate[$locale])) {
-//            throw new \InvalidArgumentException("Symbol is not traded on this market.");
-//        }
+        //        if (!isset($this->translate[$locale])) {
+        //            throw new \InvalidArgumentException("Symbol is not traded on this market.");
+        //        }
 
-//        return $this->stocks[$symbol];
-
+        //        return $this->stocks[$symbol];
 
 
         return 'temp';

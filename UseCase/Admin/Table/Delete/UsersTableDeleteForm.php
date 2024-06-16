@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace BaksDev\Users\UsersTable\UseCase\Admin\Table\Delete;
 
-
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -33,12 +32,13 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 final class UsersTableDeleteForm extends AbstractType
 {
-
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         /* Сохранить ******************************************************/
         $builder->add(
-            'users_table_delete', SubmitType::class, [
+            'users_table_delete',
+            SubmitType::class,
+            [
                 'label' => 'Save',
                 'label_html' => true,
                 ['label' => 'Delete', 'label_html' => true, 'attr' => ['class' => 'btn-danger']]
@@ -50,8 +50,8 @@ final class UsersTableDeleteForm extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => UsersTableDeleteDTO::class,
-            'method'     => 'POST',
-            'attr'       => ['class' => 'w-100'],
+            'method' => 'POST',
+            'attr' => ['class' => 'w-100'],
         ]);
     }
 }

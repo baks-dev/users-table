@@ -79,14 +79,14 @@ final class MonthTableFilterFilterForm extends AbstractType
         );
 
 
-       /* $builder->add('date', DateType::class, [
-            'widget' => 'single_text',
-            'html5' => false,
-            'attr' => ['class' => 'js-datepicker'],
-            'required' => false,
-            'format' => 'dd.MM.yyyy',
-            'input' => 'datetime_immutable',
-        ]);*/
+        /* $builder->add('date', DateType::class, [
+             'widget' => 'single_text',
+             'html5' => false,
+             'attr' => ['class' => 'js-datepicker'],
+             'required' => false,
+             'format' => 'dd.MM.yyyy',
+             'input' => 'datetime_immutable',
+         ]);*/
 
 
         $profiles = $this->profileChoice->getCollection($data->getAuthority());
@@ -94,10 +94,10 @@ final class MonthTableFilterFilterForm extends AbstractType
         /* TextType */
         $builder->add('profile', ChoiceType::class, [
             'choices' => $profiles,
-            'choice_value' => function(?UserProfileUid $profile) {
+            'choice_value' => function (?UserProfileUid $profile) {
                 return $profile?->getValue();
             },
-            'choice_label' => function(UserProfileUid $profile) {
+            'choice_label' => function (UserProfileUid $profile) {
                 return $profile->getAttr();
             },
             'label' => false,

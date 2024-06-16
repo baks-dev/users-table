@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace BaksDev\Users\UsersTable\Entity\Actions\Modify;
 
-
 use BaksDev\Core\Entity\EntityEvent;
 use BaksDev\Core\Type\Ip\IpAddress;
 use BaksDev\Core\Type\Modify\ModifyAction;
@@ -106,7 +105,7 @@ class UsersTableActionsModify extends EntityEvent
     {
         $dto = is_string($dto) && class_exists($dto) ? new $dto() : $dto;
 
-        if ($dto instanceof UsersTableActionsModifyInterface)
+        if($dto instanceof UsersTableActionsModifyInterface)
         {
             return parent::getDto($dto);
         }
@@ -116,7 +115,8 @@ class UsersTableActionsModify extends EntityEvent
 
     public function setEntity($dto): mixed
     {
-        if ($dto instanceof UsersTableActionsModifyInterface || $dto instanceof self) {
+        if($dto instanceof UsersTableActionsModifyInterface || $dto instanceof self)
+        {
             return parent::setEntity($dto);
         }
 

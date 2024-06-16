@@ -55,11 +55,11 @@ final class UsersTableActionsDTO implements UsersTableActionsEventInterface
     private ArrayCollection $working;
 
 
-//    /**
-//     * Продукция для привязки к процессу
-//     */
-//    #[Assert\Valid]
-//    private ArrayCollection $product;
+    //    /**
+    //     * Продукция для привязки к процессу
+    //     */
+    //    #[Assert\Valid]
+    //    private ArrayCollection $product;
 
     /**
      * Продукция для привязки к процессу
@@ -79,7 +79,7 @@ final class UsersTableActionsDTO implements UsersTableActionsEventInterface
     /**
      * Идентификатор события.
      */
-    
+
     public function setId(?UsersTableActionsEventUid $id): void
     {
         $this->id = $id;
@@ -127,8 +127,7 @@ final class UsersTableActionsDTO implements UsersTableActionsEventInterface
 
     public function addWorking(Working\UsersTableActionsWorkingDTO $working): void
     {
-        $filter = $this->working->filter(function(Working\UsersTableActionsWorkingDTO $element) use ($working)
-        {
+        $filter = $this->working->filter(function (Working\UsersTableActionsWorkingDTO $element) use ($working) {
             return $working->getConst()->equals($element->getConst());
         });
 
@@ -146,38 +145,37 @@ final class UsersTableActionsDTO implements UsersTableActionsEventInterface
 
 
 
-//    /**
-//     * Продукция для привязки к процессу
-//     */
-//    public function getProduct(): ArrayCollection
-//    {
-//        return $this->product;
-//    }
-//
-//    public function setProduct(ArrayCollection $product): self
-//    {
-//        $this->product = $product;
-//        return $this;
-//    }
+    //    /**
+    //     * Продукция для привязки к процессу
+    //     */
+    //    public function getProduct(): ArrayCollection
+    //    {
+    //        return $this->product;
+    //    }
+    //
+    //    public function setProduct(ArrayCollection $product): self
+    //    {
+    //        $this->product = $product;
+    //        return $this;
+    //    }
 
-//    public function addProduct(Products\UsersTableActionsProductDTO $product): void
-//    {
-//        $filter = $this->product->filter(function(Products\UsersTableActionsProductDTO $element) use ($product)
-//        {
-//            return $product->getProduct()->equals($element->getProduct());
-//        });
-//
-//        if($filter->isEmpty())
-//        {
-//            $this->product->add($product);
-//        }
-//    }
-//
-//    public function removeProduct(Products\UsersTableActionsProductDTO $product): void
-//    {
-//        $this->product->removeElement($product);
-//    }
-
+    //    public function addProduct(Products\UsersTableActionsProductDTO $product): void
+    //    {
+    //        $filter = $this->product->filter(function(Products\UsersTableActionsProductDTO $element) use ($product)
+    //        {
+    //            return $product->getProduct()->equals($element->getProduct());
+    //        });
+    //
+    //        if($filter->isEmpty())
+    //        {
+    //            $this->product->add($product);
+    //        }
+    //    }
+    //
+    //    public function removeProduct(Products\UsersTableActionsProductDTO $product): void
+    //    {
+    //        $this->product->removeElement($product);
+    //    }
 
 
     /** Перевод */
@@ -193,7 +191,7 @@ final class UsersTableActionsDTO implements UsersTableActionsEventInterface
         /* Вычисляем расхождение и добавляем неопределенные локали */
         foreach(Locale::diffLocale($this->translate) as $locale)
         {
-            $UsersTableActionsTransDTO = new Trans\UsersTableActionsTransDTO;
+            $UsersTableActionsTransDTO = new Trans\UsersTableActionsTransDTO();
             $UsersTableActionsTransDTO->setLocal($locale);
             $this->addTranslate($UsersTableActionsTransDTO);
         }

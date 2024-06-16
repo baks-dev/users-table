@@ -62,7 +62,7 @@ final class UserTableDayHandler
          */
         $errors = $this->validator->validate($command);
 
-        if (count($errors) > 0)
+        if(count($errors) > 0)
         {
             /** Ошибка валидации */
             $uniqid = uniqid('', false);
@@ -79,7 +79,7 @@ final class UserTableDayHandler
             ]
         );
 
-        if ($UserTableDay === null)
+        if($UserTableDay === null)
         {
             $UserTableDay = new UsersTableDay();
         }
@@ -91,7 +91,7 @@ final class UserTableDayHandler
          */
         $errors = $this->validator->validate($UserTableDay);
 
-        if (count($errors) > 0)
+        if(count($errors) > 0)
         {
             /** Ошибка валидации */
             $uniqid = uniqid('', false);

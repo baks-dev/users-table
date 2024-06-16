@@ -27,72 +27,69 @@
                 }) }}
 
 
-
             </div>
         </div>
 
 
-        {#<div class="card w-100 border-light">
+        {# <div class="card w-100 border-light">
 
             <div class="card-header border-light bg-body">
                 <div class="card-title">
                     <h4>
-                        #}{# Зависимость продукции #}{#
-                        Зависимость продукции
-                    </h4>
-                </div>
-            </div>
-            <div class="card-body pb-0">
+        #}{# Зависимость продукции #}{#
+        Зависимость продукции
+    </h4>
+</div>
+</div>
+<div class="card-body pb-0">
 
-                <div class="card-body pb-0" id="collection-product">
-                    {% for form in form.product %}
-                        <div class='mb-3' id='item_{{ form.vars.id }}'>
-                            {{ include(_self|replace({ "form.html.twig": "/products/_product.html.twig" })) }}
-                        </div>
-                    {% else %}
-                        <div id="products-alert" class="alert alert-warning" role="alert">
-                            Зависимости отсутствуют. Зависимости позволяют данному производственному процессу применять
-                            только к указанному списку продукции, в противном случае процесс будет применим к продукции указанной категории.
-                        </div>
-                    {% endfor %}
-                </div>
-            </div>
+<div class="card-body pb-0" id="collection-product">
+    {% for form in form.product %}
+        <div class='mb-3' id='item_{{ form.vars.id }}'>
+            {{ include(_self|replace({ "form.html.twig": "/products/_product.html.twig" })) }}
+        </div>
+    {% else %}
+        <div id="products-alert" class="alert alert-warning" role="alert">
+            Зависимости отсутствуют. Зависимости позволяют данному производственному процессу применять
+            только к указанному списку продукции, в противном случае процесс будет применим к продукции указанной категории.
+        </div>
+    {% endfor %}
+</div>
+</div>
 
-            <div class="card-footer border-light bg-body d-flex justify-content-between align-items-center">
-                <button type="button"
-                        id="productAddCollection"
-                        class="btn btn-sm btn-outline-primary border-0 product-add-collection"
-                        data-prototype="{{ include(_self|replace({ "form.html.twig": "products/_product.prototype.html.twig" }))|e('html_attr') }}"
-                        data-collection="{{ form.product.vars.id }}-collection"
-                        data-index="{{ form.product.count }}"
-                        data-working="{{ form.product.vars.name }}"
+<div class="card-footer border-light bg-body d-flex justify-content-between align-items-center">
+<button type="button"
+        id="productAddCollection"
+        class="btn btn-sm btn-outline-primary border-0 product-add-collection"
+        data-prototype="{{ include(_self|replace({ "form.html.twig": "products/_product.prototype.html.twig" }))|e('html_attr') }}"
+        data-collection="{{ form.product.vars.id }}-collection"
+        data-index="{{ form.product.count }}"
+        data-working="{{ form.product.vars.name }}"
 
-                >
-
-                    #}{# {{ include('@users-table/admin/action/newedit/_form/pc/working/_working.prototype.html.twig')|e('html_attr') }} #}{#
-
-                    <span class="svg-icon svg-icon-2">
-							<svg xmlns="http://www.w3.org/2000/svg"
-                                 width="24"
-                                 height="24"
-                                 viewBox="0 0 24 24"
-                                 fill="none">
-								<rect opacity="0.5"
-                                      x="11"
-                                      y="18"
-                                      width="12"
-                                      height="2"
-                                      rx="1"
-                                      transform="rotate(-90 11 18)"
-                                      fill="currentColor">
-							</rect>
-								<rect x="6" y="11" width="12" height="2" rx="1" fill="currentColor"></rect>
-							</svg>
-						</span>
-                    Добавить еще продукцию
-                </button>
-            </div>
-        </div>#}
+>
+        #}{# {{ include('@users-table/admin/action/newedit/_form/pc/working/_working.prototype.html.twig')|e('html_attr') }} #}{#
+        <span class="svg-icon svg-icon-2">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     width="24"
+                     height="24"
+                     viewBox="0 0 24 24"
+                     fill="none">
+                    <rect opacity="0.5"
+                          x="11"
+                          y="18"
+                          width="12"
+                          height="2"
+                          rx="1"
+                          transform="rotate(-90 11 18)"
+                          fill="currentColor">
+                </rect>
+                    <rect x="6" y="11" width="12" height="2" rx="1" fill="currentColor"></rect>
+                </svg>
+            </span>
+        Добавить еще продукцию
+    </button>
+</div>
+</div> #}
 
     </div>
 

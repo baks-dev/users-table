@@ -39,8 +39,7 @@ final class UsersTableActionsChoiceRepository implements UsersTableActionsChoice
 
     public function __construct(
         ORMQueryBuilder $ORMQueryBuilder,
-    )
-    {
+    ) {
         $this->ORMQueryBuilder = $ORMQueryBuilder;
     }
 
@@ -61,7 +60,6 @@ final class UsersTableActionsChoiceRepository implements UsersTableActionsChoice
             ->setParameter('profile', $profile, UserProfileUid::TYPE);
 
         $qb->join(
-
             UsersTableActionsEvent::class,
             'event',
             'WITH',

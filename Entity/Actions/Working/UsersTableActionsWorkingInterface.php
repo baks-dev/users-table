@@ -25,5 +25,4 @@ namespace BaksDev\Users\UsersTable\Entity\Actions\Working;
 
 interface UsersTableActionsWorkingInterface
 {
-
 }

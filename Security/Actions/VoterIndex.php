@@ -32,7 +32,6 @@ use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 #[AutoconfigureTag('baks.security.voter')]
 final class VoterIndex implements VoterInterface
 {
-
     public const VOTER = 'INDEX';
 
     public static function getVoter(): string
@@ -45,4 +44,3 @@ final class VoterIndex implements VoterInterface
         return $role->getRole() === Role::ROLE;
     }
 }
-

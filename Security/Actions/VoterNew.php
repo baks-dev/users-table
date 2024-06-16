@@ -47,4 +47,3 @@ final class VoterNew implements VoterInterface
         return $role->getRole() === Role::ROLE;
     }
 }
-

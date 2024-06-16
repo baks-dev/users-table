@@ -29,7 +29,6 @@ use App\Kernel;
 use BaksDev\Core\Type\UidType\Uid;
 use Symfony\Component\Uid\AbstractUid;
 
-
 final class UsersTableUid extends Uid
 {
     public const TEST = '018ad880-631f-71a1-b726-300f748a7ed9';

@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace BaksDev\Users\UsersTable\Messenger\Table;
 
-
 use BaksDev\Reference\Money\Type\Money;
 use BaksDev\Users\UsersTable\Entity\Actions\Working\UsersTableActionsWorking;
 use BaksDev\Users\UsersTable\Entity\Table\Event\UsersTableEvent;
@@ -54,8 +53,7 @@ final class UpdateUsersTableMonth
         LoggerInterface $usersTableLogger,
         UserTableMonthHandler $tableMonthHandler,
         PremiumCurrentMonthInterface $premiumCurrentMonthRepository
-    )
-    {
+    ) {
         $this->entityManager = $entityManager;
         $this->logger = $usersTableLogger;
         $this->tableMonthHandler = $tableMonthHandler;
@@ -72,11 +70,13 @@ final class UpdateUsersTableMonth
 
         if(!$UsersTableEvent)
         {
-            $this->logger->error('Событие UsersTableEvent не найдено',
+            $this->logger->error(
+                'Событие UsersTableEvent не найдено',
                 [
                     __LINE__ => __FILE__,
                     'event' => $message->getEvent()
-                ]);
+                ]
+            );
         }
 
 
@@ -105,11 +105,13 @@ final class UpdateUsersTableMonth
 
         if(!$UsersTableActionWorking)
         {
-            $this->logger->error('Действие UsersTableActionsWorking не найдено',
+            $this->logger->error(
+                'Действие UsersTableActionsWorking не найдено',
                 [
                     __FILE__.':'.__LINE__,
                     $UsersTableEvent->getWorking()
-                ]);
+                ]
+            );
 
             return;
         }
@@ -128,13 +130,15 @@ final class UpdateUsersTableMonth
 
         if(empty($UsersTableEvent->getQuantity()))
         {
-            $this->logger->error('Дневной табель сотрудника UsersTableDay не найден',
+            $this->logger->error(
+                'Дневной табель сотрудника UsersTableDay не найден',
                 [
                     __FILE__.':'.__LINE__,
                     'profile' => $UsersTableMonthDTO->getProfile(),
                     'working' => $UsersTableMonthDTO->getWorking(),
                     'date' => $UsersTableDateDay
-                ]);
+                ]
+            );
 
 
             return;

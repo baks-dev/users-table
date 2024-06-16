@@ -22,13 +22,16 @@
 
 $addButtonWorking = document.getElementById('workingAddCollection');
 
-if ($addButtonWorking) {
+if($addButtonWorking)
+{
     /* Блок для новой коллекции */
     let $blockCollectionCall = document.getElementById('collection-working');
 
-    if ($blockCollectionCall) {
+    if($blockCollectionCall)
+    {
 
-        $addButtonWorking.addEventListener('click', function () {
+        $addButtonWorking.addEventListener('click', function()
+        {
 
             let $addButtonWorking = this;
             /* получаем прототип коллекции  */
@@ -36,7 +39,7 @@ if ($addButtonWorking) {
             let index = $addButtonWorking.dataset.index * 1;
 
             /* Замена '__name__' в HTML-коде прототипа
-            вместо этого будет число, основанное на том, сколько коллекций */
+             вместо этого будет число, основанное на том, сколько коллекций */
             newForm = newForm.replace(/__actions_working__/g, index);
 
             /* Вставляем новую коллекцию */
@@ -66,32 +69,35 @@ if ($addButtonWorking) {
             div.scrollIntoView({block: "center", inline: "center", behavior: "smooth"});
 
 
-
         });
     }
 }
 
 
-document.querySelectorAll('.del-item-working').forEach(function (item) {
+document.querySelectorAll('.del-item-working').forEach(function(item)
+{
     item.addEventListener('click', deleteWorking);
 });
 
-function deleteWorking() {
+function deleteWorking()
+{
     document.getElementById(this.dataset.delete).remove();
 }
-
 
 
 $addButtonProduct = document.getElementById('productAddCollection');
 
 
-if ($addButtonProduct) {
+if($addButtonProduct)
+{
     /* Блок для новой коллекции */
     let $blockCollectionCall = document.getElementById('collection-product');
 
-    if ($blockCollectionCall) {
+    if($blockCollectionCall)
+    {
 
-        $addButtonProduct.addEventListener('click', function () {
+        $addButtonProduct.addEventListener('click', function()
+        {
 
             document.getElementById('products-alert')?.remove();
 
@@ -102,7 +108,7 @@ if ($addButtonProduct) {
             let index = $addButtonProduct.dataset.index * 1;
 
             /* Замена '__name__' в HTML-коде прототипа
-            вместо этого будет число, основанное на том, сколько коллекций */
+             вместо этого будет число, основанное на том, сколько коллекций */
             newForm = newForm.replace(/__product__/g, index);
 
             /* Вставляем новую коллекцию */

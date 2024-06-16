@@ -27,7 +27,8 @@ users_table_form_category = document.getElementById('users_table_form_category')
 //const users_table_form_action = document.getElementById('users_table_form_action');
 //const users_table_form_working = document.getElementById('users_table_form_working');
 
-updateForm = async (key, value) => {
+updateForm = async (key, value) =>
+{
 
     const data = new FormData(form);
     const url = form.getAttribute('action');
@@ -47,8 +48,6 @@ updateForm = async (key, value) => {
     // }
 
 
-
-
     requestBody = requestBody.join("&");
 
     const req = await fetch(url, {
@@ -66,7 +65,8 @@ updateForm = async (key, value) => {
     return text;
 };
 
-parseTextToHtml = (text) => {
+parseTextToHtml = (text) =>
+{
     const parser = new DOMParser();
     const html = parser.parseFromString(text, 'text/html');
 
@@ -76,7 +76,8 @@ parseTextToHtml = (text) => {
 /**
  * Производственный процесс после выбора Категория производства
  */
-changeCategory = async (e) => {
+changeCategory = async (e) =>
+{
 
     const updateFormResponse = await updateForm(e.target.getAttribute('name'), e.target.value);
     const html = parseTextToHtml(updateFormResponse);
@@ -86,7 +87,8 @@ changeCategory = async (e) => {
     /* Удаляем предыдущий Select2 */
     let select2 = document.getElementById('users_table_form_action_select2');
 
-    if (select2) {
+    if(select2)
+    {
         select2.remove();
     }
 
@@ -97,23 +99,18 @@ changeCategory = async (e) => {
     document.getElementById('users_table_form_working').replaceWith(new_users_table_form_working);
 
 
-
     const users_table_form_action = document.getElementById('users_table_form_action');
     users_table_form_action.addEventListener('change', (e) => changeActions(e));
-
-
 
 
 };
 
 
-
-
-
 /**
  * Действие сотрудника после выбора Производственный процесс
  */
-changeActions = async (e) => {
+changeActions = async (e) =>
+{
 
     //const requestBody = e.target.getAttribute('name') + '=' + e.target.value;
     const updateFormResponse = await updateForm(e.target.getAttribute('name'), e.target.value);
@@ -124,7 +121,8 @@ changeActions = async (e) => {
     /* Удаляем предыдущий Select2 */
     let select2 = document.getElementById('users_table_form_working_select2');
 
-    if (select2) {
+    if(select2)
+    {
         select2.remove();
     }
 

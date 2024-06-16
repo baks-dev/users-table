@@ -76,7 +76,8 @@ final class UsersTableMonthDTO implements UsersTableDayInterface
     private Money $premium;
 
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->money = new Money(0);
         $this->premium = new Money(0);
     }
@@ -167,12 +168,12 @@ final class UsersTableMonthDTO implements UsersTableDayInterface
         $this->money = $money;
     }
 
-    public function addMoney(Money $money) : void
+    public function addMoney(Money $money): void
     {
         $this->money->add($money);
     }
 
-    public function subMoney(Money $money) : void
+    public function subMoney(Money $money): void
     {
         $this->money->sub($money);
     }
@@ -190,7 +191,7 @@ final class UsersTableMonthDTO implements UsersTableDayInterface
         $this->premium = $premium;
     }
 
-    public function addPremium(Money $money) : void
+    public function addPremium(Money $money): void
     {
         $this->premium->add($money);
     }

@@ -43,7 +43,7 @@ final class ActionByProductRepository implements ActionByProductInterface
     /**
      * Метод возвращает идентификатор события UsersTableActionsEventUid привязанного продукта
      */
-    public function findUsersTableActionsByProduct(ProductUid $product) : ?UsersTableActionsEventUid
+    public function findUsersTableActionsByProduct(ProductUid $product): ?UsersTableActionsEventUid
     {
         $qb = $this->ORMQueryBuilder->createQueryBuilder(self::class);
 
@@ -54,7 +54,8 @@ final class ActionByProductRepository implements ActionByProductInterface
         $qb->where('product.product = :product');
         $qb->setParameter('product', $product, ProductUid::TYPE);
 
-        $qb->join(UsersTableActions::class,
+        $qb->join(
+            UsersTableActions::class,
             'action',
             'WITH',
             'action.event = product.event'

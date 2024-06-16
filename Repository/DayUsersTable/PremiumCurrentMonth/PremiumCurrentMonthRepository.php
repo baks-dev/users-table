@@ -34,7 +34,6 @@ use Doctrine\DBAL\ParameterType;
 
 final class PremiumCurrentMonthRepository implements PremiumCurrentMonthInterface
 {
-
     private DBALQueryBuilder $DBALQueryBuilder;
 
     public function __construct(DBALQueryBuilder $DBALQueryBuilder)
@@ -61,7 +60,7 @@ final class PremiumCurrentMonthRepository implements PremiumCurrentMonthInterfac
 
         // Устанавливает первый день текущего месяца
         $current = (new DateTimeImmutable())->modify('first day of')
-        ->setTime(0, 0)->getTimestamp();
+            ->setTime(0, 0)->getTimestamp();
 
         $qb->andWhere('table_day.date_table > :current');
         $qb->setParameter('current', $current, ParameterType::INTEGER);

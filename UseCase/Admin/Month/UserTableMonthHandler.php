@@ -61,7 +61,7 @@ final class UserTableMonthHandler
          */
         $errors = $this->validator->validate($command);
 
-        if (count($errors) > 0)
+        if(count($errors) > 0)
         {
             /** Ошибка валидации */
             $uniqid = uniqid('', false);
@@ -78,11 +78,11 @@ final class UserTableMonthHandler
             ]
         );
 
-        if ($UsersTableMonth === null)
+        if($UsersTableMonth === null)
         {
             $UsersTableMonth = new UsersTableMonth();
         }
-        
+
         $UsersTableMonth->setEntity($command);
 
         /**
@@ -90,7 +90,7 @@ final class UserTableMonthHandler
          */
         $errors = $this->validator->validate($UsersTableMonth);
 
-        if (count($errors) > 0)
+        if(count($errors) > 0)
         {
             /** Ошибка валидации */
             $uniqid = uniqid('', false);

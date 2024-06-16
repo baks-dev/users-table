@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace BaksDev\Users\UsersTable\Controller\Admin\Table;
 
-
 use BaksDev\Core\Controller\AbstractController;
 use BaksDev\Core\Listeners\Event\Security\RoleSecurity;
 use BaksDev\Users\UsersTable\Entity\Table\UsersTable;
@@ -45,9 +44,8 @@ final class NewController extends AbstractController
     public function news(
         Request $request,
         UsersTableHandler $UsersTableHandler,
-    ): Response
-    {
-        
+    ): Response {
+
         $UsersTableDTO = new UsersTableDTO($this->getProfileUid());
 
         // Форма

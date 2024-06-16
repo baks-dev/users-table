@@ -30,7 +30,7 @@ use BaksDev\Users\UsersTable\UseCase\Admin\Actions\NewEdit\Tests\NewHandleTest;
  *
  * @depends BaksDev\Users\UsersTable\UseCase\Admin\Actions\NewEdit\Tests\NewHandleTest::class
  *
- * @see NewHandleTest
+ * @see     NewHandleTest
  */
 #[When(env: 'test')]
 final class EditControllerTest extends WebTestCase

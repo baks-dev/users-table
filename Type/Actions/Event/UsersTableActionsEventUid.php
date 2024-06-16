@@ -28,10 +28,8 @@ namespace BaksDev\Users\UsersTable\Type\Actions\Event;
 use BaksDev\Core\Type\UidType\Uid;
 use Symfony\Component\Uid\AbstractUid;
 
-
 final class UsersTableActionsEventUid extends Uid
 {
-
     public const TEST = '018ae5ff-aaaa-737e-a09e-06b00ab82d0f';
 
     public const TYPE = 'users_table_actions_event';
@@ -48,8 +46,7 @@ final class UsersTableActionsEventUid extends Uid
         AbstractUid|self|string|null $value = null,
         mixed $attr = null,
         mixed $option = null,
-    )
-    {
+    ) {
         parent::__construct($value);
         $this->attr = $attr;
         $this->option = $option;

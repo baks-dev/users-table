@@ -44,11 +44,12 @@ final class IndexController extends AbstractController
         Request $request,
         AllUsersTableActionsInterface $allUsersTableActions,
         int $page = 0,
-    ): Response
-    {
+    ): Response {
         // Поиск
         $search = new SearchDTO();
-        $searchForm = $this->createForm(SearchForm::class, $search,
+        $searchForm = $this->createForm(
+            SearchForm::class,
+            $search,
             ['action' => $this->generateUrl('users-table:admin.action.index')]
         );
         $searchForm->handleRequest($request);

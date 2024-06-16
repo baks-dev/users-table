@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace BaksDev\Users\UsersTable\Messenger\Table;
 
-
 use BaksDev\Reference\Money\Type\Money;
 use BaksDev\Users\UsersTable\Entity\Actions\Working\UsersTableActionsWorking;
 use BaksDev\Users\UsersTable\Entity\Table\Event\UsersTableEvent;
@@ -50,8 +49,7 @@ final class UpdateUsersTableDay
         EntityManagerInterface $entityManager,
         LoggerInterface $usersTableLogger,
         UserTableDayHandler $tableDayHandler
-    )
-    {
+    ) {
         $this->entityManager = $entityManager;
         $this->logger = $usersTableLogger;
         $this->tableDayHandler = $tableDayHandler;
@@ -69,11 +67,13 @@ final class UpdateUsersTableDay
 
         if(!$UsersTableEvent)
         {
-            $this->logger->error('Событие UsersTableEvent не найдено',
+            $this->logger->error(
+                'Событие UsersTableEvent не найдено',
                 [
-                    __LINE__ .':'. __FILE__,
+                    __LINE__.':'.__FILE__,
                     $message->getEvent()
-                ]);
+                ]
+            );
 
             return;
         }
@@ -101,11 +101,13 @@ final class UpdateUsersTableDay
 
         if(!$UsersTableActionWorking)
         {
-            $this->logger->error('Действие UsersTableActionsWorking не найдено',
+            $this->logger->error(
+                'Действие UsersTableActionsWorking не найдено',
                 [
                     __FILE__.':'.__LINE__,
                     $UsersTableEvent->getWorking()
-                ]);
+                ]
+            );
 
             return;
         }

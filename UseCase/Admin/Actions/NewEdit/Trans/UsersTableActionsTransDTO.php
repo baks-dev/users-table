@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace BaksDev\Users\UsersTable\UseCase\Admin\Actions\NewEdit\Trans;
 
-
 use BaksDev\Core\Type\Locale\Locale;
 use BaksDev\Users\UsersTable\Entity\Actions\Trans\UsersTableActionsTransInterface;
 use ReflectionProperty;
@@ -34,7 +33,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 /** @see UsersTableActionsTrans */
 final class UsersTableActionsTransDTO implements UsersTableActionsTransInterface
 {
-
     /** Локаль */
     #[Assert\NotBlank]
     private readonly Locale $local;

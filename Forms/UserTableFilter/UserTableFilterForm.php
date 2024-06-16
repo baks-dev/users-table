@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace BaksDev\Users\UsersTable\Forms\UserTableFilter;
 
-
 use BaksDev\Users\Profile\Group\Repository\UserProfileChoice\UserProfileChoiceInterface;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use BaksDev\Users\UsersTable\Forms\DayUsersTableFilter\Admin\DayTableFilterDTO;
@@ -47,8 +46,7 @@ final class UserTableFilterForm extends AbstractType
     public function __construct(
         UserProfileChoiceInterface $profileChoice,
         RequestStack $request,
-    )
-    {
+    ) {
         $this->request = $request;
         $this->profileChoice = $profileChoice;
     }
@@ -86,10 +84,10 @@ final class UserTableFilterForm extends AbstractType
         /* TextType */
         $builder->add('profile', ChoiceType::class, [
             'choices' => $profiles,
-            'choice_value' => function(?UserProfileUid $profile) {
+            'choice_value' => function (?UserProfileUid $profile) {
                 return $profile?->getValue();
             },
-            'choice_label' => function(UserProfileUid $profile) {
+            'choice_label' => function (UserProfileUid $profile) {
                 return $profile->getAttr();
             },
             'label' => false,
@@ -102,7 +100,7 @@ final class UserTableFilterForm extends AbstractType
 
         $builder->addEventListener(
             FormEvents::POST_SUBMIT,
-            function(FormEvent $event): void {
+            function (FormEvent $event): void {
                 /** @var DayTableFilterDTO $data */
                 $data = $event->getData();
 

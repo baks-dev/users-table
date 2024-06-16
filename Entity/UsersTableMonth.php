@@ -35,12 +35,11 @@ use Doctrine\ORM\Mapping as ORM;
 use InvalidArgumentException;
 use Symfony\Component\Validator\Constraints as Assert;
 
-
 /* UsersTableMonth */
 
 #[ORM\Entity]
 #[ORM\Table(name: 'users_table_month')]
-class UsersTableMonth  extends EntityState
+class UsersTableMonth extends EntityState
 {
     public const TABLE = 'users_table_month';
 
@@ -112,7 +111,7 @@ class UsersTableMonth  extends EntityState
     {
         $dto = is_string($dto) && class_exists($dto) ? new $dto() : $dto;
 
-        if ($dto instanceof UsersTableDayInterface)
+        if($dto instanceof UsersTableDayInterface)
         {
             return parent::getDto($dto);
         }
@@ -122,7 +121,7 @@ class UsersTableMonth  extends EntityState
 
     public function setEntity($dto): mixed
     {
-        if ($dto instanceof UsersTableDayInterface || $dto instanceof self)
+        if($dto instanceof UsersTableDayInterface || $dto instanceof self)
         {
             return parent::setEntity($dto);
         }

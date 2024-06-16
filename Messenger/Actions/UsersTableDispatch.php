@@ -32,5 +32,7 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 #[AsMessageHandler]
 final class UsersTableDispatch
 {
-    public function __invoke(UsersTableActionsMessage $message): void {}
+    public function __invoke(UsersTableActionsMessage $message): void
+    {
+    }
 }

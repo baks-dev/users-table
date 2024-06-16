@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace BaksDev\Users\UsersTable\UseCase\Admin\Actions\NewEdit\Working;
 
-
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -35,7 +34,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 final class UsersTableActionsWorkingForm extends AbstractType
 {
-
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
 
@@ -44,7 +42,9 @@ final class UsersTableActionsWorkingForm extends AbstractType
          */
 
         $builder->add(
-            'sort', IntegerType::class, ['attr' => ['min' => 0, 'max' => 999]]
+            'sort',
+            IntegerType::class,
+            ['attr' => ['min' => 0, 'max' => 999]]
         );
 
         /**
@@ -59,24 +59,28 @@ final class UsersTableActionsWorkingForm extends AbstractType
          * Дневная норма
          */
         $builder->add(
-            'norm', IntegerType::class, ['attr' => ['min' => 1]]
+            'norm',
+            IntegerType::class,
+            ['attr' => ['min' => 1]]
         );
 
         /**
          * Процент премии переработки
          */
         $builder->add(
-            'premium', IntegerType::class, ['attr' => ['max' => 100, 'min' => 0]]
+            'premium',
+            IntegerType::class,
+            ['attr' => ['max' => 100, 'min' => 0]]
         );
 
 
         $builder->add('translate', CollectionType::class, [
-            'entry_type'     => Trans\UsersTableActionsWorkingTransForm::class,
-            'entry_options'  => ['label' => false],
-            'label'          => false,
-            'by_reference'   => false,
-            'allow_delete'   => true,
-            'allow_add'      => true,
+            'entry_type' => Trans\UsersTableActionsWorkingTransForm::class,
+            'entry_options' => ['label' => false],
+            'label' => false,
+            'by_reference' => false,
+            'allow_delete' => true,
+            'allow_add' => true,
             'prototype_name' => '__working_translate__',
         ]);
     }
@@ -85,8 +89,8 @@ final class UsersTableActionsWorkingForm extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => UsersTableActionsWorkingDTO::class,
-            'method'     => 'POST',
-            'attr'       => ['class' => 'w-100'],
+            'method' => 'POST',
+            'attr' => ['class' => 'w-100'],
         ]);
     }
 }

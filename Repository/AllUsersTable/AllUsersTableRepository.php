@@ -55,8 +55,7 @@ final class AllUsersTableRepository implements AllUsersTableInterface
     public function __construct(
         DBALQueryBuilder $DBALQueryBuilder,
         PaginatorInterface $paginator,
-    )
-    {
+    ) {
         $this->paginator = $paginator;
         $this->DBALQueryBuilder = $DBALQueryBuilder;
     }
@@ -68,8 +67,7 @@ final class AllUsersTableRepository implements AllUsersTableInterface
         UserProfileUid $profile,
         ?UserProfileUid $authority = null,
         bool $other = false
-    ): PaginatorInterface
-    {
+    ): PaginatorInterface {
         $qb = $this->DBALQueryBuilder
             ->createQueryBuilder(self::class)
             ->bindLocal();
@@ -90,7 +88,6 @@ final class AllUsersTableRepository implements AllUsersTableInterface
         );
 
 
-
         /** Табели других пользователей */
 
 
@@ -106,8 +103,7 @@ final class AllUsersTableRepository implements AllUsersTableInterface
             $qb
                 ->andWhere('event.profile = profile_group_users.profile')
                 ->setParameter('authority', $authority, UserProfileUid::TYPE)
-                ->setParameter('profile', $filter?->getProfile() ?: $profile, UserProfileUid::TYPE)
-            ;
+                ->setParameter('profile', $filter?->getProfile() ?: $profile, UserProfileUid::TYPE);
 
             /** Если пользователь авторизован - и передан фильтр по профилю  */
             if($filter?->getProfile())
@@ -124,21 +120,6 @@ final class AllUsersTableRepository implements AllUsersTableInterface
                 ->andWhere('event.profile = :profile')
                 ->setParameter('profile', $profile, UserProfileUid::TYPE);
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
         /**
@@ -167,7 +148,6 @@ final class AllUsersTableRepository implements AllUsersTableInterface
         );
 
 
-
         if($authority)
         {
             $qb->join(
@@ -183,8 +163,7 @@ final class AllUsersTableRepository implements AllUsersTableInterface
         {
 
             $qb->andWhere('event.profile = :profile')
-                ->setParameter('profile', $profile, UserProfileUid::TYPE)
-            ;
+                ->setParameter('profile', $profile, UserProfileUid::TYPE);
         }
 
 
@@ -286,8 +265,7 @@ final class AllUsersTableRepository implements AllUsersTableInterface
 
         $qb->andWhere('event.date_table BETWEEN :start AND :end')
             ->setParameter('start', $start->format("Y-m-d H:i:s"))
-            ->setParameter('end', $end->format("Y-m-d H:i:s"))
-        ;
+            ->setParameter('end', $end->format("Y-m-d H:i:s"));
 
 
         $qb->orderBy('event.date_table', 'DESC');

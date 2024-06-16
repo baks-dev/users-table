@@ -85,6 +85,5 @@ final class Role implements RoleInterface, MenuAdminInterface
     {
         return false;
     }
-    
-}
 
+}

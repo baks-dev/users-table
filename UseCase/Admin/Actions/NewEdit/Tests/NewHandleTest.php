@@ -47,7 +47,6 @@ use Symfony\Component\DependencyInjection\Attribute\When;
 #[When(env: 'test')]
 final class NewHandleTest extends KernelTestCase
 {
-
     public static function setUpBeforeClass(): void
     {
         $container = self::getContainer();
@@ -89,16 +88,16 @@ final class NewHandleTest extends KernelTestCase
         self::assertSame($CategoryProductUid, $UsersTableActionsDTO->getCategory());
 
 
-//        /** @var UsersTableActionsProductDTO $UsersTableActionsProductDTO */
-//
-//
-//        $UsersTableActionsProductDTO = new UsersTableActionsProductDTO();
-//        $UsersTableActionsDTO->addProduct($UsersTableActionsProductDTO );
-//        self::assertTrue($UsersTableActionsDTO->getProduct()->contains($UsersTableActionsProductDTO));
-//
-//        $ProductUid = new ProductUid();
-//        $UsersTableActionsProductDTO->setProduct($ProductUid);
-//        self::assertSame($ProductUid, $UsersTableActionsProductDTO->getProduct());
+        //        /** @var UsersTableActionsProductDTO $UsersTableActionsProductDTO */
+        //
+        //
+        //        $UsersTableActionsProductDTO = new UsersTableActionsProductDTO();
+        //        $UsersTableActionsDTO->addProduct($UsersTableActionsProductDTO );
+        //        self::assertTrue($UsersTableActionsDTO->getProduct()->contains($UsersTableActionsProductDTO));
+        //
+        //        $ProductUid = new ProductUid();
+        //        $UsersTableActionsProductDTO->setProduct($ProductUid);
+        //        self::assertSame($ProductUid, $UsersTableActionsProductDTO->getProduct());
 
 
         /** @var UsersTableActionsTransDTO $UsersTableActionsTransDTO */
@@ -110,8 +109,6 @@ final class NewHandleTest extends KernelTestCase
             $actionTrans->setName('EhIAumuUOL');
             self::assertEquals('EhIAumuUOL', $actionTrans->getName());
         }
-
-
 
 
         /** @var UsersTableActionsWorkingDTO $UsersTableActionsWorkingDTO */
@@ -141,15 +138,13 @@ final class NewHandleTest extends KernelTestCase
         /** @var UsersTableActionsWorkingTransDTO $UsersTableActionsWorkingTransDTO */
 
 
-        $UsersTableActionsWorkingTransDTO =  $UsersTableActionsWorkingDTO->getTranslate();
+        $UsersTableActionsWorkingTransDTO = $UsersTableActionsWorkingDTO->getTranslate();
 
         foreach($UsersTableActionsWorkingTransDTO as $workingTrans)
         {
             $workingTrans->setName('kRFqgNIlqA');
             self::assertEquals('kRFqgNIlqA', $workingTrans->getName());
         }
-
-
 
 
         /** @var UsersTableActionsHandler $UsersTableActionsHandler */

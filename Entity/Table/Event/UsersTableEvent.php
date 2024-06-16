@@ -135,7 +135,7 @@ class UsersTableEvent extends EntityEvent
     {
         $dto = is_string($dto) && class_exists($dto) ? new $dto() : $dto;
 
-        if ($dto instanceof UsersTableEventInterface)
+        if($dto instanceof UsersTableEventInterface)
         {
             return parent::getDto($dto);
         }
@@ -145,7 +145,7 @@ class UsersTableEvent extends EntityEvent
 
     public function setEntity($dto): mixed
     {
-        if ($dto instanceof UsersTableEventInterface || $dto instanceof self)
+        if($dto instanceof UsersTableEventInterface || $dto instanceof self)
         {
             return parent::setEntity($dto);
         }

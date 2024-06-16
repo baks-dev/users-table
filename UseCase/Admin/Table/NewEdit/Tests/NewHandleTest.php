@@ -57,7 +57,6 @@ use Symfony\Component\DependencyInjection\Attribute\When;
 #[When(env: 'test')]
 final class NewHandleTest extends KernelTestCase
 {
-
     public static function setUpBeforeClass(): void
     {
         $container = self::getContainer();
@@ -117,8 +116,6 @@ final class NewHandleTest extends KernelTestCase
         $UsersTableActionsEventUid = new UsersTableActionsEventUid();
         $UsersTableDTO->setAction($UsersTableActionsEventUid);
         self::assertSame($UsersTableActionsEventUid, $UsersTableDTO->getAction());
-
-
 
 
         $UsersTableDTO->setQuantity(100);

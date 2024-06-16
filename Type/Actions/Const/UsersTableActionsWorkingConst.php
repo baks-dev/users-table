@@ -27,7 +27,6 @@ namespace BaksDev\Users\UsersTable\Type\Actions\Const;
 
 use BaksDev\Core\Type\UidType\Uid;
 
-
 final class UsersTableActionsWorkingConst extends Uid
 {
     public const TEST = '018ae5cb-8bba-7c89-a584-9281ce93a5e8';

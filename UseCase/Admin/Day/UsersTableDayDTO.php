@@ -47,13 +47,13 @@ final class UsersTableDayDTO implements UsersTableDayInterface
     /** Действие */
     #[Assert\NotBlank]
     #[Assert\Uuid]
-    private readonly  UsersTableActionsWorkingUid $working;
+    private readonly UsersTableActionsWorkingUid $working;
 
     /**
      * Дата табеля (timestamp).
      */
     #[Assert\NotBlank]
-    private readonly  int $date;
+    private readonly int $date;
 
     /**
      * Количество.
@@ -74,7 +74,8 @@ final class UsersTableDayDTO implements UsersTableDayInterface
     private Money $premium;
 
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->money = new Money(0);
         $this->premium = new Money(0);
     }
@@ -108,7 +109,7 @@ final class UsersTableDayDTO implements UsersTableDayInterface
     {
         if(!(new ReflectionProperty(self::class, 'date'))->isInitialized($this))
         {
-            if ($date instanceof DateTimeImmutable)
+            if($date instanceof DateTimeImmutable)
             {
                 $date = $date->setTime(0, 0)->getTimestamp();
             }

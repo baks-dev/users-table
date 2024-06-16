@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace BaksDev\Users\UsersTable\UseCase\Admin\Actions\NewEdit;
 
-
 use BaksDev\Products\Category\Repository\CategoryChoice\CategoryChoiceInterface;
 use BaksDev\Products\Category\Type\Id\CategoryProductUid;
 use Symfony\Component\Form\AbstractType;
@@ -37,7 +36,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 final class UsersTableActionsForm extends AbstractType
 {
-
     private CategoryChoiceInterface $categoryChoice;
 
 
@@ -49,18 +47,18 @@ final class UsersTableActionsForm extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
 
-//        /**
-//         * Коллекция продукции для привязки к процессу
-//         */
-//        $builder->add('product', CollectionType::class, [
-//            'entry_type' => Products\UsersTableActionsProductForm::class,
-//            'entry_options' => ['label' => false],
-//            'label' => false,
-//            'by_reference' => false,
-//            'allow_delete' => true,
-//            'allow_add' => true,
-//            'prototype_name' => '__product__',
-//        ]);
+        //        /**
+        //         * Коллекция продукции для привязки к процессу
+        //         */
+        //        $builder->add('product', CollectionType::class, [
+        //            'entry_type' => Products\UsersTableActionsProductForm::class,
+        //            'entry_options' => ['label' => false],
+        //            'label' => false,
+        //            'by_reference' => false,
+        //            'allow_delete' => true,
+        //            'allow_add' => true,
+        //            'prototype_name' => '__product__',
+        //        ]);
 
         /**
          * Категория производства
@@ -69,10 +67,10 @@ final class UsersTableActionsForm extends AbstractType
         $builder
             ->add('category', ChoiceType::class, [
                 'choices' => $this->categoryChoice->findAll(),
-                'choice_value' => function(?CategoryProductUid $category) {
+                'choice_value' => function (?CategoryProductUid $category) {
                     return $category?->getValue();
                 },
-                'choice_label' => function(CategoryProductUid $category) {
+                'choice_label' => function (CategoryProductUid $category) {
                     return $category->getOptions();
                 },
 
@@ -85,7 +83,7 @@ final class UsersTableActionsForm extends AbstractType
         /**
          * Действия
          */
-        
+
         $builder->add('working', CollectionType::class, [
             'entry_type' => Working\UsersTableActionsWorkingForm::class,
             'entry_options' => ['label' => false],
