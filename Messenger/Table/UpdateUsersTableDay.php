@@ -104,7 +104,7 @@ final class UpdateUsersTableDay
             $this->logger->error(
                 'Действие UsersTableActionsWorking не найдено',
                 [
-                    __FILE__.':'.__LINE__,
+                    self::class.':'.__LINE__,
                     $UsersTableEvent->getWorking()
                 ]
             );

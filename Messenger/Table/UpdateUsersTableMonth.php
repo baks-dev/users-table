@@ -108,7 +108,7 @@ final class UpdateUsersTableMonth
             $this->logger->error(
                 'Действие UsersTableActionsWorking не найдено',
                 [
-                    __FILE__.':'.__LINE__,
+                    self::class.':'.__LINE__,
                     $UsersTableEvent->getWorking()
                 ]
             );
@@ -133,7 +133,7 @@ final class UpdateUsersTableMonth
             $this->logger->error(
                 'Дневной табель сотрудника UsersTableDay не найден',
                 [
-                    __FILE__.':'.__LINE__,
+                    self::class.':'.__LINE__,
                     'profile' => $UsersTableMonthDTO->getProfile(),
                     'working' => $UsersTableMonthDTO->getWorking(),
                     'date' => $UsersTableDateDay

@@ -72,7 +72,7 @@ final class UsersTableActionsHandler
         {
             /** Ошибка валидации */
             $uniqid = uniqid('', false);
-            $this->logger->error(sprintf('%s: %s', $uniqid, $errors), [__FILE__.':'.__LINE__]);
+            $this->logger->error(sprintf('%s: %s', $uniqid, $errors), [self::class.':'.__LINE__]);
 
             return $uniqid;
         }
@@ -90,7 +90,7 @@ final class UsersTableActionsHandler
                 $this->logger->error(
                     $uniqid.': Событие UsersTableActionsEvent не найдено',
                     [
-                        __FILE__.':'.__LINE__,
+                        self::class.':'.__LINE__,
                         $command->getEvent()
                     ]
                 );
@@ -134,7 +134,7 @@ final class UsersTableActionsHandler
                 $this->logger->error(
                     $uniqid.': Корень агрегата UsersTableActions с указанным событием и профилем не найден',
                     [
-                        __FILE__.':'.__LINE__,
+                        self::class.':'.__LINE__,
                         $command->getEvent(),
                         $profile
                     ]
@@ -165,7 +165,7 @@ final class UsersTableActionsHandler
         {
             /** Ошибка валидации */
             $uniqid = uniqid('', false);
-            $this->logger->error(sprintf('%s: %s', $uniqid, $errors), [__FILE__.':'.__LINE__]);
+            $this->logger->error(sprintf('%s: %s', $uniqid, $errors), [self::class.':'.__LINE__]);
 
             return $uniqid;
         }
@@ -180,7 +180,7 @@ final class UsersTableActionsHandler
         {
             /** Ошибка валидации */
             $uniqid = uniqid('', false);
-            $this->logger->error(sprintf('%s: %s', $uniqid, $errors), [__FILE__.':'.__LINE__]);
+            $this->logger->error(sprintf('%s: %s', $uniqid, $errors), [self::class.':'.__LINE__]);
             return $uniqid;
         }
 
