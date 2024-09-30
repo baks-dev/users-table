@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace BaksDev\Users\UsersTable\UseCase\Admin\Table\NewEdit\Tests;
 
+use BaksDev\Orders\Order\UseCase\Admin\Edit\Tests\OrderNewTest;
 use BaksDev\Products\Category\Type\Id\CategoryProductUid;
 use BaksDev\Products\Product\Type\Id\ProductUid;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
@@ -48,7 +49,12 @@ use BaksDev\Users\UsersTable\UseCase\Admin\Table\NewEdit\UsersTableHandler;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Event\ConsoleCommandEvent;
+use Symfony\Component\Console\Input\StringInput;
+use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\DependencyInjection\Attribute\When;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * @group users-table
@@ -59,6 +65,11 @@ final class NewHandleTest extends KernelTestCase
 {
     public static function setUpBeforeClass(): void
     {
+        // Бросаем событие консольной комманды
+        $dispatcher = self::getContainer()->get(EventDispatcherInterface::class);
+        $event = new ConsoleCommandEvent(new Command(), new StringInput(''), new NullOutput());
+        $dispatcher->dispatch($event, 'console.command');
+
         $container = self::getContainer();
 
         /** @var EntityManagerInterface $em */
@@ -68,18 +79,18 @@ final class NewHandleTest extends KernelTestCase
         if($UsersTable)
         {
             $em->remove($UsersTable);
-
-            $UsersTableActionsEvent = $em->getRepository(UsersTableEvent::class)
-                ->findBy(['main' => UsersTableUid::TEST]);
-
-            foreach($UsersTableActionsEvent as $remove)
-            {
-                $em->remove($remove);
-            }
-
-            $em->flush();
         }
 
+
+        $UsersTableActionsEvent = $em->getRepository(UsersTableEvent::class)
+            ->findBy(['main' => UsersTableUid::TEST]);
+
+        foreach($UsersTableActionsEvent as $remove)
+        {
+            $em->remove($remove);
+        }
+
+        $em->flush();
         $em->clear();
         //$em->close();
     }

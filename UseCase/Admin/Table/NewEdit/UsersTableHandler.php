@@ -25,159 +25,35 @@ declare(strict_types=1);
 
 namespace BaksDev\Users\UsersTable\UseCase\Admin\Table\NewEdit;
 
-use BaksDev\Core\Messenger\MessageDispatchInterface;
+use BaksDev\Core\Entity\AbstractHandler;
 use BaksDev\Users\UsersTable\Entity\Table\Event\UsersTableEvent;
 use BaksDev\Users\UsersTable\Entity\Table\UsersTable;
 use BaksDev\Users\UsersTable\Messenger\Table\UsersTableMessage;
-use Doctrine\ORM\EntityManagerInterface;
-use Psr\Log\LoggerInterface;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-final class UsersTableHandler
+final class UsersTableHandler extends AbstractHandler
 {
-    private EntityManagerInterface $entityManager;
-
-    private ValidatorInterface $validator;
-
-    private LoggerInterface $logger;
-
-    private MessageDispatchInterface $messageDispatch;
-
-    public function __construct(
-        EntityManagerInterface $entityManager,
-        ValidatorInterface $validator,
-        LoggerInterface $logger,
-        MessageDispatchInterface $messageDispatch
-    ) {
-        $this->entityManager = $entityManager;
-        $this->validator = $validator;
-        $this->logger = $logger;
-        $this->messageDispatch = $messageDispatch;
-
-    }
-
     /** @see UsersTable */
-    public function handle(
-        UsersTableDTO $command,
-    ): string|UsersTable {
+    public function handle(UsersTableDTO $command): string|UsersTable
+    {
 
-        /**
-         *  Валидация UsersTableDTO
-         */
-        $errors = $this->validator->validate($command);
+        $this->setCommand($command);
 
-        if(count($errors) > 0)
+        $this->preEventPersistOrUpdate(UsersTable::class, UsersTableEvent::class);
+
+        /** Валидация всех объектов */
+        if($this->validatorCollection->isInvalid())
         {
-            $uniqid = uniqid('', false);
-            $errorsString = (string) $errors;
-            $this->logger->error($uniqid.': '.$errorsString);
-
-            return $uniqid;
+            return $this->validatorCollection->getErrorUniqid();
         }
 
-
-        if($command->getEvent())
-        {
-            $EventRepo = $this->entityManager->getRepository(UsersTableEvent::class)->find(
-                $command->getEvent()
-            );
-
-            if($EventRepo === null)
-            {
-                $uniqid = uniqid('', false);
-                $errorsString = sprintf(
-                    'Not found %s by id: %s',
-                    UsersTableEvent::class,
-                    $command->getEvent()
-                );
-                $this->logger->error($uniqid.': '.$errorsString);
-
-                return $uniqid;
-            }
-
-            $EventRepo->setEntity($command);
-            $EventRepo->setEntityManager($this->entityManager);
-            $Event = $EventRepo->cloneEntity();
-        }
-        else
-        {
-            $Event = new UsersTableEvent();
-            $Event->setEntity($command);
-            $this->entityManager->persist($Event);
-        }
-
-        //        $this->entityManager->clear();
-        //        $this->entityManager->persist($Event);
-
-        /** @var UsersTable $Main */
-        if($Event->getMain())
-        {
-            $Main = $this->entityManager->getRepository(UsersTable::class)
-                ->findOneBy(['event' => $command->getEvent()]);
-
-            if(empty($Main))
-            {
-                $uniqid = uniqid('', false);
-                $errorsString = sprintf(
-                    'Not found %s by event: %s',
-                    UsersTable::class,
-                    $command->getEvent()
-                );
-                $this->logger->error($uniqid.': '.$errorsString);
-
-                return $uniqid;
-            }
-
-        }
-        else
-        {
-
-            $Main = new UsersTable();
-            $this->entityManager->persist($Main);
-            $Event->setMain($Main);
-        }
-
-        /* присваиваем событие корню */
-        $Main->setEvent($Event);
-
-
-        /**
-         * Валидация Event
-         */
-
-        $errors = $this->validator->validate($Event);
-
-        if(count($errors) > 0)
-        {
-            /** Ошибка валидации */
-            $uniqid = uniqid('', false);
-            $this->logger->error(sprintf('%s: %s', $uniqid, $errors), [self::class.':'.__LINE__]);
-
-            return $uniqid;
-        }
-
-        /**
-         * Валидация Main
-         */
-        $errors = $this->validator->validate($Main);
-
-        if(count($errors) > 0)
-        {
-            $uniqid = uniqid('', false);
-            $errorsString = (string) $errors;
-            $this->logger->error($uniqid.': '.$errorsString);
-            return $uniqid;
-        }
-
-
-        $this->entityManager->flush();
+        $this->flush();
 
         /* Отправляем сообщение в шину */
         $this->messageDispatch->dispatch(
-            message: new UsersTableMessage($Main->getId(), $Main->getEvent(), $command->getEvent()),
+            message: new UsersTableMessage($this->main->getId(), $this->main->getEvent(), $command->getEvent()),
             transport: 'users-table'
         );
 
-        return $Main;
+        return $this->main;
     }
 }
