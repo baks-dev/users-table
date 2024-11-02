@@ -10,7 +10,7 @@
 # systemctl stop baks-users-table@1.service
 
 [Unit]
-Description=Symfony messenger users-table %i
+Description=users-table
 StartLimitBurst=5
 StartLimitIntervalSec=0
 
