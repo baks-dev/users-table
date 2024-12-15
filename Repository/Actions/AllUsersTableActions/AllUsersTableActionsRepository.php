@@ -1,17 +1,17 @@
 <?php
 /*
- *  Copyright 2023.  Baks.dev <admin@baks.dev>
- *
+ *  Copyright 2024.  Baks.dev <admin@baks.dev>
+ *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
  *  in the Software without restriction, including without limitation the rights
  *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  *  copies of the Software, and to permit persons to whom the Software is furnished
  *  to do so, subject to the following conditions:
- *
+ *  
  *  The above copyright notice and this permission notice shall be included in all
  *  copies or substantial portions of the Software.
- *
+ *  
  *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  *  FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL THE
@@ -28,8 +28,8 @@ namespace BaksDev\Users\UsersTable\Repository\Actions\AllUsersTableActions;
 use BaksDev\Core\Doctrine\DBALQueryBuilder;
 use BaksDev\Core\Form\Search\SearchDTO;
 use BaksDev\Core\Services\Paginator\PaginatorInterface;
-use BaksDev\Products\Category\Entity\Cover\CategoryProductCover;
 use BaksDev\Products\Category\Entity\CategoryProduct;
+use BaksDev\Products\Category\Entity\Cover\CategoryProductCover;
 use BaksDev\Products\Category\Entity\Trans\CategoryProductTrans;
 use BaksDev\Users\Profile\UserProfile\Entity\Personal\UserProfilePersonal;
 use BaksDev\Users\Profile\UserProfile\Entity\UserProfile;
@@ -40,34 +40,29 @@ use BaksDev\Users\UsersTable\Entity\Actions\UsersTableActions;
 
 final class AllUsersTableActionsRepository implements AllUsersTableActionsInterface
 {
-    private PaginatorInterface $paginator;
-    private DBALQueryBuilder $DBALQueryBuilder;
 
     public function __construct(
-        DBALQueryBuilder $DBALQueryBuilder,
-        PaginatorInterface $paginator,
-    ) {
-
-        $this->paginator = $paginator;
-        $this->DBALQueryBuilder = $DBALQueryBuilder;
-    }
+        private readonly DBALQueryBuilder $DBALQueryBuilder,
+        private readonly PaginatorInterface $paginator,
+    ) {}
 
     /** Метод возвращает пагинатор AllUsersTableActions */
     public function fetchAllUsersTableActionsAssociative(
         SearchDTO $search,
         ?UserProfileUid $profile
-    ): PaginatorInterface {
-        $qb = $this->DBALQueryBuilder->createQueryBuilder(self::class)
+    ): PaginatorInterface
+    {
+        $dbal = $this->DBALQueryBuilder->createQueryBuilder(self::class)
             ->bindLocal();
 
-        $qb->select('actions.id');
-        $qb->addSelect('actions.event');
+        $dbal->select('actions.id');
+        $dbal->addSelect('actions.event');
 
-        $qb->from(UsersTableActions::TABLE, 'actions');
+        $dbal->from(UsersTableActions::class, 'actions');
 
         if($profile)
         {
-            $qb
+            $dbal
                 ->where('actions.profile = :profile')
                 ->setParameter('profile', $profile, UserProfileUid::TYPE);
         }
@@ -75,52 +70,52 @@ final class AllUsersTableActionsRepository implements AllUsersTableActionsInterf
 
         /** Ответственное лицо (Профиль пользователя) */
 
-        $qb->leftJoin(
+        $dbal->leftJoin(
             'actions',
-            UserProfile::TABLE,
+            UserProfile::class,
             'users_profile',
             'users_profile.id = actions.profile'
         );
 
-        $qb->addSelect('users_profile_personal.username AS users_profile_username');
+        $dbal->addSelect('users_profile_personal.username AS users_profile_username');
 
-        $qb->leftJoin(
+        $dbal->leftJoin(
             'users_profile',
-            UserProfilePersonal::TABLE,
+            UserProfilePersonal::class,
             'users_profile_personal',
             'users_profile_personal.event = users_profile.event'
         );
 
 
-        $qb->leftJoin(
+        $dbal->leftJoin(
             'actions',
-            UsersTableActionsEvent::TABLE,
+            UsersTableActionsEvent::class,
             'event',
             'event.id = actions.event'
         );
 
 
-        $qb->addSelect('actions_trans.name AS action_name');
-        $qb->leftJoin(
+        $dbal->addSelect('actions_trans.name AS action_name');
+        $dbal->leftJoin(
             'actions',
-            UsersTableActionsTrans::TABLE,
+            UsersTableActionsTrans::class,
             'actions_trans',
             'actions_trans.event = actions.event AND actions_trans.local = :local'
         );
 
 
-        $qb->leftJoin(
+        $dbal->leftJoin(
             'event',
-            CategoryProduct::TABLE,
+            CategoryProduct::class,
             'category',
             'category.id = event.category'
         );
 
-        $qb->addSelect('trans.name AS category_name');
+        $dbal->addSelect('trans.name AS category_name');
 
-        $qb->leftJoin(
+        $dbal->leftJoin(
             'category',
-            CategoryProductTrans::TABLE,
+            CategoryProductTrans::class,
             'trans',
             'trans.event = category.event AND trans.local = :local'
         );
@@ -128,23 +123,23 @@ final class AllUsersTableActionsRepository implements AllUsersTableActionsInterf
 
         // Обложка
 
-        $qb->addSelect(
+        $dbal->addSelect(
             "
 			CASE
 			   WHEN category_cover.name IS NOT NULL THEN
-					CONCAT ( '/upload/".CategoryProductCover::TABLE."' , '/', category_cover.name)
+					CONCAT ( '/upload/".$dbal->table(CategoryProductCover::class)."' , '/', category_cover.name)
 			   ELSE NULL
 			END AS category_cover_name
 		"
         );
 
-        $qb->addSelect('category_cover.ext AS category_cover_ext');
-        $qb->addSelect('category_cover.cdn AS category_cover_cdn');
+        $dbal->addSelect('category_cover.ext AS category_cover_ext');
+        $dbal->addSelect('category_cover.cdn AS category_cover_cdn');
 
 
-        $qb->leftJoin(
+        $dbal->leftJoin(
             'category',
-            CategoryProductCover::TABLE,
+            CategoryProductCover::class,
             'category_cover',
             'category_cover.event = category.event'
         );
@@ -154,7 +149,7 @@ final class AllUsersTableActionsRepository implements AllUsersTableActionsInterf
         if($search->getQuery())
         {
 
-            $qb
+            $dbal
                 ->createSearchQueryBuilder($search)
                 ->addSearchEqualUid('actions.id')
                 ->addSearchEqualUid('actions.event')
@@ -164,6 +159,6 @@ final class AllUsersTableActionsRepository implements AllUsersTableActionsInterf
 
         }
 
-        return $this->paginator->fetchAllAssociative($qb);
+        return $this->paginator->fetchAllAssociative($dbal);
     }
 }

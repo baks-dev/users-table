@@ -1,17 +1,17 @@
 <?php
 /*
- *  Copyright 2023.  Baks.dev <admin@baks.dev>
- *
+ *  Copyright 2024.  Baks.dev <admin@baks.dev>
+ *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
  *  in the Software without restriction, including without limitation the rights
  *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  *  copies of the Software, and to permit persons to whom the Software is furnished
  *  to do so, subject to the following conditions:
- *
+ *  
  *  The above copyright notice and this permission notice shall be included in all
  *  copies or substantial portions of the Software.
- *
+ *  
  *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  *  FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL THE
@@ -54,7 +54,8 @@ final class MonthUsersTableRepository implements MonthUsersTableInterface
     public function __construct(
         DBALQueryBuilder $DBALQueryBuilder,
         PaginatorInterface $paginator,
-    ) {
+    )
+    {
 
         $this->paginator = $paginator;
         $this->DBALQueryBuilder = $DBALQueryBuilder;
@@ -67,42 +68,44 @@ final class MonthUsersTableRepository implements MonthUsersTableInterface
         UserProfileUid $profile,
         ?UserProfileUid $authority = null,
         bool $other = false,
-    ): PaginatorInterface {
-        $qb = $this->DBALQueryBuilder
+    ): PaginatorInterface
+    {
+
+        $dbal = $this->DBALQueryBuilder
             ->createQueryBuilder(self::class)
             ->bindLocal();
 
-        $qb->addSelect('users_table_month.total AS table_total');
-        $qb->addSelect('users_table_month.date_table AS table_date');
-        $qb->addSelect('users_table_month.money AS table_money');
-        $qb->addSelect('users_table_month.premium AS table_premium');
-        $qb->addSelect('users_table_month.date_table AS table_date');
-        $qb->from(UsersTableMonth::TABLE, 'users_table_month');
+        $dbal->addSelect('users_table_month.total AS table_total');
+        $dbal->addSelect('users_table_month.date_table AS table_date');
+        $dbal->addSelect('users_table_month.money AS table_money');
+        $dbal->addSelect('users_table_month.premium AS table_premium');
+        $dbal->addSelect('users_table_month.date_table AS table_date');
+        $dbal->from(UsersTableMonth::class, 'users_table_month');
 
 
         /**
          * Действие
          */
-        $qb->addSelect('working.id AS table_working_id');
-        $qb->leftJoin(
+        $dbal->addSelect('working.id AS table_working_id');
+        $dbal->leftJoin(
             'users_table_month',
-            UsersTableActionsWorking::TABLE,
+            UsersTableActionsWorking::class,
             'working',
             'working.id = users_table_month.working'
         );
 
-        $qb->addSelect('working_trans.name AS table_working');
-        $qb->leftJoin(
+        $dbal->addSelect('working_trans.name AS table_working');
+        $dbal->leftJoin(
             'working',
-            UsersTableActionsWorkingTrans::TABLE,
+            UsersTableActionsWorkingTrans::class,
             'working_trans',
             'working_trans.working = working.id AND working_trans.local = :local'
         );
 
-        $qb->addSelect('action_event.id AS table_action_id');
-        $qb->leftJoin(
+        $dbal->addSelect('action_event.id AS table_action_id');
+        $dbal->leftJoin(
             'working',
-            UsersTableActionsEvent::TABLE,
+            UsersTableActionsEvent::class,
             'action_event',
             'action_event.id = working.event'
         );
@@ -111,14 +114,14 @@ final class MonthUsersTableRepository implements MonthUsersTableInterface
         /** Табели других пользователей */
         if($authority)
         {
-            $qb->leftJoin(
+            $dbal->leftJoin(
                 'users_table_month',
-                ProfileGroupUsers::TABLE,
+                ProfileGroupUsers::class,
                 'profile_group_users',
                 'profile_group_users.authority = :authority '.($other ? '' : ' AND profile_group_users.profile = :profile')
             );
 
-            $qb
+            $dbal
                 ->andWhere('users_table_month.profile = profile_group_users.profile')
                 ->setParameter('authority', $authority, UserProfileUid::TYPE)
                 ->setParameter('profile', $filter?->getProfile() ?: $profile, UserProfileUid::TYPE);
@@ -126,7 +129,7 @@ final class MonthUsersTableRepository implements MonthUsersTableInterface
             /** Если пользователь авторизован - и передан фильтр по профилю  */
             if($filter?->getProfile())
             {
-                $qb
+                $dbal
                     ->andWhere('users_table_month.profile = :profile')
                     ->setParameter('profile', $filter?->getProfile(), UserProfileUid::TYPE);
             }
@@ -134,41 +137,34 @@ final class MonthUsersTableRepository implements MonthUsersTableInterface
         }
         else
         {
-            $qb
+            $dbal
                 ->andWhere('users_table_month.profile = :profile')
                 ->setParameter('profile', $profile, UserProfileUid::TYPE);
         }
 
-        $qb->addSelect('action_trans.name AS table_action');
+        $dbal->addSelect('action_trans.name AS table_action');
 
-        $qb->leftJoin(
+        $dbal->leftJoin(
             'action_event',
-            UsersTableActionsTrans::TABLE,
+            UsersTableActionsTrans::class,
             'action_trans',
             'action_trans.event = action_event.id AND action_trans.local = :local'
         );
 
-        /*$qb->addSelect('action_trans.name AS table_action');
-        $qb->leftJoin(
-            'action_event',
-            UsersTableActionsTrans::TABLE,
-            'action_trans',
-            'action_trans.event = action_event.id AND action_trans.local = :local'
-        );*/
 
-        $qb->addSelect('category.id AS table_category_id');
-        $qb->leftJoin(
+        $dbal->addSelect('category.id AS table_category_id');
+        $dbal->leftJoin(
             'action_event',
-            CategoryProduct::TABLE,
+            CategoryProduct::class,
             'category',
             'category.id = action_event.category'
         );
 
-        $qb->addSelect('category_trans.name AS table_category');
+        $dbal->addSelect('category_trans.name AS table_category');
 
-        $qb->leftJoin(
+        $dbal->leftJoin(
             'category',
-            CategoryProductTrans::TABLE,
+            CategoryProductTrans::class,
             'category_trans',
             'category_trans.event = category.event AND category_trans.local = :local'
         );
@@ -177,49 +173,56 @@ final class MonthUsersTableRepository implements MonthUsersTableInterface
         // ОТВЕТСТВЕННЫЙ
 
         // UserProfile
-        $qb->addSelect('users_profile.event as users_profile_event');
-        $qb->join(
+        $dbal->addSelect('users_profile.event as users_profile_event');
+        $dbal->join(
             'users_table_month',
-            UserProfile::TABLE,
+            UserProfile::class,
             'users_profile',
             'users_profile.id = users_table_month.profile'
         );
 
         // Info
-        $qb->join(
+        $dbal->join(
             'users_table_month',
-            UserProfileInfo::TABLE,
+            UserProfileInfo::class,
             'users_profile_info',
             'users_profile_info.profile = users_table_month.profile'
         );
 
         // Event
-        $qb->join(
+        $dbal->join(
             'users_profile',
-            UserProfileEvent::TABLE,
+            UserProfileEvent::class,
             'users_profile_event',
             'users_profile_event.id = users_profile.event'
         );
 
         // Personal
-        $qb->addSelect('users_profile_personal.username AS users_profile_username');
+        $dbal->addSelect('users_profile_personal.username AS users_profile_username');
 
-        $qb->join(
+        $dbal->join(
             'users_profile_event',
-            UserProfilePersonal::TABLE,
+            UserProfilePersonal::class,
             'users_profile_personal',
             'users_profile_personal.event = users_profile_event.id'
         );
 
         // Avatar
 
-        $qb->addSelect("CASE WHEN users_profile_avatar.name IS NULL THEN users_profile_avatar.name ELSE CONCAT ( '/upload/".UserProfileAvatar::TABLE."' , '/', users_profile_avatar.name) END AS users_profile_avatar");
-        $qb->addSelect("users_profile_avatar.ext AS users_profile_avatar_ext");
-        $qb->addSelect('users_profile_avatar.cdn AS users_profile_avatar_cdn');
+        $dbal->addSelect("
+            CASE 
+                WHEN users_profile_avatar.name IS NULL 
+                THEN users_profile_avatar.name 
+                ELSE CONCAT ( '/upload/".$dbal->table(UserProfileAvatar::class)."' , '/', users_profile_avatar.name) 
+            END AS users_profile_avatar
+        ");
 
-        $qb->leftJoin(
+        $dbal->addSelect("users_profile_avatar.ext AS users_profile_avatar_ext");
+        $dbal->addSelect('users_profile_avatar.cdn AS users_profile_avatar_cdn');
+
+        $dbal->leftJoin(
             'users_profile_event',
-            UserProfileAvatar::TABLE,
+            UserProfileAvatar::class,
             'users_profile_avatar',
             'users_profile_avatar.event = users_profile_event.id'
         );
@@ -239,10 +242,10 @@ final class MonthUsersTableRepository implements MonthUsersTableInterface
                 ->getTimestamp();
         }
 
-        $qb->andWhere('users_table_month.date_table = :date');
-        $qb->setParameter('date', $date, ParameterType::INTEGER);
+        $dbal->andWhere('users_table_month.date_table = :date');
+        $dbal->setParameter('date', $date, ParameterType::INTEGER);
 
-        return $this->paginator->fetchAllAssociative($qb);
+        return $this->paginator->fetchAllAssociative($dbal);
 
     }
 }

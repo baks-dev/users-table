@@ -15,7 +15,7 @@
 
             {% if item.category_cover_ext is defined and item.category_cover_ext is not null %}
                 {% set img_host =  item.category_cover_cdn == true  ? CDN_HOST : '' %}
-                {% set img_table = '/upload/' ~ constant('BaksDev\\Payment\\Entity\\Cover\\PaymentCover::TABLE') %}
+                {% set img_table = '/upload/payment_cover' %}
                 {% set img_dir = item.category_cover_name %}
                 {% set img_file = (img_host is empty ? '/image.' : '/small.') ~ item.category_cover_ext %}
                 {% set image_path = img_host ~ img_table ~ img_dir ~ img_file %}
