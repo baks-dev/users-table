@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2024.  Baks.dev <admin@baks.dev>
+ *  Copyright 2025.  Baks.dev <admin@baks.dev>
  *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -41,16 +41,45 @@ use BaksDev\Users\UsersTable\Entity\Actions\UsersTableActions;
 final class AllUsersTableActionsRepository implements AllUsersTableActionsInterface
 {
 
+    private ?SearchDTO $search = null;
+
+    private UserProfileUid|false $profile = false;
+
     public function __construct(
         private readonly DBALQueryBuilder $DBALQueryBuilder,
         private readonly PaginatorInterface $paginator,
     ) {}
 
+    public function search(SearchDTO $search): self
+    {
+        $this->search = $search;
+        return $this;
+    }
+
+    /**
+     * Profile
+     */
+    public function profile(UserProfile|UserProfileUid|string $profile): self
+    {
+        if(is_string($profile))
+        {
+            $profile = new UserProfileUid($profile);
+        }
+
+        if($profile instanceof UserProfile)
+        {
+            $profile = $profile->getId();
+        }
+
+        $this->profile = $profile;
+
+        return $this;
+    }
+
+
+
     /** Метод возвращает пагинатор AllUsersTableActions */
-    public function fetchAllUsersTableActionsAssociative(
-        SearchDTO $search,
-        ?UserProfileUid $profile
-    ): PaginatorInterface
+    public function findPaginator(): PaginatorInterface
     {
         $dbal = $this->DBALQueryBuilder->createQueryBuilder(self::class)
             ->bindLocal();
@@ -60,11 +89,11 @@ final class AllUsersTableActionsRepository implements AllUsersTableActionsInterf
 
         $dbal->from(UsersTableActions::class, 'actions');
 
-        if($profile)
+        if($this->profile)
         {
             $dbal
                 ->where('actions.profile = :profile')
-                ->setParameter('profile', $profile, UserProfileUid::TYPE);
+                ->setParameter('profile', $this->profile, UserProfileUid::TYPE);
         }
 
 
@@ -146,11 +175,11 @@ final class AllUsersTableActionsRepository implements AllUsersTableActionsInterf
 
 
         /* Поиск */
-        if($search->getQuery())
+        if($this->search->getQuery())
         {
 
             $dbal
-                ->createSearchQueryBuilder($search)
+                ->createSearchQueryBuilder($this->search)
                 ->addSearchEqualUid('actions.id')
                 ->addSearchEqualUid('actions.event')
                 ->addSearchEqualUid('actions.profile')
