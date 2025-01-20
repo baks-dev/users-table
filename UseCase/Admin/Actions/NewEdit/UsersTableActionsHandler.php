@@ -32,36 +32,24 @@ use BaksDev\Users\UsersTable\Entity\Actions\UsersTableActions;
 use BaksDev\Users\UsersTable\Messenger\Actions\UsersTableActionsMessage;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-final class UsersTableActionsHandler
+final readonly class UsersTableActionsHandler
 {
-    private EntityManagerInterface $entityManager;
-
-    private ValidatorInterface $validator;
-
-    private LoggerInterface $logger;
-
-    private MessageDispatchInterface $messageDispatch;
-
     public function __construct(
-        EntityManagerInterface $entityManager,
-        ValidatorInterface $validator,
-        LoggerInterface $logger,
-        MessageDispatchInterface $messageDispatch
-    ) {
-        $this->entityManager = $entityManager;
-        $this->validator = $validator;
-        $this->logger = $logger;
-        $this->messageDispatch = $messageDispatch;
-
-    }
+        #[Target('usersTableLogger')] private LoggerInterface $logger,
+        private EntityManagerInterface $entityManager,
+        private ValidatorInterface $validator,
+        private MessageDispatchInterface $messageDispatch
+    ) {}
 
     /** @see UsersTableActions */
     public function handle(
         UsersTableActionsDTO $command,
         UserProfileUid|false $profile,
-    ): string|UsersTableActions {
+    ): string|UsersTableActions
+    {
 
         /**
          *  Валидация UsersTableActionsDTO
