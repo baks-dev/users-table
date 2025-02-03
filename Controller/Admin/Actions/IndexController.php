@@ -48,12 +48,14 @@ final class IndexController extends AbstractController
     {
         // Поиск
         $search = new SearchDTO();
-        $searchForm = $this->createForm(
-            SearchForm::class,
-            $search,
-            ['action' => $this->generateUrl('users-table:admin.action.index')]
-        );
-        $searchForm->handleRequest($request);
+
+        $searchForm = $this
+            ->createForm(
+                type: SearchForm::class,
+                data: $search,
+                options: ['action' => $this->generateUrl('users-table:admin.action.index')]
+            )
+            ->handleRequest($request);
 
         // Фильтр
         // $filter = new ProductsStocksFilterDTO($request, $ROLE_ADMIN ? null : $this->getProfileUid());

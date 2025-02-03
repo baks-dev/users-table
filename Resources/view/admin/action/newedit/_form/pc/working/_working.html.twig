@@ -9,9 +9,9 @@
         {{ include(_self|replace({ "_working.html.twig": "_trans.html.twig" })) }}
 
         <div class="d-flex justify-content-between gap-3">
-            {{ form_row(form.coefficient, { label : 'Коэффициет' }) }}
-            {{ form_row(form.norm, { label : 'Дневная норма' }) }}
-            {{ form_row(form.premium, { label : 'Процент премии' }) }}
+            <div class="w-100">{{ form_row(form.coefficient, { label : 'Коэффициет' }) }}</div>
+            <div class="w-100">{{ form_row(form.norm, { label : 'Дневная норма' }) }}</div>
+            <div class="w-100">{{ form_row(form.premium, { label : 'Процент премии' }) }}</div>
         </div>
 
     </div>
