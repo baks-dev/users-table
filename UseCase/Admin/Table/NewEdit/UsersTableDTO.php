@@ -1,17 +1,17 @@
 <?php
 /*
- *  Copyright 2023.  Baks.dev <admin@baks.dev>
- *
+ *  Copyright 2025.  Baks.dev <admin@baks.dev>
+ *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
  *  in the Software without restriction, including without limitation the rights
  *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  *  copies of the Software, and to permit persons to whom the Software is furnished
  *  to do so, subject to the following conditions:
- *
+ *  
  *  The above copyright notice and this permission notice shall be included in all
  *  copies or substantial portions of the Software.
- *
+ *  
  *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  *  FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL THE
@@ -113,9 +113,11 @@ final class UsersTableDTO implements UsersTableEventInterface
         return $this->id;
     }
 
-    public function setId(?UsersTableEventUid $id): void
+    public function setId(?UsersTableEventUid $id): self
     {
         $this->id = $id;
+
+        return $this;
     }
 
     /**
@@ -126,9 +128,11 @@ final class UsersTableDTO implements UsersTableEventInterface
         return $this->profile;
     }
 
-    public function setProfile(UserProfileUid $profile): void
+    public function setProfile(UserProfileUid $profile): self
     {
         $this->profile = $profile;
+
+        return $this;
     }
 
     /**
@@ -139,9 +143,11 @@ final class UsersTableDTO implements UsersTableEventInterface
         return $this->quantity;
     }
 
-    public function setQuantity(int $quantity): void
+    public function setQuantity(int $quantity): self
     {
         $this->quantity = $quantity;
+
+        return $this;
     }
 
 
@@ -153,9 +159,11 @@ final class UsersTableDTO implements UsersTableEventInterface
         return $this->date;
     }
 
-    public function setDate(?DateTimeImmutable $date): void
+    public function setDate(?DateTimeImmutable $date): self
     {
         $this->date = $date ?: new DateTimeImmutable();
+
+        return $this;
     }
 
 
@@ -167,9 +175,11 @@ final class UsersTableDTO implements UsersTableEventInterface
         return $this->action;
     }
 
-    public function setAction(UsersTableActionsEventUid $action): void
+    public function setAction(UsersTableActionsEventUid $action): self
     {
         $this->action = $action;
+
+        return $this;
     }
 
 
@@ -181,7 +191,7 @@ final class UsersTableDTO implements UsersTableEventInterface
         return $this->working;
     }
 
-    public function setWorking(UsersTableActionsWorkingUid|string $working): void
+    public function setWorking(UsersTableActionsWorkingUid|string $working): self
     {
 
         if(is_string($working))
@@ -190,6 +200,8 @@ final class UsersTableDTO implements UsersTableEventInterface
         }
 
         $this->working = $working;
+
+        return $this;
     }
 
 
