@@ -129,7 +129,7 @@ final class UsersTableActionsChoiceRepository implements UsersTableActionsChoice
             $dbal
                 ->setParameter(
                     key: 'category',
-                    value: $category,
+                    value: $this->category,
                     type: CategoryProductUid::TYPE
                 );
         }
@@ -141,14 +141,14 @@ final class UsersTableActionsChoiceRepository implements UsersTableActionsChoice
             'trans.event = actions.event AND trans.local = :local'
         );
 
+
+        $dbal
+            ->select('actions.event AS value')
+            ->addSelect('trans.name AS attr');
+
         return $dbal
             ->enableCache('users-table', 86400)
             ->fetchAllHydrate(UsersTableActionsEventUid::class);
 
-
-        //$select = sprintf('new %s(actions.event, trans.name)', UsersTableActionsEventUid::class);
-
-        /* Кешируем результат ORM */
-        //return $qb->enableCache('users-table', 86400)->getResult();
     }
 }
