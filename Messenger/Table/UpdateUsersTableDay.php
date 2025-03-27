@@ -69,6 +69,8 @@ final readonly class UpdateUsersTableDay
             return;
         }
 
+        $this->entityManager->clear();
+
 
         $UserTableDayDTO = new UsersTableDayDTO();
         $UserTableDayDTO->setProfile($UsersTableEvent->getProfile());

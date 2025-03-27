@@ -55,7 +55,9 @@ final readonly class UpdateUsersTableMonth
     public function __invoke(UsersTableMessage $message): void
     {
         /** Получаем добавленный табель пользователя */
-        $UsersTableEvent = $this->entityManager->getRepository(UsersTableEvent::class)->find($message->getEvent());
+        $UsersTableEvent = $this->entityManager
+            ->getRepository(UsersTableEvent::class)
+            ->find($message->getEvent());
 
         if(!$UsersTableEvent)
         {
@@ -68,6 +70,7 @@ final readonly class UpdateUsersTableMonth
             );
         }
 
+        $this->entityManager->clear();
 
         $UsersTableMonthDTO = new UsersTableMonthDTO();
         $UsersTableMonthDTO->setProfile($UsersTableEvent->getProfile());
@@ -77,11 +80,12 @@ final readonly class UpdateUsersTableMonth
 
         /** Получаем Ежемесячный табель сотрудника */
 
-        $UsersTableMonth = $this->entityManager->getRepository(UsersTableMonth::class)->findOneBy([
-            'profile' => $UsersTableMonthDTO->getProfile(),
-            'working' => $UsersTableMonthDTO->getWorking(),
-            'date' => $UsersTableMonthDTO->getDate()
-        ]);
+        $UsersTableMonth = $this->entityManager->getRepository(UsersTableMonth::class)
+            ->findOneBy([
+                'profile' => $UsersTableMonthDTO->getProfile(),
+                'working' => $UsersTableMonthDTO->getWorking(),
+                'date' => $UsersTableMonthDTO->getDate()
+            ]);
 
         $UsersTableMonth?->getDto($UsersTableMonthDTO);
 
@@ -110,11 +114,13 @@ final readonly class UpdateUsersTableMonth
 
         /** Получаем дневной табель сотрудника */
         $UsersTableDateDay = $UsersTableEvent->getDate()->setTime(0, 0)->getTimestamp();
-        $UsersTableDay = $this->entityManager->getRepository(UsersTableDay::class)->findOneBy([
-            'profile' => $UsersTableMonthDTO->getProfile(),
-            'working' => $UsersTableMonthDTO->getWorking(),
-            'date' => $UsersTableDateDay
-        ]);
+        $UsersTableDay = $this->entityManager
+            ->getRepository(UsersTableDay::class)
+            ->findOneBy([
+                'profile' => $UsersTableMonthDTO->getProfile(),
+                'working' => $UsersTableMonthDTO->getWorking(),
+                'date' => $UsersTableDateDay
+            ]);
 
 
         if(empty($UsersTableEvent->getQuantity()))
