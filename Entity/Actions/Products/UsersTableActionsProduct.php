@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2023.  Baks.dev <admin@baks.dev>
+ *  Copyright 2025.  Baks.dev <admin@baks.dev>
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -38,8 +38,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Table(name: 'users_table_actions_product')]
 class UsersTableActionsProduct extends EntityEvent
 {
-    public const TABLE = 'users_table_actions_product';
-
     /**
      * Связь на событие
      */
