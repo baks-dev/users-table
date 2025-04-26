@@ -49,7 +49,7 @@ class UsersTableActionsModify extends EntityEvent
     /** ID события */
     #[Assert\NotBlank]
     #[ORM\Id]
-    #[ORM\OneToOne(inversedBy: 'modify', targetEntity: UsersTableActionsEvent::class)]
+    #[ORM\OneToOne(targetEntity: UsersTableActionsEvent::class, inversedBy: 'modify')]
     #[ORM\JoinColumn(name: 'event', referencedColumnName: 'id')]
     private UsersTableActionsEvent $event;
 
