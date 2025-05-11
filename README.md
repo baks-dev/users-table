@@ -37,4 +37,3 @@ $ php bin/phpunit --group=users-table
 
 [README.md](README.md)
 The MIT License (MIT). Обратитесь к [Файлу лицензии](LICENSE.md) за дополнительной информацией.
-
