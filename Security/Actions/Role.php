@@ -36,7 +36,9 @@ use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 final class Role implements RoleInterface, MenuAdminInterface
 {
     /** Этапы производства продукции */
-    public const ROLE = 'ROLE_USERS_TABLE_ACTIONS';
+    public const string ROLE = 'ROLE_USERS_TABLE_ACTIONS';
+
+    public const string KEY = 'xwWCdKXaE';
 
     public function getRole(): string
     {
@@ -52,6 +54,14 @@ final class Role implements RoleInterface, MenuAdminInterface
     public function getPath(): string
     {
         return 'users-table:admin.action.index';
+    }
+
+    /**
+     * Метод возвращает ключ раздела (для меню телеграм)
+     */
+    public function getPathKey(): string
+    {
+        return self::KEY;
     }
 
     /**
