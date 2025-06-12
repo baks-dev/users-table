@@ -32,8 +32,6 @@ interface AllUsersTableActionsInterface
 {
     public function search(SearchDTO $search): self;
 
-    public function profile(UserProfile|UserProfileUid|string $profile): self;
-
     /** Метод возвращает пагинатор AllUsersTableActions */
     public function findPaginator(): PaginatorInterface;
 }

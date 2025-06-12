@@ -64,8 +64,6 @@ final class IndexController extends AbstractController
 
         // Получаем список
 
-        $this->isAdmin() ?: $allUsersTableActions->profile($this->getProfileUid());
-
         $UsersTableActions = $allUsersTableActions
             ->search($search)
             ->findPaginator();

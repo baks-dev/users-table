@@ -33,6 +33,7 @@ use BaksDev\Products\Category\Entity\Cover\CategoryProductCover;
 use BaksDev\Products\Category\Entity\Trans\CategoryProductTrans;
 use BaksDev\Users\Profile\UserProfile\Entity\Personal\UserProfilePersonal;
 use BaksDev\Users\Profile\UserProfile\Entity\UserProfile;
+use BaksDev\Users\Profile\UserProfile\Repository\UserProfileTokenStorage\UserProfileTokenStorageInterface;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use BaksDev\Users\UsersTable\Entity\Actions\Event\UsersTableActionsEvent;
 use BaksDev\Users\UsersTable\Entity\Actions\Trans\UsersTableActionsTrans;
@@ -40,43 +41,20 @@ use BaksDev\Users\UsersTable\Entity\Actions\UsersTableActions;
 
 final class AllUsersTableActionsRepository implements AllUsersTableActionsInterface
 {
-
     private ?SearchDTO $search = null;
-
-    private UserProfileUid|false $profile = false;
 
     public function __construct(
         private readonly DBALQueryBuilder $DBALQueryBuilder,
         private readonly PaginatorInterface $paginator,
+        private readonly UserProfileTokenStorageInterface $UserProfileTokenStorage
     ) {}
 
     public function search(SearchDTO $search): self
     {
         $this->search = $search;
-        return $this;
-    }
-
-    /**
-     * Profile
-     */
-    public function profile(UserProfile|UserProfileUid|string $profile): self
-    {
-        if(is_string($profile))
-        {
-            $profile = new UserProfileUid($profile);
-        }
-
-        if($profile instanceof UserProfile)
-        {
-            $profile = $profile->getId();
-        }
-
-        $this->profile = $profile;
 
         return $this;
     }
-
-
 
     /** Метод возвращает пагинатор AllUsersTableActions */
     public function findPaginator(): PaginatorInterface
@@ -84,17 +62,16 @@ final class AllUsersTableActionsRepository implements AllUsersTableActionsInterf
         $dbal = $this->DBALQueryBuilder->createQueryBuilder(self::class)
             ->bindLocal();
 
-        $dbal->select('actions.id');
-        $dbal->addSelect('actions.event');
-
-        $dbal->from(UsersTableActions::class, 'actions');
-
-        if($this->profile)
-        {
-            $dbal
-                ->where('actions.profile = :profile')
-                ->setParameter('profile', $this->profile, UserProfileUid::TYPE);
-        }
+        $dbal
+            ->select('actions.id')
+            ->addSelect('actions.event')
+            ->from(UsersTableActions::class, 'actions')
+            ->where('actions.profile = :profile')
+            ->setParameter(
+                key: 'profile',
+                value: $this->UserProfileTokenStorage->getProfile(),
+                type: UserProfileUid::TYPE,
+            );
 
 
         /** Ответственное лицо (Профиль пользователя) */
@@ -103,51 +80,52 @@ final class AllUsersTableActionsRepository implements AllUsersTableActionsInterf
             'actions',
             UserProfile::class,
             'users_profile',
-            'users_profile.id = actions.profile'
+            'users_profile.id = actions.profile',
         );
 
-        $dbal->addSelect('users_profile_personal.username AS users_profile_username');
-
-        $dbal->leftJoin(
-            'users_profile',
-            UserProfilePersonal::class,
-            'users_profile_personal',
-            'users_profile_personal.event = users_profile.event'
-        );
+        $dbal
+            ->addSelect('users_profile_personal.username AS users_profile_username')
+            ->leftJoin(
+                'users_profile',
+                UserProfilePersonal::class,
+                'users_profile_personal',
+                'users_profile_personal.event = users_profile.event',
+            );
 
 
         $dbal->leftJoin(
             'actions',
             UsersTableActionsEvent::class,
             'event',
-            'event.id = actions.event'
+            'event.id = actions.event',
         );
 
 
-        $dbal->addSelect('actions_trans.name AS action_name');
-        $dbal->leftJoin(
-            'actions',
-            UsersTableActionsTrans::class,
-            'actions_trans',
-            'actions_trans.event = actions.event AND actions_trans.local = :local'
-        );
+        $dbal
+            ->addSelect('actions_trans.name AS action_name')
+            ->leftJoin(
+                'actions',
+                UsersTableActionsTrans::class,
+                'actions_trans',
+                'actions_trans.event = actions.event AND actions_trans.local = :local',
+            );
 
 
         $dbal->leftJoin(
             'event',
             CategoryProduct::class,
             'category',
-            'category.id = event.category'
+            'category.id = event.category',
         );
 
-        $dbal->addSelect('trans.name AS category_name');
-
-        $dbal->leftJoin(
-            'category',
-            CategoryProductTrans::class,
-            'trans',
-            'trans.event = category.event AND trans.local = :local'
-        );
+        $dbal
+            ->addSelect('trans.name AS category_name')
+            ->leftJoin(
+                'category',
+                CategoryProductTrans::class,
+                'trans',
+                'trans.event = category.event AND trans.local = :local',
+            );
 
 
         // Обложка
@@ -159,19 +137,18 @@ final class AllUsersTableActionsRepository implements AllUsersTableActionsInterf
 					CONCAT ( '/upload/".$dbal->table(CategoryProductCover::class)."' , '/', category_cover.name)
 			   ELSE NULL
 			END AS category_cover_name
-		"
+		",
         );
 
-        $dbal->addSelect('category_cover.ext AS category_cover_ext');
-        $dbal->addSelect('category_cover.cdn AS category_cover_cdn');
-
-
-        $dbal->leftJoin(
-            'category',
-            CategoryProductCover::class,
-            'category_cover',
-            'category_cover.event = category.event'
-        );
+        $dbal
+            ->addSelect('category_cover.ext AS category_cover_ext')
+            ->addSelect('category_cover.cdn AS category_cover_cdn')
+            ->leftJoin(
+                'category',
+                CategoryProductCover::class,
+                'category_cover',
+                'category_cover.event = category.event',
+            );
 
 
         /* Поиск */

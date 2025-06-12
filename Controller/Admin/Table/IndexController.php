@@ -49,23 +49,30 @@ final class IndexController extends AbstractController
         int $page = 0,
     ): Response
     {
-
-
         // Поиск
+
         $search = new SearchDTO();
 
         $searchForm = $this
             ->createForm(
                 type: SearchForm::class,
                 data: $search,
-                options: ['action' => $this->generateUrl('users-table:admin.table.index')]
+                options: ['action' => $this->generateUrl('users-table:admin.table.index')],
             )
             ->handleRequest($request);
 
         // Фильтр
+
         $filter = new UserTableFilterDTO($request, $this->getProfileUid());
-        $filterForm = $this->createForm(UserTableFilterForm::class, $filter);
-        $filterForm->handleRequest($request);
+
+        $filterForm = $this
+            ->createForm(
+                type: UserTableFilterForm::class,
+                data: $filter,
+                options: ['action' => $this->generateUrl('users-table:admin.table.index')],
+            )
+            ->handleRequest($request);
+
 
         if($filterForm->isSubmitted())
         {
@@ -83,20 +90,17 @@ final class IndexController extends AbstractController
         }
 
         // Получаем список
-        $UsersTable = $allUsersTable->fetchAllUsersTableAssociative(
-            $search,
-            $filter,
-            $this->getCurrentProfileUid(),
-            $this->getProfileUid(),
-            $this->isGranted('ROLE_USERS_TABLE_OTHER')
-        );
+        $UsersTable = $allUsersTable
+            ->search($search)
+            ->filter($filter)
+            ->findAll($this->isGranted('ROLE_USERS_TABLE_OTHER'));
 
         return $this->render(
             [
                 'query' => $UsersTable,
                 'search' => $searchForm->createView(),
                 'filter' => $filterForm->createView(),
-            ]
+            ],
         );
     }
 }
