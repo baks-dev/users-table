@@ -25,31 +25,46 @@ declare(strict_types=1);
 
 namespace BaksDev\Users\UsersTable\UseCase\Admin\Actions\NewEdit;
 
-use BaksDev\Core\Messenger\MessageDispatchInterface;
-use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
+use BaksDev\Core\Entity\AbstractHandler;
 use BaksDev\Users\UsersTable\Entity\Actions\Event\UsersTableActionsEvent;
 use BaksDev\Users\UsersTable\Entity\Actions\UsersTableActions;
 use BaksDev\Users\UsersTable\Messenger\Actions\UsersTableActionsMessage;
-use Doctrine\ORM\EntityManagerInterface;
-use Psr\Log\LoggerInterface;
-use Symfony\Component\DependencyInjection\Attribute\Target;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
+use BaksDev\Users\UsersTable\Type\Actions\Id\UsersTableActionsUid;
 
-final readonly class UsersTableActionsHandler
+final  class UsersTableActionsHandler extends AbstractHandler
 {
-    public function __construct(
-        #[Target('usersTableLogger')] private LoggerInterface $logger,
-        private EntityManagerInterface $entityManager,
-        private ValidatorInterface $validator,
-        private MessageDispatchInterface $messageDispatch
-    ) {}
-
     /** @see UsersTableActions */
-    public function handle(
-        UsersTableActionsDTO $command,
-        UserProfileUid|false $profile,
-    ): string|UsersTableActions
+    public function handle(UsersTableActionsDTO $command): string|UsersTableActions
     {
+        $UsersTableActions = new UsersTableActions();
+
+        /** Если передан идентификатор Application - присваиваем через конструктор корню */
+        if(true === ($command->getApplication() instanceof UsersTableActionsUid))
+        {
+            $UsersTableActions = new UsersTableActions($command->getApplication());
+        }
+
+        $this
+            ->setCommand($command)
+            ->preEventPersistOrUpdate($UsersTableActions, UsersTableActionsEvent::class);
+
+        /* Валидация всех объектов */
+        if($this->validatorCollection->isInvalid())
+        {
+            return $this->validatorCollection->getErrorUniqid();
+        }
+
+        $this->flush();
+
+        /* Отправляем сообщение в шину */
+        $this->messageDispatch->dispatch(
+            message: new UsersTableActionsMessage($this->main->getId(), $this->main->getEvent(), $command->getEvent()),
+            transport: 'users-table',
+        );
+
+
+        return $this->main;
+
 
         /**
          *  Валидация UsersTableActionsDTO
@@ -79,8 +94,8 @@ final readonly class UsersTableActionsHandler
                     $uniqid.': Событие UsersTableActionsEvent не найдено',
                     [
                         self::class.':'.__LINE__,
-                        $command->getEvent()
-                    ]
+                        $command->getEvent(),
+                    ],
                 );
 
                 return $uniqid;
@@ -124,8 +139,8 @@ final readonly class UsersTableActionsHandler
                     [
                         self::class.':'.__LINE__,
                         $command->getEvent(),
-                        $profile
-                    ]
+                        $profile,
+                    ],
                 );
 
                 return $uniqid;
@@ -178,7 +193,7 @@ final readonly class UsersTableActionsHandler
         /* Отправляем сообщение в шину */
         $this->messageDispatch->dispatch(
             message: new UsersTableActionsMessage($Main->getId(), $Main->getEvent(), $command->getEvent()),
-            transport: 'users-table'
+            transport: 'users-table',
         );
 
 

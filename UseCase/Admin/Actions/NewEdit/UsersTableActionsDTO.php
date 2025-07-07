@@ -1,17 +1,17 @@
 <?php
 /*
- *  Copyright 2023.  Baks.dev <admin@baks.dev>
- *
+ *  Copyright 2025.  Baks.dev <admin@baks.dev>
+ *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
  *  in the Software without restriction, including without limitation the rights
  *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  *  copies of the Software, and to permit persons to whom the Software is furnished
  *  to do so, subject to the following conditions:
- *
+ *  
  *  The above copyright notice and this permission notice shall be included in all
  *  copies or substantial portions of the Software.
- *
+ *  
  *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  *  FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL THE
@@ -29,6 +29,8 @@ use BaksDev\Core\Type\Locale\Locale;
 use BaksDev\Products\Category\Type\Id\CategoryProductUid;
 use BaksDev\Users\UsersTable\Entity\Actions\Event\UsersTableActionsEventInterface;
 use BaksDev\Users\UsersTable\Type\Actions\Event\UsersTableActionsEventUid;
+use BaksDev\Users\UsersTable\Type\Actions\Id\UsersTableActionsUid;
+use BaksDev\Users\UsersTable\UseCase\Admin\Actions\NewEdit\Profile\UsersTableActionsProfileDTO;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -41,12 +43,16 @@ final class UsersTableActionsDTO implements UsersTableActionsEventInterface
     #[Assert\Uuid]
     private ?UsersTableActionsEventUid $id = null;
 
+
+    /** Идентификатор производства по заявкам */
+    #[Assert\Uuid]
+    private ?UsersTableActionsUid $application = null;
+
     /**
      * Категория производства
      */
-    #[Assert\NotBlank]
     #[Assert\Uuid]
-    private CategoryProductUid $category;
+    private ?CategoryProductUid $category = null;
 
     /**
      * Действия
@@ -55,26 +61,36 @@ final class UsersTableActionsDTO implements UsersTableActionsEventInterface
     private ArrayCollection $working;
 
 
-    //    /**
-    //     * Продукция для привязки к процессу
-    //     */
-    //    #[Assert\Valid]
-    //    private ArrayCollection $product;
-
     /**
      * Продукция для привязки к процессу
      */
     #[Assert\Valid]
     private ArrayCollection $translate;
 
+    /**
+     * Идентификатор бизнес-профиля
+     */
+    private UsersTableActionsProfileDTO $profile;
+
 
     public function __construct()
     {
         $this->working = new ArrayCollection();
-        //$this->product = new ArrayCollection();
         $this->translate = new ArrayCollection();
+        $this->profile = new UsersTableActionsProfileDTO();
     }
 
+
+    public function getApplication(): ?UsersTableActionsUid
+    {
+        return $this->application;
+    }
+
+    public function setApplication(UsersTableActionsUid $application): self
+    {
+        $this->application = $application;
+        return $this;
+    }
 
     /**
      * Идентификатор события.
@@ -94,14 +110,13 @@ final class UsersTableActionsDTO implements UsersTableActionsEventInterface
      * Категория производства
      */
 
-    public function getCategory(): CategoryProductUid
+    public function getCategory(): ?CategoryProductUid
     {
         return $this->category;
     }
 
-    public function setCategory(CategoryProductUid|string $category): void
+    public function setCategory(CategoryProductUid|string|null $category): void
     {
-
         if(is_string($category))
         {
             $category = new CategoryProductUid($category);
@@ -143,39 +158,10 @@ final class UsersTableActionsDTO implements UsersTableActionsEventInterface
         $this->working->removeElement($working);
     }
 
-
-
-    //    /**
-    //     * Продукция для привязки к процессу
-    //     */
-    //    public function getProduct(): ArrayCollection
-    //    {
-    //        return $this->product;
-    //    }
-    //
-    //    public function setProduct(ArrayCollection $product): self
-    //    {
-    //        $this->product = $product;
-    //        return $this;
-    //    }
-
-    //    public function addProduct(Products\UsersTableActionsProductDTO $product): void
-    //    {
-    //        $filter = $this->product->filter(function(Products\UsersTableActionsProductDTO $element) use ($product)
-    //        {
-    //            return $product->getProduct()->equals($element->getProduct());
-    //        });
-    //
-    //        if($filter->isEmpty())
-    //        {
-    //            $this->product->add($product);
-    //        }
-    //    }
-    //
-    //    public function removeProduct(Products\UsersTableActionsProductDTO $product): void
-    //    {
-    //        $this->product->removeElement($product);
-    //    }
+    public function getProfile(): UsersTableActionsProfileDTO
+    {
+        return $this->profile;
+    }
 
 
     /** Перевод */

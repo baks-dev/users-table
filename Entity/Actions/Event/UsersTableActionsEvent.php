@@ -30,6 +30,7 @@ use BaksDev\Core\Type\Locale\Locale;
 use BaksDev\Products\Category\Type\Id\CategoryProductUid;
 use BaksDev\Users\UsersTable\Entity\Actions\Modify\UsersTableActionsModify;
 use BaksDev\Users\UsersTable\Entity\Actions\Products\UsersTableActionsProduct;
+use BaksDev\Users\UsersTable\Entity\Actions\Profile\UsersTableActionsProfile;
 use BaksDev\Users\UsersTable\Entity\Actions\Trans\UsersTableActionsTrans;
 use BaksDev\Users\UsersTable\Entity\Actions\UsersTableActions;
 use BaksDev\Users\UsersTable\Entity\Actions\Working\UsersTableActionsWorking;
@@ -62,10 +63,9 @@ class UsersTableActionsEvent extends EntityEvent
     /**
      * Категория производства
      */
-    #[Assert\NotBlank]
     #[Assert\Uuid]
-    #[ORM\Column(type: CategoryProductUid::TYPE)]
-    private CategoryProductUid $category;
+    #[ORM\Column(type: CategoryProductUid::TYPE, nullable: true)]
+    private ?CategoryProductUid $category = null;
 
     /**
      * Модификатор
@@ -93,11 +93,18 @@ class UsersTableActionsEvent extends EntityEvent
     #[ORM\OneToMany(targetEntity: UsersTableActionsTrans::class, mappedBy: 'event', cascade: ['all'], fetch: 'EAGER')]
     private Collection $translate;
 
+    /**
+     * Идентификатор бизнес-профиля
+     */
+    #[ORM\OneToOne(targetEntity: UsersTableActionsProfile::class, mappedBy: 'event', cascade: ['all'])]
+    private ?UsersTableActionsProfile $profile;
+
 
     public function __construct()
     {
         $this->id = new UsersTableActionsEventUid();
         $this->modify = new UsersTableActionsModify($this);
+        $this->profile = new UsersTableActionsProfile($this);
     }
 
     public function __clone()
@@ -147,20 +154,4 @@ class UsersTableActionsEvent extends EntityEvent
 
         throw new InvalidArgumentException(sprintf('Class %s interface error', $dto::class));
     }
-
-    public function getNameByLocale(Locale $locale): ?string
-    {
-        $lng = (string) $locale;
-
-
-        //        if (!isset($this->translate[$locale])) {
-        //            throw new \InvalidArgumentException("Symbol is not traded on this market.");
-        //        }
-
-        //        return $this->stocks[$symbol];
-
-
-        return 'temp';
-    }
-
 }

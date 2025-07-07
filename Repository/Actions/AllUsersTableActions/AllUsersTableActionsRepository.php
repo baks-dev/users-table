@@ -36,6 +36,7 @@ use BaksDev\Users\Profile\UserProfile\Entity\UserProfile;
 use BaksDev\Users\Profile\UserProfile\Repository\UserProfileTokenStorage\UserProfileTokenStorageInterface;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use BaksDev\Users\UsersTable\Entity\Actions\Event\UsersTableActionsEvent;
+use BaksDev\Users\UsersTable\Entity\Actions\Profile\UsersTableActionsProfile;
 use BaksDev\Users\UsersTable\Entity\Actions\Trans\UsersTableActionsTrans;
 use BaksDev\Users\UsersTable\Entity\Actions\UsersTableActions;
 
@@ -65,8 +66,19 @@ final class AllUsersTableActionsRepository implements AllUsersTableActionsInterf
         $dbal
             ->select('actions.id')
             ->addSelect('actions.event')
-            ->from(UsersTableActions::class, 'actions')
-            ->where('actions.profile = :profile')
+            ->from(UsersTableActions::class, 'actions')//->where('actions.profile = :profile')
+        ;
+
+
+        $dbal->leftJoin(
+            'actions',
+            UsersTableActionsProfile::class,
+            'actions_profile',
+            'actions_profile.event = actions.event',
+        );
+
+        $dbal
+            ->andWhere('actions_profile.value IS NULL OR actions_profile.value = :profile')
             ->setParameter(
                 key: 'profile',
                 value: $this->UserProfileTokenStorage->getProfile(),

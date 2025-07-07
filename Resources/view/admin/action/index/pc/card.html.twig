@@ -26,7 +26,14 @@
                  data-bg="{{ image_path }}">
             </div>
 
-            {{ item.category_name }}
+            {% if item.category_name %}
+                {{ item.category_name }}
+            {% else %}
+                <span class="badge text-bg-warning">Без категории</span>
+            {% endif %}
+
+
+
         </div>
 
 
@@ -44,7 +51,11 @@
 
     {% if is_granted('ROLE_ADMIN') %}
         <td>
-            {{ item.users_profile_username }}
+            {% if item.users_profile_username %}
+                {{ item.users_profile_username }}
+            {% else %}
+                <span class="badge text-bg-warning">Общий</span>
+            {% endif %}
         </td>
     {% endif %}
 
