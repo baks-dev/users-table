@@ -22,26 +22,26 @@
  *
  */
 
-namespace BaksDev\Users\UsersTable\Repository\Actions\UsersTableActionsChoice;
+declare(strict_types=1);
 
-use BaksDev\Products\Category\Entity\CategoryProduct;
-use BaksDev\Products\Category\Type\Id\CategoryProductUid;
-use BaksDev\Users\Profile\UserProfile\Entity\UserProfile;
-use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
-use BaksDev\Users\UsersTable\Type\Actions\Event\UsersTableActionsEventUid;
-use Generator;
+namespace BaksDev\Users\UsersTable\Repository\Actions\UsersTableActionsChoice\Tests;
 
-interface UsersTableActionsChoiceInterface
+use BaksDev\Users\UsersTable\Repository\Actions\UsersTableActionsChoice\UsersTableActionsChoiceInterface;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\DependencyInjection\Attribute\When;
+
+/**
+ * @group users-table
+ */
+#[When(env: 'test')]
+class UserTableActionsChoiceRepositoryTest extends KernelTestCase
 {
-    public function forProfile(UserProfile|UserProfileUid|string $profile): self;
+    public function testUseCase(): void
+    {
+        /** @var UsersTableActionsChoiceInterface $UsersTableActionsChoiceInterface */
+        $UsersTableActionsChoiceInterface = self::getContainer()->get(UsersTableActionsChoiceInterface::class);
 
-    public function forCategory(CategoryProduct|CategoryProductUid|string $category): self;
-
-    /**
-     * Метод возвращает коллекцию идентификаторов активных процессов производства
-     *
-     * @return Generator{int, UsersTableActionsEventUid}|false
-     */
-    public function getCollection(): Generator|false;
-
+        self::assertTrue(true);
+        return;
+    }
 }
