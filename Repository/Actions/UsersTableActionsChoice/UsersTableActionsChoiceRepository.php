@@ -19,6 +19,7 @@
  *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
+ *
  */
 
 declare(strict_types=1);
@@ -32,6 +33,7 @@ use BaksDev\Users\Profile\UserProfile\Entity\UserProfile;
 use BaksDev\Users\Profile\UserProfile\Repository\UserProfileTokenStorage\UserProfileTokenStorageInterface;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use BaksDev\Users\UsersTable\Entity\Actions\Event\UsersTableActionsEvent;
+use BaksDev\Users\UsersTable\Entity\Actions\Profile\UsersTableActionsProfile;
 use BaksDev\Users\UsersTable\Entity\Actions\Trans\UsersTableActionsTrans;
 use BaksDev\Users\UsersTable\Entity\Actions\UsersTableActions;
 use BaksDev\Users\UsersTable\Type\Actions\Event\UsersTableActionsEventUid;
@@ -95,9 +97,10 @@ final class UsersTableActionsChoiceRepository implements UsersTableActionsChoice
         return $this;
     }
 
-
     /**
      * Метод возвращает коллекцию идентификаторов активных процессов производства
+     *
+     * @return Generator{int, UsersTableActionsEventUid}|false
      */
     public function getCollection(): Generator|false
     {
@@ -107,12 +110,20 @@ final class UsersTableActionsChoiceRepository implements UsersTableActionsChoice
             ->bindLocal();
 
         $dbal
-            ->from(UsersTableActions::class, 'actions')
-            ->where('actions.profile = :profile')
+            ->from(UsersTableActions::class, 'actions');
+
+        $dbal
+            ->join(
+                'actions',
+                UsersTableActionsProfile::class,
+                'actions_profile',
+                'actions_profile.event = actions.event',
+            )
+            ->where('actions_profile.value = :profile')
             ->setParameter(
-                'profile',
-                $this->profile ?: $this->UserProfileTokenStorage->getProfile(),
-                UserProfileUid::TYPE
+                key: 'profile',
+                value: $this->profile ?: $this->UserProfileTokenStorage->getProfile(),
+                type: UserProfileUid::TYPE,
             );
 
         $dbal
@@ -149,6 +160,5 @@ final class UsersTableActionsChoiceRepository implements UsersTableActionsChoice
         return $dbal
             ->enableCache('users-table', 86400)
             ->fetchAllHydrate(UsersTableActionsEventUid::class);
-
     }
 }

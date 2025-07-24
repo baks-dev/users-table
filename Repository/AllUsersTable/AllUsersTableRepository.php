@@ -19,6 +19,7 @@
  *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
+ *
  */
 
 declare(strict_types=1);
@@ -30,7 +31,6 @@ use BaksDev\Core\Form\Search\SearchDTO;
 use BaksDev\Core\Services\Paginator\PaginatorInterface;
 use BaksDev\Products\Category\Entity\CategoryProduct;
 use BaksDev\Products\Category\Entity\Trans\CategoryProductTrans;
-use BaksDev\Users\Profile\Group\Entity\Users\ProfileGroupUsers;
 use BaksDev\Users\Profile\UserProfile\Entity\Event\Avatar\UserProfileAvatar;
 use BaksDev\Users\Profile\UserProfile\Entity\Event\Info\UserProfileInfo;
 use BaksDev\Users\Profile\UserProfile\Entity\Event\Personal\UserProfilePersonal;
@@ -74,7 +74,6 @@ final class AllUsersTableRepository implements AllUsersTableInterface
         return $this;
     }
 
-
     /** Метод возвращает пагинатор UsersTable */
     public function findAll(bool $other = false): PaginatorInterface
     {
@@ -116,7 +115,7 @@ final class AllUsersTableRepository implements AllUsersTableInterface
             ->andWhere('DATE(event.date_table) = :date_between')
             ->setParameter(
                 key: 'date_between',
-                value: ($filter && $filter->getDate()) ? $filter->getDate() : new DateTimeImmutable(),
+                value: ($this->filter && $this->filter->getDate()) ? $this->filter->getDate() : new DateTimeImmutable(),
                 type: Types::DATE_IMMUTABLE,
             );
 
