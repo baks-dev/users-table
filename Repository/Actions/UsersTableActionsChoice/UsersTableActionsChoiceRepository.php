@@ -73,7 +73,7 @@ final class UsersTableActionsChoiceRepository implements UsersTableActionsChoice
         return $this;
     }
 
-    public function forCategory(CategoryProduct|CategoryProductUid|string $category): self
+    public function forCategory(CategoryProduct|CategoryProductUid|string|null $category): self
     {
         if(empty($category))
         {
@@ -97,10 +97,9 @@ final class UsersTableActionsChoiceRepository implements UsersTableActionsChoice
         return $this;
     }
 
+
     /**
      * Метод возвращает коллекцию идентификаторов активных процессов производства
-     *
-     * @return Generator{int, UsersTableActionsEventUid}|false
      */
     public function getCollection(): Generator|false
     {
@@ -110,30 +109,43 @@ final class UsersTableActionsChoiceRepository implements UsersTableActionsChoice
             ->bindLocal();
 
         $dbal
-            ->from(UsersTableActions::class, 'actions');
+            ->from(UsersTableActions::class, 'actions')
+            //->where('(actions.profile = :profile OR actions.profile IS NULL)')
+            //            ->setParameter(
+            //                'profile',
+            //                $this->profile ?: $this->UserProfileTokenStorage->getProfile(),
+            //                UserProfileUid::TYPE
+            //            )
+        ;
+
 
         $dbal
-            ->join(
+            ->leftJoin(
                 'actions',
                 UsersTableActionsProfile::class,
-                'actions_profile',
-                'actions_profile.event = actions.event',
-            )
-            ->where('actions_profile.value = :profile')
-            ->setParameter(
-                key: 'profile',
-                value: $this->profile ?: $this->UserProfileTokenStorage->getProfile(),
-                type: UserProfileUid::TYPE,
+                'event_profile',
+                'event_profile.event = actions.event',
             );
 
+
         $dbal
-            ->join(
+            ->where('(event_profile.value = :profile OR event_profile.value IS NULL)')
+            ->setParameter(
+                'profile',
+                $this->profile ?: $this->UserProfileTokenStorage->getProfile(),
+                UserProfileUid::TYPE,
+            );
+
+
+        $dbal
+
+            ->leftJoin(
                 'actions',
                 UsersTableActionsEvent::class,
                 'event',
-                'event.id = actions.event'.
-                ($this->category ? ' AND event.category = :category' : '')
+                'event.id = actions.event',
             );
+
 
         if($this->category)
         {
@@ -141,15 +153,24 @@ final class UsersTableActionsChoiceRepository implements UsersTableActionsChoice
                 ->setParameter(
                     key: 'category',
                     value: $this->category,
-                    type: CategoryProductUid::TYPE
+                    type: CategoryProductUid::TYPE,
                 );
+
+
+            $dbal->andWhere('event.category = :category');
         }
+        else
+        {
+            $dbal->andWhere('event.category IS NULL');
+
+        }
+
 
         $dbal->leftJoin(
             'actions',
             UsersTableActionsTrans::class,
             'trans',
-            'trans.event = actions.event AND trans.local = :local'
+            'trans.event = actions.event AND trans.local = :local',
         );
 
 
@@ -160,5 +181,6 @@ final class UsersTableActionsChoiceRepository implements UsersTableActionsChoice
         return $dbal
             ->enableCache('users-table', 86400)
             ->fetchAllHydrate(UsersTableActionsEventUid::class);
+
     }
 }
