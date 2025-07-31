@@ -30,6 +30,7 @@ use BaksDev\Products\Category\Type\Id\CategoryProductUid;
 use BaksDev\Users\UsersTable\Entity\Actions\Event\UsersTableActionsEventInterface;
 use BaksDev\Users\UsersTable\Type\Actions\Event\UsersTableActionsEventUid;
 use BaksDev\Users\UsersTable\Type\Actions\Id\UsersTableActionsUid;
+use BaksDev\Users\UsersTable\UseCase\Admin\Actions\NewEdit\Offer\UsersTableActionsOfferDTO;
 use BaksDev\Users\UsersTable\UseCase\Admin\Actions\NewEdit\Profile\UsersTableActionsProfileDTO;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -61,6 +62,10 @@ final class UsersTableActionsDTO implements UsersTableActionsEventInterface
     private ArrayCollection $working;
 
 
+    #[Assert\Valid]
+    private UsersTableActionsOfferDTO $offer;
+
+
     /**
      * Продукция для привязки к процессу
      */
@@ -78,6 +83,8 @@ final class UsersTableActionsDTO implements UsersTableActionsEventInterface
         $this->working = new ArrayCollection();
         $this->translate = new ArrayCollection();
         $this->profile = new UsersTableActionsProfileDTO();
+
+        $this->offer = new UsersTableActionsOfferDTO();
     }
 
 
@@ -161,6 +168,11 @@ final class UsersTableActionsDTO implements UsersTableActionsEventInterface
     public function getProfile(): UsersTableActionsProfileDTO
     {
         return $this->profile;
+    }
+
+    public function getOffer(): UsersTableActionsOfferDTO
+    {
+        return $this->offer;
     }
 
 

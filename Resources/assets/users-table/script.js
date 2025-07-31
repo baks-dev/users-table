@@ -133,6 +133,49 @@ if($addButtonProduct)
 
         });
     }
+
 }
+
+
+// Чекбоксы по офферам
+
+// Получить чекбоксы по офферам
+var actions_form_offer_offer = document.getElementById('users_table_actions_form_offer_offer');
+var actions_form_offer_variation = document.getElementById('users_table_actions_form_offer_variation');
+var actions_form_offer_modification = document.getElementById('users_table_actions_form_offer_modification');
+
+// Получить контейнеры чекбоксов 'Множественные Варианты торгового предложения' и 'Модификации множественных вариантов'
+var actions_form_offer_variation_wrapper = document.querySelector('.actions_form_offer_variation')
+var actions_form_offer_modification_wrapper = document.querySelector('.actions_form_offer_modification')
+
+
+// Обработчик чекбокса "Торговые предложения"
+actions_form_offer_offer.addEventListener('click', function(){
+    if (this.checked) {
+        console.log('checked offer')
+        actions_form_offer_variation_wrapper.classList.remove('d-none');
+    }
+    else {
+        console.log('not checked')
+        actions_form_offer_variation_wrapper.classList.add('d-none');
+        actions_form_offer_variation.checked = false;
+
+        actions_form_offer_modification_wrapper.classList.add('d-none');
+        actions_form_offer_modification.checked = false;
+    }
+})
+
+// Обработчик чекбокса "Множественные Варианты торгового предложения"
+actions_form_offer_variation.addEventListener('click', function(){
+    if (this.checked) {
+        console.log('checked variation')
+        actions_form_offer_modification_wrapper.classList.remove('d-none');
+    }
+    else {
+        console.log('not checked')
+        actions_form_offer_modification_wrapper.classList.add('d-none');
+        actions_form_offer_modification.checked = false;
+    }
+})
 
 

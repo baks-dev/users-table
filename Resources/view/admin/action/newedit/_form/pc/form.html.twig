@@ -32,8 +32,28 @@
                     attr: { 'data-select' : 'select2' }
                 }) }}
 
-            </div>
 
+
+            </div>
+            
+            {# Настройки офферов #}
+            <div class="card-body pb-0">
+                <div class="mb-3">
+                    {{ form_row(form.offer.offer, {
+                        label: 'Торговые предложения'|trans,
+                    }) }}
+                </div>
+                <div class="mb-3 actions_form_offer_variation {{ form.offer.offer.vars.checked == false ? 'd-none' : '' }}">
+                    {{ form_row(form.offer.variation, {
+                        label: 'Множественные Варианты торгового предложения'|trans,
+                    }) }}
+                </div>
+                <div class="mb-3 actions_form_offer_modification {{ form.offer.offer.vars.checked == false or form.offer.variation.vars.checked == false  ? 'd-none' : '' }}">
+                    {{ form_row(form.offer.modification, {
+                        label: 'Модификации множественных вариантов'|trans,
+                    }) }}
+                </div>
+            </div>
 
         </div>
 
