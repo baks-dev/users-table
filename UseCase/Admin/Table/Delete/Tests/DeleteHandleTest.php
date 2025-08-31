@@ -1,17 +1,17 @@
 <?php
 /*
- *  Copyright 2023.  Baks.dev <admin@baks.dev>
- *
+ *  Copyright 2025.  Baks.dev <admin@baks.dev>
+ *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
  *  in the Software without restriction, including without limitation the rights
  *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  *  copies of the Software, and to permit persons to whom the Software is furnished
  *  to do so, subject to the following conditions:
- *
+ *  
  *  The above copyright notice and this permission notice shall be included in all
  *  copies or substantial portions of the Software.
- *
+ *  
  *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  *  FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL THE
@@ -29,35 +29,31 @@ use BaksDev\Core\Doctrine\ORMQueryBuilder;
 use BaksDev\Products\Category\Type\Id\CategoryProductUid;
 use BaksDev\Products\Product\Type\Id\ProductUid;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
+use BaksDev\Users\Profile\UserProfile\UseCase\User\NewEdit\Tests\UserNewUserProfileHandleTest;
+use BaksDev\Users\UsersTable\Controller\Admin\Table\Tests\DeleteControllerTest;
 use BaksDev\Users\UsersTable\Entity\Table\Event\UsersTableEvent;
 use BaksDev\Users\UsersTable\Entity\Table\UsersTable;
-use BaksDev\Users\UsersTable\Type\Actions\Event\UsersTableActionsEventUid;
 use BaksDev\Users\UsersTable\Type\Actions\Working\UsersTableActionsWorkingUid;
 use BaksDev\Users\UsersTable\Type\Table\Id\UsersTableUid;
 use BaksDev\Users\UsersTable\UseCase\Admin\Table\Delete\UsersTableDeleteDTO;
 use BaksDev\Users\UsersTable\UseCase\Admin\Table\Delete\UsersTableDeleteHandler;
+use BaksDev\Users\UsersTable\UseCase\Admin\Table\NewEdit\Tests\NewHandleTest;
 use BaksDev\Users\UsersTable\UseCase\Admin\Table\NewEdit\UsersTableDTO;
 use BaksDev\Wildberries\Products\Entity\Barcode\Event\WbBarcodeEvent;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
+use PHPUnit\Framework\Attributes\Depends;
+use PHPUnit\Framework\Attributes\DependsOnClass;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\Attribute\When;
-use BaksDev\Users\UsersTable\UseCase\Admin\Table\NewEdit\Tests\NewHandleTest;
-use BaksDev\Users\UsersTable\Controller\Admin\Table\Tests\DeleteControllerTest;
 
-/**
- * @group users-table
- * @group users-table-table
- *
- * @depends BaksDev\Users\UsersTable\UseCase\Admin\Table\NewEdit\Tests\NewHandleTest::class
- * @depends BaksDev\Users\UsersTable\Controller\Admin\Table\Tests\DeleteControllerTest::class
- *
- * @see     NewHandleTest
- * @see     DeleteControllerTest
- */
+#[Group('users-table')]
 #[When(env: 'test')]
 final class DeleteHandleTest extends KernelTestCase
 {
+    #[DependsOnClass(NewHandleTest::class)]
+    #[DependsOnClass(DeleteControllerTest::class)]
     public function testUseCase(): void
     {
         //self::bootKernel();
@@ -110,10 +106,7 @@ final class DeleteHandleTest extends KernelTestCase
 
     }
 
-
-    /**
-     * @depends testUseCase
-     */
+    #[Depends('testUseCase')]
     public function testComplete(): void
     {
         $container = self::getContainer();

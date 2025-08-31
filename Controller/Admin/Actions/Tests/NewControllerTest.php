@@ -24,13 +24,11 @@
 namespace BaksDev\Users\UsersTable\Controller\Admin\Actions\Tests;
 
 use BaksDev\Users\User\Tests\TestUserAccount;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DependencyInjection\Attribute\When;
 
-/**
- * @group users-table
- * @group users-table-action
- */
+#[Group('users-table')]
 #[When(env: 'test')]
 final class NewControllerTest extends WebTestCase
 {

@@ -27,6 +27,7 @@ namespace BaksDev\Users\UsersTable\UseCase\Admin\Actions\NewEdit\Tests;
 
 use BaksDev\Products\Category\Type\Id\CategoryProductUid;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
+use BaksDev\Users\UsersTable\Controller\Admin\Actions\Tests\DeleteControllerTest;
 use BaksDev\Users\UsersTable\Entity\Actions\Event\UsersTableActionsEvent;
 use BaksDev\Users\UsersTable\Entity\Actions\UsersTableActions;
 use BaksDev\Users\UsersTable\Type\Actions\Const\UsersTableActionsWorkingConst;
@@ -37,24 +38,20 @@ use BaksDev\Users\UsersTable\UseCase\Admin\Actions\NewEdit\UsersTableActionsDTO;
 use BaksDev\Users\UsersTable\UseCase\Admin\Actions\NewEdit\UsersTableActionsHandler;
 use BaksDev\Users\UsersTable\UseCase\Admin\Actions\NewEdit\Working\Trans\UsersTableActionsWorkingTransDTO;
 use BaksDev\Users\UsersTable\UseCase\Admin\Actions\NewEdit\Working\UsersTableActionsWorkingDTO;
+use BaksDev\Users\UsersTable\UseCase\Admin\Table\Delete\Tests\DeleteHandleTest;
 use Doctrine\ORM\EntityManagerInterface;
+use PHPUnit\Framework\Attributes\DependsOnClass;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\Attribute\When;
 
-/**
- * @group users-table
- * @group users-table-action
- *
- * @depends BaksDev\Users\UsersTable\UseCase\Admin\Actions\NewEdit\Tests\NewHandleTest::class
- * @depends BaksDev\Users\UsersTable\Controller\Admin\Actions\Tests\DeleteControllerTest::class
- * @depends BaksDev\Users\UsersTable\UseCase\Admin\Table\Delete\Tests\DeleteHandleTest::class
- *
- * @see     UserNewUserProfileHandleTest
- * @see     DeleteAdminControllerTest
- */
+#[Group('users-table')]
 #[When(env: 'test')]
 final class UserTableEditHandleTest extends KernelTestCase
 {
+    #[DependsOnClass(UserTableNewHandleTest::class)]
+    #[DependsOnClass(DeleteControllerTest::class)]
+    #[DependsOnClass(DeleteHandleTest::class)]
     public function testUseCase(): void
     {
 
@@ -140,6 +137,7 @@ final class UserTableEditHandleTest extends KernelTestCase
         $em->clear();
         //$em->close();
     }
+
 
     public function testComplete(): void
     {

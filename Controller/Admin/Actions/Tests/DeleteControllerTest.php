@@ -25,18 +25,13 @@ namespace BaksDev\Users\UsersTable\Controller\Admin\Actions\Tests;
 
 use BaksDev\Users\User\Tests\TestUserAccount;
 use BaksDev\Users\UsersTable\Type\Actions\Event\UsersTableActionsEventUid;
-use BaksDev\Users\UsersTable\UseCase\Admin\Actions\NewEdit\Tests\NewHandleTest;
+use BaksDev\Users\UsersTable\UseCase\Admin\Actions\NewEdit\Tests\UserTableNewHandleTest;
+use PHPUnit\Framework\Attributes\DependsOnClass;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DependencyInjection\Attribute\When;
 
-/**
- * @group users-table
- * @group users-table-action
- *
- * @depends BaksDev\Users\UsersTable\UseCase\Admin\Actions\NewEdit\Tests\NewHandleTest::class
- *
- * @see     NewHandleTest
- */
+#[Group('users-table')]
 #[When(env: 'test')]
 final class DeleteControllerTest extends WebTestCase
 {
@@ -44,9 +39,9 @@ final class DeleteControllerTest extends WebTestCase
 
     private const string ROLE = 'ROLE_USERS_TABLE_ACTIONS_DELETE';
 
+    #[DependsOnClass(UserTableNewHandleTest::class)]
     public function testRoleSuccessful(): void
     {
-
         self::ensureKernelShutdown();
         $client = static::createClient();
 
@@ -67,6 +62,7 @@ final class DeleteControllerTest extends WebTestCase
     }
 
     // доступ по роли ROLE_ADMIN
+    #[DependsOnClass(UserTableNewHandleTest::class)]
     public function testRoleAdminSuccessful(): void
     {
 
@@ -90,6 +86,7 @@ final class DeleteControllerTest extends WebTestCase
     }
 
     // доступ по роли ROLE_USER
+    #[DependsOnClass(UserTableNewHandleTest::class)]
     public function testRoleUserDeny(): void
     {
 
@@ -112,9 +109,9 @@ final class DeleteControllerTest extends WebTestCase
     }
 
     /** Доступ по без роли */
+    #[DependsOnClass(UserTableNewHandleTest::class)]
     public function testGuestFiled(): void
     {
-
         self::ensureKernelShutdown();
         $client = static::createClient();
 
