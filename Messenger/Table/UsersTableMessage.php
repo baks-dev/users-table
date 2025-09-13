@@ -47,7 +47,7 @@ final class UsersTableMessage
     {
         $this->id = (string) $id;
         $this->event = (string) $event;
-        $this->event = $event ? (string) $event : null;
+        $this->last = $last ? (string) $last : null;
     }
 
     /** Идентификатор */
