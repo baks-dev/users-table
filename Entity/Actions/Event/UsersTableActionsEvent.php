@@ -29,6 +29,7 @@ use BaksDev\Core\Entity\EntityEvent;
 use BaksDev\Core\Type\Locale\Locale;
 use BaksDev\Products\Category\Type\Id\CategoryProductUid;
 use BaksDev\Users\UsersTable\Entity\Actions\Modify\UsersTableActionsModify;
+use BaksDev\Users\UsersTable\Entity\Actions\Offer\UsersTableActionsOffer;
 use BaksDev\Users\UsersTable\Entity\Actions\Products\UsersTableActionsProduct;
 use BaksDev\Users\UsersTable\Entity\Actions\Profile\UsersTableActionsProfile;
 use BaksDev\Users\UsersTable\Entity\Actions\Trans\UsersTableActionsTrans;
@@ -99,12 +100,19 @@ class UsersTableActionsEvent extends EntityEvent
     #[ORM\OneToOne(targetEntity: UsersTableActionsProfile::class, mappedBy: 'event', cascade: ['all'])]
     private ?UsersTableActionsProfile $profile;
 
+    /**
+     * Offer
+     */
+    #[ORM\OneToOne(targetEntity: UsersTableActionsOffer::class, mappedBy: 'event', cascade: ['all'])]
+    private ?UsersTableActionsOffer $offer;
 
     public function __construct()
     {
         $this->id = new UsersTableActionsEventUid();
         $this->modify = new UsersTableActionsModify($this);
         $this->profile = new UsersTableActionsProfile($this);
+
+        $this->offer = new UsersTableActionsOffer($this);
     }
 
     public function __clone()
@@ -153,5 +161,10 @@ class UsersTableActionsEvent extends EntityEvent
         }
 
         throw new InvalidArgumentException(sprintf('Class %s interface error', $dto::class));
+    }
+
+    public function getActionCategory(): ?CategoryProductUid
+    {
+        return $this->category;
     }
 }

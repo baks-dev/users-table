@@ -27,6 +27,7 @@ namespace BaksDev\Users\UsersTable\UseCase\Admin\Actions\NewEdit;
 
 use BaksDev\Products\Category\Repository\CategoryChoice\CategoryChoiceInterface;
 use BaksDev\Products\Category\Type\Id\CategoryProductUid;
+use BaksDev\Users\UsersTable\UseCase\Admin\Actions\NewEdit\Offer\UsersTableActionsOfferForm;
 use BaksDev\Users\UsersTable\UseCase\Admin\Actions\NewEdit\Profile\UsersTableActionsProfileForm;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -108,6 +109,7 @@ final class UsersTableActionsForm extends AbstractType
 
         $builder->add('profile', UsersTableActionsProfileForm::class, ['label' => false]);
 
+        $builder->add('offer', UsersTableActionsOfferForm::class, ['label' => false]);
 
         /* Сохранить ******************************************************/
         $builder->add(

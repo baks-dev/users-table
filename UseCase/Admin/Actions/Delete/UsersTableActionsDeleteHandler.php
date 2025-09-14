@@ -60,6 +60,7 @@ final readonly class UsersTableActionsDeleteHandler
             $uniqid = uniqid('', false);
             $errorsString = (string) $errors;
             $this->logger->error($uniqid.': '.$errorsString);
+
             return $uniqid;
         }
 
@@ -97,8 +98,12 @@ final readonly class UsersTableActionsDeleteHandler
 
 
         /** Получаем корень */
+//        $Main = $this->entityManager->getRepository(UsersTableActions::class)
+//            ->findOneBy(['event' => $command->getEvent(), 'profile' => $profile]);
+
+        // Если у action не задан профиль, то при удалении возникает ошибка
         $Main = $this->entityManager->getRepository(UsersTableActions::class)
-            ->findOneBy(['event' => $command->getEvent(), 'profile' => $profile]);
+            ->findOneBy(['event' => $command->getEvent()]);
 
         if(empty($Main))
         {
@@ -108,6 +113,7 @@ final readonly class UsersTableActionsDeleteHandler
                 UsersTableActions::class,
                 $command->getEvent()
             );
+
             $this->logger->error($uniqid.': '.$errorsString);
 
             return $uniqid;
