@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2025.  Baks.dev <admin@baks.dev>
+ *  Copyright 2026.  Baks.dev <admin@baks.dev>
  *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -35,14 +35,10 @@ use BaksDev\Users\UsersTable\Type\Actions\Const\UsersTableActionsWorkingConst;
 use BaksDev\Users\UsersTable\Type\Actions\Id\UsersTableActionsUid;
 use BaksDev\Users\UsersTable\UseCase\Admin\Actions\Delete\UsersTableActionsDeleteDTO;
 use BaksDev\Users\UsersTable\UseCase\Admin\Actions\Delete\UsersTableActionsDeleteHandler;
-use BaksDev\Users\UsersTable\UseCase\Admin\Actions\NewEdit\Products\UsersTableActionsProductDTO;
-use BaksDev\Users\UsersTable\UseCase\Admin\Actions\NewEdit\Tests\UserTableEditHandleTest;
-use BaksDev\Users\UsersTable\UseCase\Admin\Actions\NewEdit\Tests\UserTableNewHandleTest;
 use BaksDev\Users\UsersTable\UseCase\Admin\Actions\NewEdit\Trans\UsersTableActionsTransDTO;
 use BaksDev\Users\UsersTable\UseCase\Admin\Actions\NewEdit\UsersTableActionsDTO;
 use BaksDev\Users\UsersTable\UseCase\Admin\Actions\NewEdit\Working\Trans\UsersTableActionsWorkingTransDTO;
 use BaksDev\Users\UsersTable\UseCase\Admin\Actions\NewEdit\Working\UsersTableActionsWorkingDTO;
-use BaksDev\Users\UsersTable\UseCase\Admin\Table\Delete\Tests\DeleteHandleTest;
 use BaksDev\Wildberries\Products\Controller\Admin\Settings\Tests\DeleteControllerTest;
 use BaksDev\Wildberries\Products\Entity\Barcode\Event\WbBarcodeEvent;
 use Doctrine\ORM\EntityManagerInterface;
@@ -54,12 +50,12 @@ use Symfony\Component\DependencyInjection\Attribute\When;
 
 #[Group('users-table')]
 #[When(env: 'test')]
-final class UserTableDeleteHandleTest extends KernelTestCase
+final class UserTableActionsDeleteHandleTest extends KernelTestCase
 {
-    #[DependsOnClass(UserTableNewHandleTest::class)]
-    #[DependsOnClass(UserTableEditHandleTest::class)]
-    #[DependsOnClass(DeleteControllerTest::class)]
-    #[DependsOnClass(DeleteHandleTest::class)]
+    //#[DependsOnClass(UserTableNewHandleTest::class)]
+    //#[DependsOnClass(UserTableEditHandleTest::class)]
+    //#[DependsOnClass(DeleteControllerTest::class)]
+    //#[DependsOnClass(DeleteHandleTest::class)]
     public function testUseCase(): void
     {
         self::bootKernel();
@@ -83,7 +79,7 @@ final class UserTableDeleteHandleTest extends KernelTestCase
                 'event.id = main.event',
             );
 
-        /** @var WbBarcodeEvent $UsersTableActionsEvent */
+        /** @var UsersTableActionsEvent $UsersTableActionsEvent */
         $UsersTableActionsEvent = $qb->getQuery()->getOneOrNullResult();
 
 
