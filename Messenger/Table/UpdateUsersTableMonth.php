@@ -65,8 +65,8 @@ final readonly class UpdateUsersTableMonth
                 'Событие UsersTableEvent не найдено',
                 [
                     __LINE__ => __FILE__,
-                    'event' => $message->getEvent()
-                ]
+                    'event' => $message->getEvent(),
+                ],
             );
         }
 
@@ -84,7 +84,7 @@ final readonly class UpdateUsersTableMonth
             ->findOneBy([
                 'profile' => $UsersTableMonthDTO->getProfile(),
                 'working' => $UsersTableMonthDTO->getWorking(),
-                'date' => $UsersTableMonthDTO->getDate()
+                'date' => $UsersTableMonthDTO->getDate(),
             ]);
 
         $UsersTableMonth?->getDto($UsersTableMonthDTO);
@@ -102,8 +102,8 @@ final readonly class UpdateUsersTableMonth
                 'Действие UsersTableActionsWorking не найдено',
                 [
                     self::class.':'.__LINE__,
-                    $UsersTableEvent->getWorking()
-                ]
+                    $UsersTableEvent->getWorking(),
+                ],
             );
 
             return;
@@ -119,7 +119,7 @@ final readonly class UpdateUsersTableMonth
             ->findOneBy([
                 'profile' => $UsersTableMonthDTO->getProfile(),
                 'working' => $UsersTableMonthDTO->getWorking(),
-                'date' => $UsersTableDateDay
+                'date' => $UsersTableDateDay,
             ]);
 
 
@@ -131,8 +131,8 @@ final readonly class UpdateUsersTableMonth
                     self::class.':'.__LINE__,
                     'profile' => $UsersTableMonthDTO->getProfile(),
                     'working' => $UsersTableMonthDTO->getWorking(),
-                    'date' => $UsersTableDateDay
-                ]
+                    'date' => $UsersTableDateDay,
+                ],
             );
 
 

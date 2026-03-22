@@ -26,11 +26,11 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 use BaksDev\Users\UsersTable\BaksDevUsersTableBundle;
 use Symfony\Config\TwigConfig;
 
-return static function (TwigConfig $twig) {
+return static function(TwigConfig $twig) {
 
     $twig->path(
         BaksDevUsersTableBundle::PATH.implode(DIRECTORY_SEPARATOR, ['Resources', 'view', '']), // .'Resources/view',
-        'users-table'
+        'users-table',
     );
 
 };

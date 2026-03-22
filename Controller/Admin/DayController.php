@@ -56,7 +56,7 @@ final class DayController extends AbstractController
             ->createForm(
                 type: SearchForm::class,
                 data: $search,
-                options: ['action' => $this->generateUrl('users-table:admin.day')]
+                options: ['action' => $this->generateUrl('users-table:admin.day')],
             )
             ->handleRequest($request);
 
@@ -88,7 +88,7 @@ final class DayController extends AbstractController
             $filter,
             $this->getCurrentProfileUid(),
             $this->getProfileUid(),
-            $this->isGranted('ROLE_USERS_TABLE_OTHER')
+            $this->isGranted('ROLE_USERS_TABLE_OTHER'),
         );
 
         return $this->render(
@@ -96,7 +96,7 @@ final class DayController extends AbstractController
                 'query' => $UsersTable,
                 'search' => $searchForm->createView(),
                 'filter' => $filterForm->createView(),
-            ]
+            ],
         );
     }
 }

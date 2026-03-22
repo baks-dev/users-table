@@ -138,7 +138,6 @@ final class UsersTableActionsChoiceRepository implements UsersTableActionsChoice
 
 
         $dbal
-
             ->leftJoin(
                 'actions',
                 UsersTableActionsEvent::class,

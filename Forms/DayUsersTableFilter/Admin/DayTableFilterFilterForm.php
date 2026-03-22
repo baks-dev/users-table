@@ -43,7 +43,8 @@ final class DayTableFilterFilterForm extends AbstractType
     public function __construct(
         UserProfileChoiceInterface $profileChoice,
         RequestStack $request,
-    ) {
+    )
+    {
 
         $this->request = $request;
         $this->profileChoice = $profileChoice;
@@ -58,7 +59,7 @@ final class DayTableFilterFilterForm extends AbstractType
         $builder->add(
             'back',
             SubmitType::class,
-            ['label' => 'Back', 'label_html' => true, 'attr' => ['class' => 'btn-light']]
+            ['label' => 'Back', 'label_html' => true, 'attr' => ['class' => 'btn-light']],
         );
 
 
@@ -75,7 +76,7 @@ final class DayTableFilterFilterForm extends AbstractType
         $builder->add(
             'next',
             SubmitType::class,
-            ['label' => 'next', 'label_html' => true, 'attr' => ['class' => 'btn-light']]
+            ['label' => 'next', 'label_html' => true, 'attr' => ['class' => 'btn-light']],
         );
 
 
@@ -84,29 +85,29 @@ final class DayTableFilterFilterForm extends AbstractType
         /* TextType */
         $builder->add('profile', ChoiceType::class, [
             'choices' => $profiles,
-            'choice_value' => function (?UserProfileUid $profile) {
+            'choice_value' => function(?UserProfileUid $profile) {
                 return $profile?->getValue();
             },
-            'choice_label' => function (UserProfileUid $profile) {
+            'choice_label' => function(UserProfileUid $profile) {
                 return $profile->getAttr();
             },
             'label' => false,
             'expanded' => false,
             'multiple' => false,
             'required' => false,
-            'attr' => ['data-select' => 'select2',]
+            'attr' => ['data-select' => 'select2',],
         ]);
 
 
         $builder->addEventListener(
             FormEvents::POST_SUBMIT,
-            function (FormEvent $event): void {
+            function(FormEvent $event): void {
                 /** @var DayTableFilterDTO $data */
                 $data = $event->getData();
 
                 $this->request->getSession()->set(DayTableFilterDTO::date, $data->getDate());
                 $this->request->getSession()->set(DayTableFilterDTO::profile, $data->getProfile());
-            }
+            },
         );
     }
 
@@ -116,7 +117,7 @@ final class DayTableFilterFilterForm extends AbstractType
             [
                 'data_class' => DayTableFilterDTO::class,
                 'method' => 'POST',
-            ]
+            ],
         );
     }
 }

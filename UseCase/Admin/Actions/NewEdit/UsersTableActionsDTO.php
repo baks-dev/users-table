@@ -149,7 +149,7 @@ final class UsersTableActionsDTO implements UsersTableActionsEventInterface
 
     public function addWorking(Working\UsersTableActionsWorkingDTO $working): void
     {
-        $filter = $this->working->filter(function (Working\UsersTableActionsWorkingDTO $element) use ($working) {
+        $filter = $this->working->filter(function(Working\UsersTableActionsWorkingDTO $element) use ($working) {
             return $working->getConst()->equals($element->getConst());
         });
 
@@ -175,15 +175,6 @@ final class UsersTableActionsDTO implements UsersTableActionsEventInterface
         return $this->offer;
     }
 
-
-    /** Перевод */
-
-    public function setTranslate(ArrayCollection $trans): void
-    {
-        $this->translate = $trans;
-    }
-
-
     public function getTranslate(): ArrayCollection
     {
         /* Вычисляем расхождение и добавляем неопределенные локали */
@@ -197,6 +188,12 @@ final class UsersTableActionsDTO implements UsersTableActionsEventInterface
         return $this->translate;
     }
 
+    /** Перевод */
+
+    public function setTranslate(ArrayCollection $trans): void
+    {
+        $this->translate = $trans;
+    }
 
     public function addTranslate(Trans\UsersTableActionsTransDTO $trans): void
     {

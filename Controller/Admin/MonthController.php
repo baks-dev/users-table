@@ -56,7 +56,7 @@ final class MonthController extends AbstractController
             ->createForm(
                 type: SearchForm::class,
                 data: $search,
-                options: ['action' => $this->generateUrl('users-table:admin.month')]
+                options: ['action' => $this->generateUrl('users-table:admin.month')],
             )
             ->handleRequest($request);
 
@@ -89,7 +89,7 @@ final class MonthController extends AbstractController
             $filter,
             $this->getCurrentProfileUid(),
             $this->getProfileUid(),
-            $this->isGranted('ROLE_USERS_TABLE_OTHER')
+            $this->isGranted('ROLE_USERS_TABLE_OTHER'),
         );
 
 
@@ -98,7 +98,7 @@ final class MonthController extends AbstractController
                 'query' => $UsersTable,
                 'search' => $searchForm->createView(),
                 'filter' => $filterForm->createView(),
-            ]
+            ],
         );
     }
 }

@@ -111,17 +111,6 @@ final class UsersTableActionsWorkingDTO implements UsersTableActionsWorkingInter
         $this->sort = $sort;
     }
 
-
-    /**
-     * Перевод
-     */
-
-    public function setTranslate(ArrayCollection $trans): void
-    {
-        $this->translate = $trans;
-    }
-
-
     public function getTranslate(): ArrayCollection
     {
         /* Вычисляем расхождение и добавляем неопределенные локали */
@@ -135,6 +124,14 @@ final class UsersTableActionsWorkingDTO implements UsersTableActionsWorkingInter
         return $this->translate;
     }
 
+    /**
+     * Перевод
+     */
+
+    public function setTranslate(ArrayCollection $trans): void
+    {
+        $this->translate = $trans;
+    }
 
     public function addTranslate(Trans\UsersTableActionsWorkingTransDTO $trans): void
     {

@@ -2,7 +2,6 @@
 
 namespace BaksDev\Users\UsersTable\UseCase\Admin\Actions\NewEdit\Offer;
 
-use BaksDev\Users\UsersTable\UseCase\Admin\Actions\NewEdit\Profile\UsersTableActionsProfileDTO;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -15,17 +14,17 @@ class UsersTableActionsOfferForm extends AbstractType
     {
 
         $builder->add('offer', CheckboxType::class, [
-            'label'    => 'Товары в категории с торговым предложением',
+            'label' => 'Товары в категории с торговым предложением',
             'required' => false,
         ]);
 
         $builder->add('variation', CheckboxType::class, [
-            'label'    => 'Множественные Варианты торгового предложения',
+            'label' => 'Множественные Варианты торгового предложения',
             'required' => false,
         ]);
 
         $builder->add('modification', CheckboxType::class, [
-            'label'    => 'Модификации множественных вариантов',
+            'label' => 'Модификации множественных вариантов',
             'required' => false,
         ]);
     }

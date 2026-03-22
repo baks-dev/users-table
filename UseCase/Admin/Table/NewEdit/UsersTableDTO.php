@@ -38,52 +38,43 @@ use Symfony\Component\Validator\Constraints as Assert;
 final class UsersTableDTO implements UsersTableEventInterface
 {
     /**
+     * Категория производства
+     */
+    #[Assert\Uuid]
+    public ?CategoryProductUid $category = null;
+    /**
      * Идентификатор события.
      */
     #[Assert\Uuid]
     private ?UsersTableEventUid $id = null;
-
     /**
      * Профиль пользователя.
      */
     #[Assert\NotBlank]
     #[Assert\Uuid]
     private UserProfileUid $profile;
-
-
     /**
      * Действие сотрудника
      */
     #[Assert\Uuid]
     private ?UsersTableActionsWorkingUid $working = null;
-
     /**
      * Дата.
      */
     #[Assert\NotBlank]
     private DateTimeImmutable $date;
 
+    /*
+     *
+     * Вспомогательное свойство
+     *
+     */
     /**
      * Количество.
      * Может быть отрицательным - означает штраф!
      */
     #[Assert\NotBlank]
     private int $quantity;
-
-    /*
-     *
-     * Вспомогательное свойство
-     *
-     */
-
-
-    /**
-     * Категория производства
-     */
-    #[Assert\Uuid]
-    public ?CategoryProductUid $category = null;
-
-
     /**
      * Производственный процесс
      */

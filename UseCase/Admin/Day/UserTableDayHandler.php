@@ -41,6 +41,7 @@ final readonly class UserTableDayHandler
 
     /**
      * Метод получает/создает табель на указанную дату и обновляет его количество
+     *
      * @see UsersTableDay
      */
     public function handle(UsersTableDayDTO $command): string|UsersTableDay
@@ -63,8 +64,8 @@ final readonly class UserTableDayHandler
             [
                 'profile' => $command->getProfile(),
                 'working' => $command->getWorking(),
-                'date' => $command->getDate()
-            ]
+                'date' => $command->getDate(),
+            ],
         );
 
         if($UserTableDay === null)

@@ -39,17 +39,16 @@ final class UserTableFilterDTO
     private ?UserProfileUid $profile = null;
 
     private readonly ?UserProfileUid $authority;
+    /**
+     * Date.
+     */
+    private ?DateTimeImmutable $date = null;
 
     public function __construct(Request $request, ?UserProfileUid $authority)
     {
         $this->request = $request;
         $this->authority = $authority;
     }
-
-    /**
-     * Date.
-     */
-    private ?DateTimeImmutable $date = null;
 
     /**
      * Date.

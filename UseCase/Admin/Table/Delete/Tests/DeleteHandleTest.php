@@ -74,7 +74,7 @@ final class DeleteHandleTest extends KernelTestCase
                 UsersTableEvent::class,
                 'event',
                 'WITH',
-                'event.id = main.event'
+                'event.id = main.event',
             );
 
         /** @var WbBarcodeEvent $UsersTableEvent */

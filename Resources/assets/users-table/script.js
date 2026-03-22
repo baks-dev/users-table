@@ -20,17 +20,17 @@
  *  THE SOFTWARE.
  */
 
-$addButtonWorking = document.getElementById('workingAddCollection');
+$addButtonWorking = document.getElementById("workingAddCollection");
 
 if($addButtonWorking)
 {
     /* Блок для новой коллекции */
-    let $blockCollectionCall = document.getElementById('collection-working');
+    let $blockCollectionCall = document.getElementById("collection-working");
 
     if($blockCollectionCall)
     {
 
-        $addButtonWorking.addEventListener('click', function()
+        $addButtonWorking.addEventListener("click", function()
         {
 
             let $addButtonWorking = this;
@@ -43,9 +43,9 @@ if($addButtonWorking)
             newForm = newForm.replace(/__actions_working__/g, index);
 
             /* Вставляем новую коллекцию */
-            let div = document.createElement('div');
-            div.id = 'item_users_table_actions_form_working_' + index;
-            div.classList.add('mb-3');
+            let div = document.createElement("div");
+            div.id = "item_users_table_actions_form_working_" + index;
+            div.classList.add("mb-3");
 
             // div.classList.add('gap-3');
             // div.classList.add('item-collection-file');
@@ -59,14 +59,14 @@ if($addButtonWorking)
 
 
             /* Удаляем контактный номер телефона */
-            (div.querySelector('.del-item-working'))?.addEventListener('click', deleteWorking);
+            (div.querySelector(".del-item-working"))?.addEventListener("click", deleteWorking);
 
 
             /* Увеличиваем data-index на 1 после вставки новой коллекции */
             $addButtonWorking.dataset.index = (index + 1).toString();
 
             /* Плавная прокрутка к элементу */
-            div.scrollIntoView({block: "center", inline: "center", behavior: "smooth"});
+            div.scrollIntoView({block : "center", inline : "center", behavior : "smooth"});
 
 
         });
@@ -74,9 +74,9 @@ if($addButtonWorking)
 }
 
 
-document.querySelectorAll('.del-item-working').forEach(function(item)
+document.querySelectorAll(".del-item-working").forEach(function(item)
 {
-    item.addEventListener('click', deleteWorking);
+    item.addEventListener("click", deleteWorking);
 });
 
 function deleteWorking()
@@ -85,21 +85,21 @@ function deleteWorking()
 }
 
 
-$addButtonProduct = document.getElementById('productAddCollection');
+$addButtonProduct = document.getElementById("productAddCollection");
 
 
 if($addButtonProduct)
 {
     /* Блок для новой коллекции */
-    let $blockCollectionCall = document.getElementById('collection-product');
+    let $blockCollectionCall = document.getElementById("collection-product");
 
     if($blockCollectionCall)
     {
 
-        $addButtonProduct.addEventListener('click', function()
+        $addButtonProduct.addEventListener("click", function()
         {
 
-            document.getElementById('products-alert')?.remove();
+            document.getElementById("products-alert")?.remove();
 
 
             let $addButtonWorking = this;
@@ -112,23 +112,23 @@ if($addButtonProduct)
             newForm = newForm.replace(/__product__/g, index);
 
             /* Вставляем новую коллекцию */
-            let div = document.createElement('div');
-            div.id = 'item_users_table_actions_form_product_' + index;
+            let div = document.createElement("div");
+            div.id = "item_users_table_actions_form_product_" + index;
             //div.classList.add('mb-3');
 
             div.innerHTML = newForm;
             $blockCollectionCall.append(div);
 
             /* Удаляем контактный номер телефона */
-            (div.querySelector('.del-item-working'))?.addEventListener('click', deleteWorking);
+            (div.querySelector(".del-item-working"))?.addEventListener("click", deleteWorking);
 
             /* Увеличиваем data-index на 1 после вставки новой коллекции */
             $addButtonProduct.dataset.index = (index + 1).toString();
 
             /* Плавная прокрутка к элементу */
-            div.scrollIntoView({block: "center", inline: "center", behavior: "smooth"});
+            div.scrollIntoView({block : "center", inline : "center", behavior : "smooth"});
 
-            new NiceSelect(div.querySelector('[data-select="select2"]'), {searchable: true});
+            new NiceSelect(div.querySelector("[data-select=\"select2\"]"), {searchable : true});
 
 
         });
@@ -140,42 +140,48 @@ if($addButtonProduct)
 // Чекбоксы по офферам
 
 // Получить чекбоксы по офферам
-var actions_form_offer_offer = document.getElementById('users_table_actions_form_offer_offer');
-var actions_form_offer_variation = document.getElementById('users_table_actions_form_offer_variation');
-var actions_form_offer_modification = document.getElementById('users_table_actions_form_offer_modification');
+var actions_form_offer_offer = document.getElementById("users_table_actions_form_offer_offer");
+var actions_form_offer_variation = document.getElementById("users_table_actions_form_offer_variation");
+var actions_form_offer_modification = document.getElementById("users_table_actions_form_offer_modification");
 
 // Получить контейнеры чекбоксов 'Множественные Варианты торгового предложения' и 'Модификации множественных вариантов'
-var actions_form_offer_variation_wrapper = document.querySelector('.actions_form_offer_variation')
-var actions_form_offer_modification_wrapper = document.querySelector('.actions_form_offer_modification')
+var actions_form_offer_variation_wrapper = document.querySelector(".actions_form_offer_variation");
+var actions_form_offer_modification_wrapper = document.querySelector(".actions_form_offer_modification");
 
 
 // Обработчик чекбокса "Торговые предложения"
-actions_form_offer_offer.addEventListener('click', function(){
-    if (this.checked) {
-        console.log('checked offer')
-        actions_form_offer_variation_wrapper.classList.remove('d-none');
+actions_form_offer_offer.addEventListener("click", function()
+{
+    if(this.checked)
+    {
+        console.log("checked offer");
+        actions_form_offer_variation_wrapper.classList.remove("d-none");
     }
-    else {
-        console.log('not checked')
-        actions_form_offer_variation_wrapper.classList.add('d-none');
+    else
+    {
+        console.log("not checked");
+        actions_form_offer_variation_wrapper.classList.add("d-none");
         actions_form_offer_variation.checked = false;
 
-        actions_form_offer_modification_wrapper.classList.add('d-none');
+        actions_form_offer_modification_wrapper.classList.add("d-none");
         actions_form_offer_modification.checked = false;
     }
-})
+});
 
 // Обработчик чекбокса "Множественные Варианты торгового предложения"
-actions_form_offer_variation.addEventListener('click', function(){
-    if (this.checked) {
-        console.log('checked variation')
-        actions_form_offer_modification_wrapper.classList.remove('d-none');
+actions_form_offer_variation.addEventListener("click", function()
+{
+    if(this.checked)
+    {
+        console.log("checked variation");
+        actions_form_offer_modification_wrapper.classList.remove("d-none");
     }
-    else {
-        console.log('not checked')
-        actions_form_offer_modification_wrapper.classList.add('d-none');
+    else
+    {
+        console.log("not checked");
+        actions_form_offer_modification_wrapper.classList.add("d-none");
         actions_form_offer_modification.checked = false;
     }
-})
+});
 
 

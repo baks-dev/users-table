@@ -87,12 +87,12 @@ class UsersTableActionsOffer extends EntityEvent
     {
         if($dto instanceof UsersTableActionsOfferInterface)
         {
-//            if($dto->getValue() instanceof UserProfileUid)
-//            {
-//                return parent::setEntity($dto);
-//            }
-//
-//            return false;
+            //            if($dto->getValue() instanceof UserProfileUid)
+            //            {
+            //                return parent::setEntity($dto);
+            //            }
+            //
+            //            return false;
             return parent::setEntity($dto);
         }
 

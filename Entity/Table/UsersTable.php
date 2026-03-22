@@ -61,11 +61,6 @@ class UsersTable
         return (string) $this->id;
     }
 
-    public function getId(): UsersTableUid
-    {
-        return $this->id;
-    }
-
     public function getEvent(): UsersTableEventUid
     {
         return $this->event;
@@ -74,5 +69,10 @@ class UsersTable
     public function setEvent(UsersTableEventUid|UsersTableEvent $event): void
     {
         $this->event = $event instanceof UsersTableEvent ? $event->getId() : $event;
+    }
+
+    public function getId(): UsersTableUid
+    {
+        return $this->id;
     }
 }

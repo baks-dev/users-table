@@ -69,10 +69,10 @@ final class UsersTableActionsForm extends AbstractType
         $builder
             ->add('category', ChoiceType::class, [
                 'choices' => $this->categoryChoice->findAll(),
-                'choice_value' => function (?CategoryProductUid $category) {
+                'choice_value' => function(?CategoryProductUid $category) {
                     return $category?->getValue();
                 },
-                'choice_label' => function (CategoryProductUid $category) {
+                'choice_label' => function(CategoryProductUid $category) {
                     return $category->getOptions();
                 },
 
@@ -115,7 +115,7 @@ final class UsersTableActionsForm extends AbstractType
         $builder->add(
             'users_table_actions',
             SubmitType::class,
-            ['label' => 'Save', 'label_html' => true, 'attr' => ['class' => 'btn-primary']]
+            ['label' => 'Save', 'label_html' => true, 'attr' => ['class' => 'btn-primary']],
         );
     }
 

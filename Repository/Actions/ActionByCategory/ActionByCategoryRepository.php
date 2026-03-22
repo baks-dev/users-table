@@ -54,14 +54,14 @@ final class ActionByCategoryRepository implements ActionByCategoryInterface
             ->setParameter(
                 key: 'category',
                 value: $category,
-                type: CategoryProductUid::TYPE
+                type: CategoryProductUid::TYPE,
             );
 
         $qb->join(
             UsersTableActions::class,
             'action',
             'WITH',
-            'action.event = event.id'
+            'action.event = event.id',
         );
 
         $qb->leftJoin(
@@ -69,7 +69,7 @@ final class ActionByCategoryRepository implements ActionByCategoryInterface
             'product',
             'WITH',
             'product.event = event.id
-            '
+            ',
         );
 
         $qb->andWhere('product.event IS NULL');

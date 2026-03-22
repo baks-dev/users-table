@@ -47,7 +47,8 @@ final class EditController extends AbstractController
         Request $request,
         #[MapEntity] UsersTableActionsEvent $UsersTableActionsEvent,
         UsersTableActionsHandler $UsersTableActionsHandler,
-    ): Response {
+    ): Response
+    {
         $UsersTableActionsDTO = new UsersTableActionsDTO();
         $UsersTableActionsEvent->getDto($UsersTableActionsDTO);
 
@@ -64,14 +65,14 @@ final class EditController extends AbstractController
 
             $handle = $UsersTableActionsHandler->handle(
                 $UsersTableActionsDTO,
-                $this->isAdmin() ? false : $this->getProfileUid()
+                $this->isAdmin() ? false : $this->getProfileUid(),
             );
 
             $this->addFlash(
                 'admin.page.edit',
                 $handle instanceof UsersTableActions ? 'admin.success.edit' : 'admin.danger.edit',
                 'admin.table.actions',
-                $handle
+                $handle,
             );
 
             return $this->redirectToRoute('users-table:admin.action.index');

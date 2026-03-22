@@ -44,7 +44,8 @@ final class NewController extends AbstractController
     public function news(
         Request $request,
         UsersTableHandler $UsersTableHandler,
-    ): Response {
+    ): Response
+    {
 
         $UsersTableDTO = new UsersTableDTO($this->getProfileUid());
 
@@ -65,7 +66,7 @@ final class NewController extends AbstractController
                 'admin.page.index',
                 $UsersTable instanceof UsersTable ? 'admin.success.new' : 'admin.danger.new',
                 'admin.table',
-                $UsersTable
+                $UsersTable,
             );
 
             return $this->redirectToReferer();

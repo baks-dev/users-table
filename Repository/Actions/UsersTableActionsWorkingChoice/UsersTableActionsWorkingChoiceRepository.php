@@ -56,7 +56,7 @@ final class UsersTableActionsWorkingChoiceRepository implements UsersTableAction
             UsersTableActionsWorkingTrans::class,
             'trans',
             'WITH',
-            'trans.working = working.id AND trans.local = :local'
+            'trans.working = working.id AND trans.local = :local',
         );
 
         if($event)
@@ -66,7 +66,7 @@ final class UsersTableActionsWorkingChoiceRepository implements UsersTableAction
                 ->setParameter(
                     key: 'event',
                     value: $event,
-                    type: UsersTableActionsEventUid::TYPE
+                    type: UsersTableActionsEventUid::TYPE,
                 );
         }
 

@@ -37,12 +37,6 @@ final class UsersTableActionsProfileDTO implements UsersTableActionsProfileInter
     #[Assert\NotBlank]
     private ?UserProfileUid $value = null;
 
-    public function setValue(?UserProfileUid $value): self
-    {
-        $this->value = $value;
-        return $this;
-    }
-
     /**
      * Значение свойства
      *
@@ -51,5 +45,11 @@ final class UsersTableActionsProfileDTO implements UsersTableActionsProfileInter
     public function getValue(): ?UserProfileUid
     {
         return $this->value;
+    }
+
+    public function setValue(?UserProfileUid $value): self
+    {
+        $this->value = $value;
+        return $this;
     }
 }

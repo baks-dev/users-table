@@ -114,9 +114,9 @@ class UsersTableEvent extends EntityEvent
         return (string) $this->id;
     }
 
-    public function getId(): UsersTableEventUid
+    public function getMain(): ?UsersTableUid
     {
-        return $this->id;
+        return $this->main;
     }
 
     public function setMain(UsersTableUid|UsersTable $main): void
@@ -124,9 +124,9 @@ class UsersTableEvent extends EntityEvent
         $this->main = $main instanceof UsersTable ? $main->getId() : $main;
     }
 
-    public function getMain(): ?UsersTableUid
+    public function getId(): UsersTableEventUid
     {
-        return $this->main;
+        return $this->id;
     }
 
     public function getDto($dto): mixed

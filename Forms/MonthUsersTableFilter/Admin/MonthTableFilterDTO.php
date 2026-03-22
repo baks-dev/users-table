@@ -39,6 +39,8 @@ final class MonthTableFilterDTO implements DayUsersTableFilterInterface
     private ?UserProfileUid $profile = null;
 
     private readonly ?UserProfileUid $authority;
+    /** Дата */
+    private ?DateTimeImmutable $date = null;
 
     public function __construct(Request $request, ?UserProfileUid $authority)
     {
@@ -53,9 +55,6 @@ final class MonthTableFilterDTO implements DayUsersTableFilterInterface
     {
         return $this->authority;
     }
-
-    /** Дата */
-    private ?DateTimeImmutable $date = null;
 
     /**
      * Date.

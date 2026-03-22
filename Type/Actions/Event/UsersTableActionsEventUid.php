@@ -46,7 +46,8 @@ final class UsersTableActionsEventUid extends Uid
         AbstractUid|self|string|null $value = null,
         mixed $attr = null,
         mixed $option = null,
-    ) {
+    )
+    {
         parent::__construct($value);
         $this->attr = $attr;
         $this->option = $option;

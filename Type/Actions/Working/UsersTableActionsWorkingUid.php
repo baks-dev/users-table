@@ -56,7 +56,8 @@ final class UsersTableActionsWorkingUid extends Uid
         mixed $option = null,
         mixed $property = null,
         mixed $characteristic = null,
-    ) {
+    )
+    {
         parent::__construct($value);
 
         $this->attr = $attr;

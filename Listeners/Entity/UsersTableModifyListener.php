@@ -43,7 +43,8 @@ final class UsersTableModifyListener
     public function __construct(
         RequestStack $request,
         TokenStorageInterface $token,
-    ) {
+    )
+    {
         $this->request = $request;
         $this->token = $token;
     }
@@ -70,7 +71,7 @@ final class UsersTableModifyListener
         {
             $data->upModifyAgent(
                 new IpAddress($this->request->getCurrentRequest()->getClientIp()), /* Ip */
-                $this->request->getCurrentRequest()->headers->get('User-Agent') /* User-Agent */
+                $this->request->getCurrentRequest()->headers->get('User-Agent'), /* User-Agent */
             );
         }
     }

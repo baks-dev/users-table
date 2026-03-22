@@ -91,7 +91,7 @@ final class MonthUsersTableRepository implements MonthUsersTableInterface
             'users_table_month',
             UsersTableActionsWorking::class,
             'working',
-            'working.id = users_table_month.working'
+            'working.id = users_table_month.working',
         );
 
         $dbal->addSelect('working_trans.name AS table_working');
@@ -99,7 +99,7 @@ final class MonthUsersTableRepository implements MonthUsersTableInterface
             'working',
             UsersTableActionsWorkingTrans::class,
             'working_trans',
-            'working_trans.working = working.id AND working_trans.local = :local'
+            'working_trans.working = working.id AND working_trans.local = :local',
         );
 
         $dbal->addSelect('action_event.id AS table_action_id');
@@ -107,7 +107,7 @@ final class MonthUsersTableRepository implements MonthUsersTableInterface
             'working',
             UsersTableActionsEvent::class,
             'action_event',
-            'action_event.id = working.event'
+            'action_event.id = working.event',
         );
 
 
@@ -118,7 +118,7 @@ final class MonthUsersTableRepository implements MonthUsersTableInterface
                 'users_table_month',
                 ProfileGroupUsers::class,
                 'profile_group_users',
-                'profile_group_users.authority = :authority '.($other ? '' : ' AND profile_group_users.profile = :profile')
+                'profile_group_users.authority = :authority '.($other ? '' : ' AND profile_group_users.profile = :profile'),
             );
 
             $dbal
@@ -148,7 +148,7 @@ final class MonthUsersTableRepository implements MonthUsersTableInterface
             'action_event',
             UsersTableActionsTrans::class,
             'action_trans',
-            'action_trans.event = action_event.id AND action_trans.local = :local'
+            'action_trans.event = action_event.id AND action_trans.local = :local',
         );
 
 
@@ -157,7 +157,7 @@ final class MonthUsersTableRepository implements MonthUsersTableInterface
             'action_event',
             CategoryProduct::class,
             'category',
-            'category.id = action_event.category'
+            'category.id = action_event.category',
         );
 
         $dbal->addSelect('category_trans.name AS table_category');
@@ -166,7 +166,7 @@ final class MonthUsersTableRepository implements MonthUsersTableInterface
             'category',
             CategoryProductTrans::class,
             'category_trans',
-            'category_trans.event = category.event AND category_trans.local = :local'
+            'category_trans.event = category.event AND category_trans.local = :local',
         );
 
 
@@ -178,7 +178,7 @@ final class MonthUsersTableRepository implements MonthUsersTableInterface
             'users_table_month',
             UserProfile::class,
             'users_profile',
-            'users_profile.id = users_table_month.profile'
+            'users_profile.id = users_table_month.profile',
         );
 
         // Info
@@ -186,7 +186,7 @@ final class MonthUsersTableRepository implements MonthUsersTableInterface
             'users_table_month',
             UserProfileInfo::class,
             'users_profile_info',
-            'users_profile_info.profile = users_table_month.profile'
+            'users_profile_info.profile = users_table_month.profile',
         );
 
         // Event
@@ -194,7 +194,7 @@ final class MonthUsersTableRepository implements MonthUsersTableInterface
             'users_profile',
             UserProfileEvent::class,
             'users_profile_event',
-            'users_profile_event.id = users_profile.event'
+            'users_profile_event.id = users_profile.event',
         );
 
         // Personal
@@ -204,7 +204,7 @@ final class MonthUsersTableRepository implements MonthUsersTableInterface
             'users_profile_event',
             UserProfilePersonal::class,
             'users_profile_personal',
-            'users_profile_personal.event = users_profile_event.id'
+            'users_profile_personal.event = users_profile_event.id',
         );
 
         // Avatar
@@ -224,7 +224,7 @@ final class MonthUsersTableRepository implements MonthUsersTableInterface
             'users_profile_event',
             UserProfileAvatar::class,
             'users_profile_avatar',
-            'users_profile_avatar.event = users_profile_event.id'
+            'users_profile_avatar.event = users_profile_event.id',
         );
 
         if($filter && $filter->getDate())

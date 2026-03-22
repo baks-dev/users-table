@@ -65,7 +65,7 @@ final readonly class UsersTableDeleteHandler
             $uniqid = uniqid('', false);
             $errorsString = sprintf(
                 'Not found event id in class: %s',
-                $command::class
+                $command::class,
             );
             $this->logger->error($uniqid.': '.$errorsString);
 
@@ -83,7 +83,7 @@ final readonly class UsersTableDeleteHandler
             $errorsString = sprintf(
                 'Not found %s by id: %s',
                 UsersTableEvent::class,
-                $command->getEvent()
+                $command->getEvent(),
             );
             $this->logger->error($uniqid.': '.$errorsString);
 
@@ -101,7 +101,7 @@ final readonly class UsersTableDeleteHandler
             $errorsString = sprintf(
                 'Not found %s by event: %s',
                 UsersTable::class,
-                $command->getEvent()
+                $command->getEvent(),
             );
             $this->logger->error($uniqid.': '.$errorsString);
 
@@ -121,7 +121,7 @@ final readonly class UsersTableDeleteHandler
         /* Отправляем сообщение в шину */
         $this->messageDispatch->dispatch(
             message: new UsersTableMessage($Main->getId(), $Main->getEvent(), $command->getEvent()),
-            transport: 'users-table'
+            transport: 'users-table',
         );
 
         return $Main;

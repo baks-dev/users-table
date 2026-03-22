@@ -21,7 +21,7 @@
  */
 
 
-inputTableCategory = document.getElementById('users_table_form_category');
+inputTableCategory = document.getElementById("users_table_form_category");
 
 if(inputTableCategory)
 {
@@ -31,16 +31,16 @@ if(inputTableCategory)
 
 function cahgeCategory(inputTableCategory)
 {
-    inputTableCategory.addEventListener('change', function()
+    inputTableCategory.addEventListener("change", function()
     {
 
 
-        let replaceId = 'users_table_form_action';
+        let replaceId = "users_table_form_action";
 
-        let replaceElement = document.getElementById(replaceId + '_select2');
+        let replaceElement = document.getElementById(replaceId + "_select2");
         if(replaceElement)
         {
-            replaceElement.classList.add('disabled');
+            replaceElement.classList.add("disabled");
         }
 
 
@@ -54,13 +54,13 @@ function cahgeCategory(inputTableCategory)
 
         //let materialName = document.getElementById(replaceId);
 
-        formData.append(this.getAttribute('name'), this.value);
+        formData.append(this.getAttribute("name"), this.value);
 
         //console.log(materialName.getAttribute('name'));
 
-        requestModalName.open(incomingForm.getAttribute('method'), incomingForm.getAttribute('action'), true);
+        requestModalName.open(incomingForm.getAttribute("method"), incomingForm.getAttribute("action"), true);
         /* Указываем заголовки для сервера */
-        requestModalName.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+        requestModalName.setRequestHeader("X-Requested-With", "XMLHttpRequest");
 
         /* Получаем ответ от сервера на запрос*/
         requestModalName.addEventListener("readystatechange", function()
@@ -78,7 +78,7 @@ function cahgeCategory(inputTableCategory)
 
 
                 /* Удаляем предыдущий Select2 */
-                let select2 = document.getElementById(replaceId + '_select2');
+                let select2 = document.getElementById(replaceId + "_select2");
 
                 if(select2)
                 {
@@ -91,11 +91,11 @@ function cahgeCategory(inputTableCategory)
                 // document.querySelectorAll('[data-select="select2"]').forEach(function (item) {
                 if(result.disabled === false)
                 {
-                    new NiceSelect(result, {searchable: true, id: 'select2-' + replaceId});
+                    new NiceSelect(result, {searchable : true, id : "select2-" + replaceId});
                 }
 
 
-                inputTableActions = document.getElementById('users_table_form_action');
+                inputTableActions = document.getElementById("users_table_form_action");
 
                 if(inputTableActions)
                 {
@@ -115,7 +115,7 @@ function cahgeCategory(inputTableCategory)
 }
 
 
-inputTableActions = document.getElementById('users_table_form_action');
+inputTableActions = document.getElementById("users_table_form_action");
 
 if(inputTableActions)
 {
@@ -126,16 +126,16 @@ if(inputTableActions)
 
 function changeActions(inputTableActions)
 {
-    inputTableActions.addEventListener('change', function()
+    inputTableActions.addEventListener("change", function()
     {
 
 
-        let replaceId = 'users_table_form_working';
+        let replaceId = "users_table_form_working";
 
-        let replaceElement = document.getElementById(replaceId + '_select2');
+        let replaceElement = document.getElementById(replaceId + "_select2");
         if(replaceElement)
         {
-            replaceElement.classList.add('disabled');
+            replaceElement.classList.add("disabled");
         }
 
 
@@ -150,13 +150,13 @@ function changeActions(inputTableActions)
         //let materialName = document.getElementById(replaceId);
 
 
-        formData.append(this.getAttribute('name'), this.value);
+        formData.append(this.getAttribute("name"), this.value);
 
         //console.log(materialName.getAttribute('name'));
 
-        requestModalName.open(incomingForm.getAttribute('method'), incomingForm.getAttribute('action'), true);
+        requestModalName.open(incomingForm.getAttribute("method"), incomingForm.getAttribute("action"), true);
         /* Указываем заголовки для сервера */
-        requestModalName.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+        requestModalName.setRequestHeader("X-Requested-With", "XMLHttpRequest");
 
         /* Получаем ответ от сервера на запрос*/
         requestModalName.addEventListener("readystatechange", function()
@@ -174,7 +174,7 @@ function changeActions(inputTableActions)
 
 
                 /* Удаляем предыдущий Select2 */
-                let select2 = document.getElementById(replaceId + '_select2');
+                let select2 = document.getElementById(replaceId + "_select2");
                 if(select2)
                 {
                     select2.remove();
@@ -187,7 +187,7 @@ function changeActions(inputTableActions)
                 // document.querySelectorAll('[data-select="select2"]').forEach(function (item) {
                 if(result.disabled === false)
                 {
-                    new NiceSelect(result, {searchable: true, id: 'select2-' + replaceId});
+                    new NiceSelect(result, {searchable : true, id : "select2-" + replaceId});
                 }
 
 

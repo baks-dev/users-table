@@ -38,7 +38,7 @@ final class UsersTableActionsDeleteForm extends AbstractType
         $builder->add(
             'users_table_actions_delete',
             SubmitType::class,
-            ['label' => 'Delete', 'label_html' => true, 'attr' => ['class' => 'btn-danger']]
+            ['label' => 'Delete', 'label_html' => true, 'attr' => ['class' => 'btn-danger']],
         );
     }
 

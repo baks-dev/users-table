@@ -71,7 +71,7 @@ final readonly class UsersTableActionsDeleteHandler
             $uniqid = uniqid('', false);
             $errorsString = sprintf(
                 'Not found event id in class: %s',
-                $command::class
+                $command::class,
             );
             $this->logger->error($uniqid.': '.$errorsString);
 
@@ -89,7 +89,7 @@ final readonly class UsersTableActionsDeleteHandler
             $errorsString = sprintf(
                 'Not found %s by id: %s',
                 UsersTableActionsEvent::class,
-                $command->getEvent()
+                $command->getEvent(),
             );
             $this->logger->error($uniqid.': '.$errorsString);
 
@@ -98,8 +98,8 @@ final readonly class UsersTableActionsDeleteHandler
 
 
         /** Получаем корень */
-//        $Main = $this->entityManager->getRepository(UsersTableActions::class)
-//            ->findOneBy(['event' => $command->getEvent(), 'profile' => $profile]);
+        //        $Main = $this->entityManager->getRepository(UsersTableActions::class)
+        //            ->findOneBy(['event' => $command->getEvent(), 'profile' => $profile]);
 
         // Если у action не задан профиль, то при удалении возникает ошибка
         $Main = $this->entityManager->getRepository(UsersTableActions::class)
@@ -111,7 +111,7 @@ final readonly class UsersTableActionsDeleteHandler
             $errorsString = sprintf(
                 'Not found %s by event: %s',
                 UsersTableActions::class,
-                $command->getEvent()
+                $command->getEvent(),
             );
 
             $this->logger->error($uniqid.': '.$errorsString);
@@ -132,7 +132,7 @@ final readonly class UsersTableActionsDeleteHandler
         /* Отправляем сообщение в шину */
         $this->messageDispatch->dispatch(
             message: new UsersTableActionsMessage($Main->getId(), $Main->getEvent(), $command->getEvent()),
-            transport: 'users-table'
+            transport: 'users-table',
         );
 
         return $Main;

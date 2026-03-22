@@ -38,16 +38,14 @@ final class DayTableFilterDTO implements DayUsersTableFilterInterface
     private ?UserProfileUid $profile = null;
 
     private readonly ?UserProfileUid $authority;
+    /** Дата */
+    private ?DateTimeImmutable $date = null;
 
     public function __construct(Request $request, ?UserProfileUid $authority)
     {
         $this->request = $request;
         $this->authority = $authority;
     }
-
-    /** Дата */
-    private ?DateTimeImmutable $date = null;
-
 
     /**
      * Date.

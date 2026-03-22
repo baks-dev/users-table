@@ -41,8 +41,8 @@ final class UsersTableDeleteForm extends AbstractType
             [
                 'label' => 'Save',
                 'label_html' => true,
-                ['label' => 'Delete', 'label_html' => true, 'attr' => ['class' => 'btn-danger']]
-            ]
+                ['label' => 'Delete', 'label_html' => true, 'attr' => ['class' => 'btn-danger']],
+            ],
         );
     }
 

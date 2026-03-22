@@ -44,7 +44,8 @@ final class DeleteController extends AbstractController
         Request $request,
         #[MapEntity] UsersTableEvent $UsersTableEvent,
         UsersTableDeleteHandler $UsersTableDeleteHandler,
-    ): Response {
+    ): Response
+    {
 
         return new Response('/admin/users/table/delete/{id}');
 
@@ -53,7 +54,7 @@ final class DeleteController extends AbstractController
         $form = $this->createForm(
             UsersTableDeleteForm::class,
             $UsersTableDeleteDTO,
-            ['action' => $this->generateUrl('users-table:admin.delete', ['id' => $UsersTableDeleteDTO->getEvent()]),]
+            ['action' => $this->generateUrl('users-table:admin.delete', ['id' => $UsersTableDeleteDTO->getEvent()]),],
         );
         $form->handleRequest($request);
 
@@ -74,7 +75,7 @@ final class DeleteController extends AbstractController
                 'admin.page.delete',
                 'admin.danger.delete',
                 'admin.users.table',
-                $UsersTable
+                $UsersTable,
             );
 
             return $this->redirectToRoute('users-table:admin.index', status: 400);
@@ -82,9 +83,9 @@ final class DeleteController extends AbstractController
 
         return $this->render(
             ['form' => $form->createView(), 'name' => $UsersTableEvent->getNameByLocale(
-                $this->getLocale()
+                $this->getLocale(),
             ), // название согласно локали
-            ]
+            ],
         );
     }
 }

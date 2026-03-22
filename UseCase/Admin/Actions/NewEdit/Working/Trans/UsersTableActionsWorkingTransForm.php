@@ -44,14 +44,14 @@ final class UsersTableActionsWorkingTransForm extends AbstractType
 
         $builder->get('local')->addModelTransformer(
             new CallbackTransformer(
-                function ($local) {
+                function($local) {
                     return $local instanceof Locale ? $local->getLocalValue() : $local;
                 },
-                function ($local) {
+                function($local) {
 
                     return new Locale($local);
-                }
-            )
+                },
+            ),
         );
 
         /**

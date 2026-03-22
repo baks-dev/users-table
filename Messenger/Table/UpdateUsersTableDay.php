@@ -62,8 +62,8 @@ final readonly class UpdateUsersTableDay
                 'Событие UsersTableEvent не найдено',
                 [
                     __LINE__.':'.__FILE__,
-                    $message->getEvent()
-                ]
+                    $message->getEvent(),
+                ],
             );
 
             return;
@@ -81,7 +81,7 @@ final readonly class UpdateUsersTableDay
         $UsersTableDay = $this->entityManager->getRepository(UsersTableDay::class)->findOneBy([
             'profile' => $UserTableDayDTO->getProfile(),
             'working' => $UserTableDayDTO->getWorking(),
-            'date' => $UserTableDayDTO->getDate()
+            'date' => $UserTableDayDTO->getDate(),
         ]);
 
         $UsersTableDay?->getDto($UserTableDayDTO);
@@ -98,8 +98,8 @@ final readonly class UpdateUsersTableDay
                 'Действие UsersTableActionsWorking не найдено',
                 [
                     self::class.':'.__LINE__,
-                    $UsersTableEvent->getWorking()
-                ]
+                    $UsersTableEvent->getWorking(),
+                ],
             );
 
             return;

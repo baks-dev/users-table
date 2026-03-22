@@ -38,7 +38,7 @@ use BaksDev\Users\UsersTable\Type\Table\Id\UsersTableType;
 use BaksDev\Users\UsersTable\Type\Table\Id\UsersTableUid;
 use Symfony\Config\DoctrineConfig;
 
-return static function (ContainerConfigurator $container, DoctrineConfig $doctrine) {
+return static function(ContainerConfigurator $container, DoctrineConfig $doctrine) {
 
     $doctrine->dbal()->type(UsersTableUid::TYPE)->class(UsersTableType::class);
     $doctrine->dbal()->type(UsersTableEventUid::TYPE)->class(UsersTableEventType::class);

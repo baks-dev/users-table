@@ -69,16 +69,6 @@ class UsersTableActionsProfile extends EntityEvent
         return (string) $this->event;
     }
 
-    public function getValue(): UserProfileUid|false
-    {
-        if(false === (new ReflectionProperty(self::class, 'value'))->isInitialized($this))
-        {
-            return false;
-        }
-
-        return $this->value;
-    }
-
     /** @return UsersTableActionsProfileInterface */
     public function getDto($dto): mixed
     {
@@ -109,5 +99,15 @@ class UsersTableActionsProfile extends EntityEvent
         }
 
         throw new InvalidArgumentException(sprintf('Class %s interface error', $dto::class));
+    }
+
+    public function getValue(): UserProfileUid|false
+    {
+        if(false === (new ReflectionProperty(self::class, 'value'))->isInitialized($this))
+        {
+            return false;
+        }
+
+        return $this->value;
     }
 }

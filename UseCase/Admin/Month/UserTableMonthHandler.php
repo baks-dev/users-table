@@ -42,6 +42,7 @@ final readonly class UserTableMonthHandler
 
     /**
      * Метод получает/создает табель на указанный месяц и обновляет его количество
+     *
      * @see UsersTableDay
      */
     public function handle(UsersTableMonthDTO $command): string|UsersTableMonth
@@ -64,8 +65,8 @@ final readonly class UserTableMonthHandler
             [
                 'profile' => $command->getProfile(),
                 'working' => $command->getWorking(),
-                'date' => $command->getDate()
-            ]
+                'date' => $command->getDate(),
+            ],
         );
 
         if($UsersTableMonth === null)

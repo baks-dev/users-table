@@ -51,7 +51,7 @@ final class UsersTableHandler extends AbstractHandler
         /* Отправляем сообщение в шину */
         $this->messageDispatch->dispatch(
             message: new UsersTableMessage($this->main->getId(), $this->main->getEvent(), $command->getEvent()),
-            transport: 'users-table'
+            transport: 'users-table',
         );
 
         return $this->main;

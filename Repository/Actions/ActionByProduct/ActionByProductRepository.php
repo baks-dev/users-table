@@ -51,14 +51,14 @@ final class ActionByProductRepository implements ActionByProductInterface
             ->setParameter(
                 key: 'product',
                 value: $product,
-                type: ProductUid::TYPE
+                type: ProductUid::TYPE,
             );
 
         $qb->join(
             UsersTableActions::class,
             'action',
             'WITH',
-            'action.event = product.event'
+            'action.event = product.event',
         );
 
         return $qb->getOneOrNullResult();

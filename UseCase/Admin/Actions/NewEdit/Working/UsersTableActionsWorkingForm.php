@@ -44,7 +44,7 @@ final class UsersTableActionsWorkingForm extends AbstractType
         $builder->add(
             'sort',
             IntegerType::class,
-            ['attr' => ['min' => 0, 'max' => 999]]
+            ['attr' => ['min' => 0, 'max' => 999]],
         );
 
         /**
@@ -52,7 +52,7 @@ final class UsersTableActionsWorkingForm extends AbstractType
          */
         $builder->add('coefficient', NumberType::class, [
             //'input' => 'string',
-            'scale' => 2
+            'scale' => 2,
         ]);
 
         /**
@@ -61,7 +61,7 @@ final class UsersTableActionsWorkingForm extends AbstractType
         $builder->add(
             'norm',
             IntegerType::class,
-            ['attr' => ['min' => 1]]
+            ['attr' => ['min' => 1]],
         );
 
         /**
@@ -70,7 +70,7 @@ final class UsersTableActionsWorkingForm extends AbstractType
         $builder->add(
             'premium',
             IntegerType::class,
-            ['attr' => ['max' => 100, 'min' => 0]]
+            ['attr' => ['max' => 100, 'min' => 0]],
         );
 
 

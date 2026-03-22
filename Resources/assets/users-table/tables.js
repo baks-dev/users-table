@@ -23,7 +23,7 @@
 
 form = document.forms.users_table_form;
 
-users_table_form_category = document.getElementById('users_table_form_category');
+users_table_form_category = document.getElementById("users_table_form_category");
 //const users_table_form_action = document.getElementById('users_table_form_action');
 //const users_table_form_working = document.getElementById('users_table_form_working');
 
@@ -31,8 +31,8 @@ updateForm = async (key, value) =>
 {
 
     const data = new FormData(form);
-    const url = form.getAttribute('action');
-    const method = form.getAttribute('method');
+    const url = form.getAttribute("action");
+    const method = form.getAttribute("method");
 
     //let requestBody = e.target.getAttribute('name') + '=' + e.target.value;
     let requestBody = [];
@@ -51,13 +51,13 @@ updateForm = async (key, value) =>
     requestBody = requestBody.join("&");
 
     const req = await fetch(url, {
-        method: method,
-        body: requestBody,
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'X-Requested-With': 'XMLHttpRequest',
-            'charset': 'utf-8'
-        }
+        method : method,
+        body : requestBody,
+        headers : {
+            "Content-Type" : "application/x-www-form-urlencoded",
+            "X-Requested-With" : "XMLHttpRequest",
+            "charset" : "utf-8",
+        },
     });
 
     const text = await req.text();
@@ -68,7 +68,7 @@ updateForm = async (key, value) =>
 parseTextToHtml = (text) =>
 {
     const parser = new DOMParser();
-    const html = parser.parseFromString(text, 'text/html');
+    const html = parser.parseFromString(text, "text/html");
 
     return html;
 };
@@ -79,28 +79,28 @@ parseTextToHtml = (text) =>
 changeCategory = async (e) =>
 {
 
-    const updateFormResponse = await updateForm(e.target.getAttribute('name'), e.target.value);
+    const updateFormResponse = await updateForm(e.target.getAttribute("name"), e.target.value);
     const html = parseTextToHtml(updateFormResponse);
 
     //console.log(requestBody);
 
     /* Удаляем предыдущий Select2 */
-    let select2 = document.getElementById('users_table_form_action_select2');
+    let select2 = document.getElementById("users_table_form_action_select2");
 
     if(select2)
     {
         select2.remove();
     }
 
-    const new_users_table_form_action = html.getElementById('users_table_form_action');
-    document.getElementById('users_table_form_action').replaceWith(new_users_table_form_action);
+    const new_users_table_form_action = html.getElementById("users_table_form_action");
+    document.getElementById("users_table_form_action").replaceWith(new_users_table_form_action);
 
-    const new_users_table_form_working = html.getElementById('users_table_form_working');
-    document.getElementById('users_table_form_working').replaceWith(new_users_table_form_working);
+    const new_users_table_form_working = html.getElementById("users_table_form_working");
+    document.getElementById("users_table_form_working").replaceWith(new_users_table_form_working);
 
 
-    const users_table_form_action = document.getElementById('users_table_form_action');
-    users_table_form_action.addEventListener('change', (e) => changeActions(e));
+    const users_table_form_action = document.getElementById("users_table_form_action");
+    users_table_form_action.addEventListener("change", (e) => changeActions(e));
 
 
 };
@@ -113,26 +113,26 @@ changeActions = async (e) =>
 {
 
     //const requestBody = e.target.getAttribute('name') + '=' + e.target.value;
-    const updateFormResponse = await updateForm(e.target.getAttribute('name'), e.target.value);
+    const updateFormResponse = await updateForm(e.target.getAttribute("name"), e.target.value);
     const html = parseTextToHtml(updateFormResponse);
 
     //console.log(requestBody);
 
     /* Удаляем предыдущий Select2 */
-    let select2 = document.getElementById('users_table_form_working_select2');
+    let select2 = document.getElementById("users_table_form_working_select2");
 
     if(select2)
     {
         select2.remove();
     }
 
-    const new_users_table_form_working = html.getElementById('users_table_form_working');
+    const new_users_table_form_working = html.getElementById("users_table_form_working");
     //form_select_position.innerHTML = new_form_select_position.innerHTML;
-    document.getElementById('users_table_form_working').replaceWith(new_users_table_form_working);
+    document.getElementById("users_table_form_working").replaceWith(new_users_table_form_working);
 
 };
 
-users_table_form_category.addEventListener('change', (e) => changeCategory(e));
+users_table_form_category.addEventListener("change", (e) => changeCategory(e));
 
 
 //
